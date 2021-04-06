@@ -6,16 +6,16 @@ namespace TablePage
     public class TableInit
     {   
         ///<summary>Maakt nieuwe Table arrays afhankelijk van het aantal stoelen per tafel</summary>
-        private static Table[] createTables(int howManyTables, int seatsPerTable, int tableHeight, int tableWidth=6) {
+        private static Table[] createTables(int howManyTables, int seatsPerTable) {
             Table[] tableArr = new Table[howManyTables];
             for (int i = 0; i < howManyTables; i++) {
-                tableArr[i] = new Table(i + 1, seatsPerTable, tableHeight, tableWidth);
+                tableArr[i] = new Table(i + 1, seatsPerTable);
             }
             return tableArr;
         }
 
         ///<summary>Vult de references van de jagged arrays met string arrays</summary>
-       private static Func<Table[], string[][]> createJagged =  t =>
+       private static Func<Table[], string[][]> createJagged = t =>
         {
             string[][] jagged = new string[t.Length][];
             for (int i = 0; i < jagged.Length; i++) {
@@ -155,12 +155,11 @@ namespace TablePage
         /////////////////////////////
         public static void MainTable(bool reserveren=false) {  // als de parameter false is dan zie je alleen de plattegrond zonder een tafel te kiezen
             Console.Clear();
-            Table[] forTwo = createTables(8, 2, 3);
-            Table[] forFour = createTables(5, 4, 5);
-            Table[] forSix = createTables(2, 6, 5, 12);
+            Table[] forTwo = createTables(8, 2);
+            Table[] forFour = createTables(5, 4);
+            Table[] forSix = createTables(2, 6);
             Table[][] dinnerRoom = new Table[][] {forTwo, forFour, forSix};
             
-            drawMap(forTwo, forFour, forSix, reserveren);
             if (reserveren) {
                 string message = "Typt u alstublieft het tafelnummer waar u voor wilt reserveren: ";
                 string errormessage = "Helaas is die optie niet beschikbaar, Kiest u alstublieft uit de groen gekleurde tafels.";
@@ -170,6 +169,9 @@ namespace TablePage
                 Console.Clear();
                 Console.WriteLine("Nieuwe Beschikbare Tafels");
                 drawMap(forTwo, forFour, forSix);
+            } else
+            {
+                drawMap(forTwo, forFour, forSix, reserveren);
             }
             Resources.input("druk op enter om verder te gaan\n");
             return; // ga terug naar de parent class
@@ -181,15 +183,11 @@ namespace TablePage
     {
         private string table_num;  // het tafelnummer
         private int seats;  // het aantal stoelen van de tafel
-        private int width;  // de breedte van de tafel
-        private int height;  // de hoogte van de tafel
         private bool occupied;  // een bool die noteert of de tafel bezet is of niet.
        
         // de Table constructor
-        public Table(int t_num, int chairs, int newHeight=3, int newWidth=6) {
-            seats = chairs;
-            width = newWidth;
-            Height = newHeight;
+        public Table(int t_num, int chairs) {
+            Seats = chairs;
             Number = t_num.ToString();
             Number += chairs == 2 ? "A" : chairs == 4 ? "B" : "C";
             Occupied = false;
@@ -202,13 +200,6 @@ namespace TablePage
             set { occupied = value; }
         }
 
-        // getter en setter method voor height attribute
-        public int Height
-        {
-            get { return height; }
-            set { height = value; }
-        }
-
         // getter en setter method voor het tafelnummer
         public string Number
         {
@@ -216,49 +207,51 @@ namespace TablePage
             set { table_num = value; }
         }
 
+        // getter and setter method voor seats attribuut
+        public int Seats
+        {
+            get { return seats;  }
+            set { seats = value == 2 ? 2 : value == 4 ? 4 : value == 6 ? 6 : 2; }
+        }
+
         ///<summary>Maakt een string van de tafel</string>
         public string[] DrawTable() {
-            if (seats == 6) { // de tafel voor 6 personen ligt op zijn kant dus heeft een ander uiterlijk
-                string line0 = " " + Resources.drawString(2, "_") + Resources.drawString(2, "O___") + "O_ ";
-                string line1 = "|" + Resources.drawString(12, " ") + "|";
-                string line2 = "|" + Resources.drawString(5, " ") + table_num + Resources.drawString(5, " ") + "|";
-                string line3 = "|" + Resources.drawString(12, "_") + "|";
-                string line4 = Resources.drawString(3, "   O") + "  ";
-                return new string[] {line0, line1, line2, line3, line4};
-                }
-            int currentIndex = 0;
-            string[] tableStr = new string[height + 1];
-            tableStr[currentIndex] += Resources.drawString(4, " ");
-            string widthSide = Resources.drawString(width, "_");
-            string chair = " O ";
-            tableStr[currentIndex++] += widthSide + Resources.drawString(4, " ");  // na deze line is de eerste kant van de tafel af.
-            
-            // Maakt zijdes totdat de line met het tafelnummer in de string moet.
-            string vertical = Resources.drawString(3, " ") + "|" + Resources.drawString(width, " ") + "|" + Resources.drawString(3, " ");
-            string verticalSeats = chair + "|" + Resources.drawString(width, " ") + "|" + chair;
-            for (int i = 0; i < height / 2; i++) {
-                if (i % 2 == 0) {
-                    tableStr[currentIndex++] += vertical;
-                } else {
-                    tableStr[currentIndex++] += verticalSeats;
-                }
+            string[] tableString;
+            if (Seats == 6)
+            { // de tafel voor 6 personen
+                tableString = new string[5];
+                tableString[0] = " " + Resources.drawString(2, "_") + Resources.drawString(2, "O___") + "O_ ";
+                tableString[1] = "|" + Resources.drawString(12, " ") + "|";
+                tableString[2] = "|" + Resources.drawString(5, " ") + Number + Resources.drawString(5, " ") + "|";
+                tableString[3] = "|" + Resources.drawString(12, "_") + "|";
+                tableString[4] = Resources.drawString(3, "   O") + "  ";
+            } else
+            { // de tafel is voor 2 of 4 personen
+                string tableEnd = Resources.drawString(6, "_");
+                string tableMiddle = "|" + Resources.drawString(6, " ") + "|";
+                string chairSide = " O ";
+                string tableSide = Resources.drawString(3, " ");
+                string firstLine = Resources.drawString(4, " ") + tableEnd + Resources.drawString(4, " ");
+                string lastLine = tableSide + "|" + tableEnd + "|" + tableSide;
+                if (Seats == 4)
+                {
+                    tableString = new string[6];
+                    tableString[0] = firstLine;
+                    tableString[1] = tableSide + tableMiddle + tableSide;
+                    tableString[2] = chairSide + tableMiddle + chairSide;
+                    tableString[3] = tableSide + $"|  {table_num}  |" + tableSide;
+                    tableString[4] = tableString[2];
+                    tableString[5] = lastLine;
+                } else
+                {
+                    tableString = new string[4];
+                    tableString[0] = firstLine;
+                    tableString[1] = tableSide + tableMiddle + tableSide;
+                    tableString[2] = chairSide + $"|  {table_num}  |" + chairSide;
+                    tableString[3] = tableSide + "|" + tableEnd + "|" + tableSide;
+                }                
             }
-            // de line met het tafelnummer (heeft ook stoelen als het aantal stoelen geen 4 is)
-            if (seats == 4) {
-                tableStr[currentIndex++] += Resources.drawString(3, " ") + "|" + Resources.drawString(width / 2 - 1, " ") + table_num +  Resources.drawString(width / 2 - 1, " ") + "|" + Resources.drawString(3, " ");
-            } else {
-                tableStr[currentIndex++] += " O " + "|" + Resources.drawString(width / 2 - 1, " ") + table_num +  Resources.drawString(width / 2 - 1, " ") + "|" + " O ";
-            }
-            // begin de loop na de line met het tafelnummer (word geskipped als dit de laatste line van de tafel is)
-            for (int i = height / 2 + 1; i < height - 1; i++) {
-                if (i % 2 == 0)
-                    tableStr[currentIndex++] += vertical;
-                else
-                    tableStr[currentIndex++] += verticalSeats;
-            }
-            // de laatste line van de tafel
-            tableStr[currentIndex++] += Resources.drawString(3, " ") + "|" + widthSide + "|" + Resources.drawString(3, " ");
-            return tableStr;
+            return tableString;
         }
     }
 }

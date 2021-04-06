@@ -3,7 +3,6 @@ using resourceMethods;
 using LoginPage; // namespace van login.cs
 using MenuPage; // namespace van Menu.cs
 using TablePage; // namespace van Tafels.cs
-
 namespace Main_Restaurant
 {
     class Main_Menu  // hoofdmenu van de applicatie
