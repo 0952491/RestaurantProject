@@ -9,7 +9,7 @@ namespace MenuPage
     {
         public static void MenuChoices()
         {
-            Console.Clear();
+            Console.Clear(); // ik pas hier iets aan
             Resources.orderOptions("", new string[] {"Voorgerecht", "Hoofdgerecht", "Dessert"}, true);
             string input = Resources.inputCheck("Kies een nummer: ", new string[] {"1", "2", "3", "b", "B"});
             if (input == "1") { Voorgerecht(); }
