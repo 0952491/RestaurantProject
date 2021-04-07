@@ -178,7 +178,6 @@ namespace TablePage
         }
     }
     
-
     public class Table 
     {
         private string table_num;  // het tafelnummer

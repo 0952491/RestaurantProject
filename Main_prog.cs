@@ -1,5 +1,8 @@
 using System;
+using System.Text;
+using System.IO;
 using resourceMethods;
+using Newtonsoft.Json;
 using LoginPage; // namespace van login.cs
 using MenuPage; // namespace van Menu.cs
 using TablePage; // namespace van Tafels.cs
@@ -9,6 +12,16 @@ namespace Main_Restaurant
     {
         static void Main()
         {
+            /*
+            VOORBEELD JSON
+            Table Tafel1 = new Table(1, 5);
+            string output = JsonConvert.SerializeObject(Tafel1);
+            Console.WriteLine(output);
+            File.WriteAllText("C:/Users/J3roe/Source/Repos/RestaurantProject/NewJson.json", output);
+            string json = File.ReadAllText("NewJson.json");
+            dynamic Obj = JsonConvert.DeserializeObject(json);
+            Console.WriteLine(Obj.Occupied);
+            return;*/
             string optie = "";
             while (optie != "quit") {
                 Console.Clear();
