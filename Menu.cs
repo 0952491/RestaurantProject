@@ -69,16 +69,52 @@ namespace MenuPage
                 MenuChoices();
             }
         }
-    }
-    class Gerecht
-    {
-        string Naam;
-        int Prijs;
+    } 
+    // class Gerecht
+    // {
+    //     string Naam;
+    //     int Prijs;
 
-        public Gerecht(string naam, int prijs)
-        {
-            Naam = naam;
-            Prijs = prijs
-        }
-    }
+    //     public Gerecht(string naam, int prijs)
+    //     {
+    //         Naam = naam;
+    //         Prijs = prijs
+    //     }
+
+        
+    //     // foreach (Gerecht g in Menu.HoofdGerechten) {
+    //     //   Console.WriteLine($"{g.Naam}\t\t\t{g.Prijs} ")
+    //     // }
+    // }
+
+    // MenuKaart menu = DataHandler.loadJson("menu.json")
+    // class MenuKaart { 
+    //     public Gerecht[] Hoofdgerechten;
+
+    //     public MenuKaart() { 
+    //         Hoofdgerechten = DataHandler.loadJson("menu.json").Hoofdgerechten;
+    //     }
+
+    //     public void addGerecht(Gerecht gerecht) 
+    //     { 
+    //         Gerecht[] nieuweHoofd = new Gerecht[Hoofdgerechten.Length + 1];
+    //         for (int i = 0; i < nieuweHoofd.Length; i++)
+    //         { 
+    //             nieuweHoofd[i] = Hoofdgerechten[i];
+    //         }
+    //         nieuweHoofd[Hoofdgerechten.Length] = gerecht;
+    //         Hoofdgerechten = nieuweHoofd;
+    //     }
+
+    //     public void removeGerecht(Gerecht gerecht)
+    //     {
+    //         Gerecht[] nieuweHoofd = new Gerecht[Hoofdgerechten.Length - 1];
+    //         for (int i = 0, j = 0; i < nieuweHoofd.Length; i++)
+    //         {
+    //             nieuweHoofd[i] = Hoofdgerechten[j++];
+                
+
+    //         }
+    //     }
+    // }
 }

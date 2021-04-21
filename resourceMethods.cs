@@ -64,11 +64,12 @@ namespace resourceMethods{
         }
 
         ///<summary>Een method die een string[] maakt van alle nummers tussen de gegeven min en max (incl. max)</summary>
-        public static string[] makeRangeArr(int min, int max, backbutton=false) {
+        public static string[] makeRangeArr(int min, int max, bool backbutton=false) {
+            string[] returnArr;
             if (backbutton)
-                string[] returnArr = new string[max - min + 2];
+                returnArr = new string[max - min + 2];
             else
-                string[] returnArr = new string[max - min + 1];
+                returnArr = new string[max - min + 1];
             for (int i = 0; min <= max; min++) {
                 returnArr[i++] = $"{min}";
             }
@@ -82,22 +83,22 @@ namespace resourceMethods{
             return Resources.inputCheck(prompt, Resources.makeRangeArr(1, options.Length, backbutton), errorprompt, maxtries);
         }
 
-        public static string inputRegex(string prompt, string regexStr, string errorprompt="Input onjuist, probeer het opnieuw", maxtries=0){
+        public static string inputRegex(string prompt, string regexStr, string errorprompt="Input onjuist, probeer het opnieuw", int maxtries=0) {
             string answer = input(prompt);
             Regex newre = new Regex(regexStr);
-            string check = Regex.Match(answer, newre);
+            bool check = newre.IsMatch(answer);
             int totaltries = 0;
-            while check.Length == 0 {  // de check was niet succesvol
+            while (!check) {  // de check was niet succesvol
                 errorMessage(errorprompt);
                 totaltries++;
-                if (maxTries != 0 && totalTries >= maxTries) {
-                    check = "";
+                if (maxtries != 0 && totaltries >= maxtries) {
+                    answer = "";
                     break;
                 }
                 answer = input(prompt);
-                check = Regex.Match(answer, newre);
+                check = newre.IsMatch(answer);
             }
-            return check;
+            return answer;
         }
     }
 
@@ -112,7 +113,7 @@ namespace resourceMethods{
         ///<summary>Backup alle data van een object naar een json file</summary>
         public static void writeJson(string filename, dynamic Obj){
             string output = JsonConvert.SerializeObject(Obj);
-            File.WriteAllText($"Data/{filename}");
+            File.WriteAllText($"Data/{filename}", output);
         }
     }
 }
