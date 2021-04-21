@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -79,8 +78,8 @@ namespace resourceMethods{
         }
 
         public static string makeMenuInput(string title, string prompt, string[] options, string errorprompt="Helaas is die optie niet beschikbaar. Kiest u alstublieft opnieuw.",bool backbutton=false, int maxtries=0){
-            Resources.orderOptions(title, options, backbutton);
-            return Resources.inputCheck(prompt, Resources.makeRangeArr(1, options.Length, backbutton), errorprompt, maxtries);
+            orderOptions(title, options, backbutton);
+            return inputCheck(prompt, makeRangeArr(1, options.Length, backbutton), errorprompt, maxtries);
         }
 
         public static string inputRegex(string prompt, string regexStr, string errorprompt="Input onjuist, probeer het opnieuw", int maxtries=0) {
@@ -103,17 +102,29 @@ namespace resourceMethods{
     }
 
     class DataHandler{
+
         ///<summary>Laad alle objects van een json file in een object</summary>
-        public static dynamic loadJson(string filename) { 
-            string json = File.ReadAllText(filename);
+        public static dynamic loadJson(string filename) {
+            setRightCwd();
+            string json = File.ReadAllText($"Data/{filename}");
             dynamic Obj = JsonConvert.DeserializeObject(json);
             return Obj;
         }
         
         ///<summary>Backup alle data van een object naar een json file</summary>
         public static void writeJson(string filename, dynamic Obj){
-            string output = JsonConvert.SerializeObject(Obj);
+            setRightCwd();
+            string output = JsonConvert.SerializeObject(Obj, Formatting.Indented);
             File.WriteAllText($"Data/{filename}", output);
+        }
+
+        ///<summary>Zet de current working directory naar de juiste hoofdfolder</summary>
+        public static void setRightCwd() {
+            string curdir = Directory.GetCurrentDirectory();
+            while (!Directory.Exists($"{curdir}/Data")) {
+                Directory.SetCurrentDirectory("..");  // .. staat voor de parent folder
+                curdir = Directory.GetCurrentDirectory();
+            }
         }
     }
 }

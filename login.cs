@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using resourceMethods;
 
 namespace LoginPage
@@ -8,8 +7,8 @@ namespace LoginPage
 {
     class Login
     {
-        static UserAdministration userAdmin = new UserAdministration();
-        
+        public static UserAdministration UserAdmin = new();
+
         public static void ReserveerHome() {
         // ik heb dit een reserveringsmenu gemaakt want we hadden al deze opties voor inloggen al op de homepagina (p.s. Jeroen)
             Console.Clear();
@@ -18,17 +17,17 @@ namespace LoginPage
             if (input == "1") { Inloggen(true); }
             else if (input == "2") { Registreren(true); }
             else if (input == "3") { Gast(); }
-            else if (input == "4") { Login.userAdmin.save(); }
+            else if (input == "4") { UserAdmin.Save(); } // deze method hoort hier niet maar dit is tijdelijk
         }
 
         public static void Inloggen(bool reserveren=false)
         {
             Console.Clear();
-            string[] registeredEmails = userAdmin.getMails();  // laad later alle mails uit de json file naar deze variable (mss met een for loop)
+            string[] registeredEmails = UserAdmin.GetMails();  // laad later alle mails uit de json file naar deze variable (mss met een for loop)
             Console.WriteLine("Login Pagina\n");
             int tries = 3;
             string loginMail = Resources.inputCheck("Email: ", registeredEmails, "Email incorrect", tries);
-            string password = "12345";  // dit moet uit een json file komen en is afhankelijk van de mail
+            string password = UserAdmin.GetPass(loginMail);
             string loginPass = loginMail != "" ? Resources.inputCheck("Wachtwoord: ", new string[] {password}, "Wachtwoord incorrect", tries) : "Geen wachtwoord";
     
             if (loginMail == "") {  // de gebruiker heeft 3 keer een verkeerde mail opgegeven  
@@ -51,12 +50,13 @@ namespace LoginPage
         public static void Registreren(bool sub=true)
         {
             Console.Clear();
+            var subs = UserAdmin;
             Console.WriteLine("Registreren\n");
             // veel van deze inputs kunnen later gechecked worden met een regex (https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex?view=net-5.0)
             string voornaam = Resources.inputRegex("Voornaam: ", @"\w+");
             string tussenvoegsel = Resources.input("Tussenvoegsel: ");
             string achternaam = Resources.inputRegex("Achternaam: ", @"\w+");
-            string email = Resources.input("E-mail Adres: ");
+            string email = Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
             string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$"); 
             string geboortedatum = Resources.inputRegex("Geboortedatum(dd-mm-yyyy): ", @"\d{2}\-\d{2}\-\d{4}");
             string wachtwoord = Resources.inputRegex("Wachtwoord: ", @"\w{8}");
@@ -67,13 +67,13 @@ namespace LoginPage
                 ReserveerHome();
             } else {  // de gebruiker registreert alle gegevens TODO: hier moeten alle gegevens van de gebruiker in json worden opgeslagen
                 if (sub) {
-                    Person newuser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
-                    userAdmin.addSub(newuser);
+                    Person newuser = new(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
+                    UserAdmin.AddSub(newuser);
                     Resources.succesMessage("U bent succesvol geregistreerd!");
                     ReserveerHome();
                 } else {
-                    Person newadmin = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
-                    userAdmin.addAdmin(newadmin);
+                    Person newadmin = new(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
+                    UserAdmin.AddAdmin(newadmin);
                     Resources.succesMessage("U bent succesvol geregistreerd!");
                     ReserveerHome();
                 }
@@ -127,14 +127,14 @@ namespace LoginPage
             Console.WriteLine($"Leeftijd: {Leeftijd}");
         }
 
-        ///<summary>Returned true if modLevel = 1, anders returns false</summary>
-        public bool isAdmin() { 
+        /// <summary>Returned true if modLevel = 1, anders returns false</summary>
+        public bool IsAdmin() { 
             return ModLevel == 1;
         }
 
-        ///<summary>Met deze method kan je de gegevens van een persoon veranderen</summary>
+        /// <summary>Met deze method kan je de gegevens van een persoon veranderen</summary>
         public void ChangePerson() {
-            this.Present();
+            Present();
             string[] opties = new string[] {"Voornaam", "Tussenvoegsel", "Achternaam", "Email", "Telefoon nr", "Leeftijd"};
             string choice = Resources.makeMenuInput("Verander je gegevens", "Kies een van de bovenstaande opties: ", opties, backbutton: true);
             if (choice == "1") // verander je voornaam
@@ -155,23 +155,27 @@ namespace LoginPage
     class UserAdministration { // De adminstratie waar alle admins en users worden opgeslagen
         public Person[] Subscribers;
         public Person[] Admins;
-        static string FILENAME = "Users.json";
+        private const string FILENAME = "Users.json";
 
-        public UserAdministration() { 
-            Subscribers = new Person[0];
-            Admins = new Person[0];
-            /*Subscribers = DataHandler.loadJson(FILENAME).Subscribers;
-            Admins = DataHandler.loadJson(FILENAME).Admins;*/
+        public UserAdministration() {
+            Subscribers = LoadUsers(DataHandler.loadJson(FILENAME).Subscribers);
+            Admins = LoadUsers(DataHandler.loadJson(FILENAME).Admins);
         }
 
-        ///<summary>slaat de UserAdministration op in "Users.json" file in Data folder</summary>
-        public void save() {
+        /// <summary>Zet de gegevens om in Person arrays</summary>
+        public Person[] LoadUsers(dynamic Users)
+        {
+            return Users.ToObject<Person[]>();
+        }
+
+        /// <summary>slaat de UserAdministration op in "Users.json" file in Data folder</summary>
+        public void Save() {
             DataHandler.writeJson(FILENAME, this);
         }
 
-        ///<summary>Voegt een Subscriber toe aan Subscribers array</summary>
-        public void addSub(Person sub) {
-            if (exists(sub) && !sub.isAdmin()) {
+        /// <summary>Voegt een Subscriber toe aan Subscribers array</summary>
+        public void AddSub(Person sub) {
+            if (!Exists(sub) && !sub.IsAdmin()) {
                 Person[] newSubscribers = new Person[Subscribers.Length + 1];
                 for (int i = 0; i < Subscribers.Length; i++) {
                     newSubscribers[i] = Subscribers[i];
@@ -182,8 +186,8 @@ namespace LoginPage
         }
 
         ///<summary>Voegt een Admin toe aan Admins array</summary>
-        public void addAdmin(Person admin) {
-            if (exists(admin) && admin.isAdmin()) { 
+        public void AddAdmin(Person admin) {
+            if (!Exists(admin) && admin.IsAdmin()) { 
                 Person[] newAdmins = new Person[Admins.Length + 1];
                 for (int i = 0; i < Admins.Length; i++) {
                     newAdmins[i] = Admins[i];
@@ -195,9 +199,9 @@ namespace LoginPage
             }
         }
 
-        ///<summary>Verwijderd een Subscriber uit de Subscribers array</summary>
-        public void removeSub(Person user) {
-            if (exists(user) && !user.isAdmin()) {
+        /// <summary>Verwijderd een Subscriber uit de Subscribers array</summary>
+        public void RemoveSub(Person user) {
+            if (Exists(user) && !user.IsAdmin()) {
                 Person[] newSubscribers = new Person[Subscribers.Length - 1];
                 for (int i = 0; i < Subscribers.Length; i++) { 
                     if (Subscribers[i] == user) { 
@@ -212,23 +216,37 @@ namespace LoginPage
             }
         }
 
-        ///<summary>Checked of de passed user bestaat gebaseerd op alle mails (van Admins en Subscribers)</summary>
-        public bool exists(Person user) { 
-            return getMails().Contains(user.Email);
+        /// <summary>Checked of de passed user bestaat gebaseerd op alle mails (van Admins en Subscribers)</summary>
+        public bool Exists(Person user) { 
+            return GetMails().Contains(user.Email);
         }
 
-        ///<summary>Verzamelt alle mails van alle gebruikers in een array en returned die array</summary>
-        public string[] getMails() {
+        /// <summary>Verzamelt alle mails van alle gebruikers in een array en returned die array</summary>
+        public string[] GetMails() {
             string[] mails;
             mails = new string[Subscribers.Length + Admins.Length];
-            for (int i = 0; i < mails.Length; i++) {
-                mails[i] = Subscribers[i].Email;
+            int totalIndex = 0;
+            for (int i = 0; i < Subscribers.Length; i++) {
+                mails[totalIndex++] = Subscribers[i].Email;
             }
-            for (int i = 0; i < mails.Length; i++) {
-                mails[i] = Admins[i].Email;
+            for (int i = 0; i < Admins.Length; i++) {
+                mails[totalIndex++] = Admins[i].Email;
             }
             return mails;
         }
-    }
-    
+
+        /// <summary>Returned het wachtwoord die bij de gegeven mail hoort</summary>
+        public string GetPass(string mail) {
+            string pass = "";
+            foreach (Person user in Subscribers) {
+                if (user.Email == mail)
+                    pass = user.Wachtwoord;
+            }
+            foreach (Person user in Admins) {
+                if (user.Email == mail)
+                    pass = user.Wachtwoord;
+            }
+            return pass;
+        }
+    }  
 }

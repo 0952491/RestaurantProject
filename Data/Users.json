@@ -1,1 +1,26 @@
-{"Subscribers":[],"Admins":[]}
+{
+  "Subscribers": [
+    {
+      "Voornaam": "Jeroen",
+      "Tussenvoegsel": "",
+      "Achternaam": "Visser",
+      "Email": "0952491@hr.nl",
+      "Tel_no": "0612345678",
+      "Leeftijd": "02-07-1999",
+      "Wachtwoord": "12345678",
+      "ModLevel": 0
+    }
+  ],
+  "Admins": [
+    {
+      "Voornaam": "Jeroen",
+      "Tussenvoegsel": "",
+      "Achternaam": "Visser",
+      "Email": "jeroen@hr.nl",
+      "Tel_no": "0612345678",
+      "Leeftijd": "02-07-1999",
+      "Wachtwoord": "12345678",
+      "ModLevel": 1
+    }
+  ]
+}

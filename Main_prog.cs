@@ -1,8 +1,5 @@
 using System;
-using System.Text;
-using System.IO;
 using resourceMethods;
-using Newtonsoft.Json;
 using LoginPage; // namespace van login.cs
 using MenuPage; // namespace van Menu.cs
 using TablePage; // namespace van Tafels.cs
