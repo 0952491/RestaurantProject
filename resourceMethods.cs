@@ -1,5 +1,9 @@
 using System;
 using System.Linq;
+using System.Text;
+using System.IO;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 namespace resourceMethods{
     class Resources{
         ///<summary>Maakt een stringline afhankelijk van de lengte en de gegeven character(string geen char)</summary>
@@ -45,8 +49,7 @@ namespace resourceMethods{
                     answer = "";
                     break;
                 }
-                Console.Write(prompt);
-                answer = Console.ReadLine();
+                answer = input(prompt);
             }
             return answer;
         }
@@ -61,12 +64,55 @@ namespace resourceMethods{
         }
 
         ///<summary>Een method die een string[] maakt van alle nummers tussen de gegeven min en max (incl. max)</summary>
-        public static string[] makeRangeArr(int min, int max) {
-            string[] returnArr = new string[max - min + 1];
+        public static string[] makeRangeArr(int min, int max, backbutton=false) {
+            if (backbutton)
+                string[] returnArr = new string[max - min + 2];
+            else
+                string[] returnArr = new string[max - min + 1];
             for (int i = 0; min <= max; min++) {
                 returnArr[i++] = $"{min}";
             }
+            if (backbutton)
+                returnArr[max - min + 1] = "b";
             return returnArr;
+        }
+
+        public static string makeMenuInput(string title, string prompt, string[] options, string errorprompt="Helaas is die optie niet beschikbaar. Kiest u alstublieft opnieuw.",bool backbutton=false, int maxtries=0){
+            Resources.orderOptions(title, options, backbutton);
+            return Resources.inputCheck(prompt, Resources.makeRangeArr(1, options.Length, backbutton), errorprompt, maxtries);
+        }
+
+        public static string inputRegex(string prompt, string regexStr, string errorprompt="Input onjuist, probeer het opnieuw", maxtries=0){
+            string answer = input(prompt);
+            Regex newre = new Regex(regexStr);
+            string check = Regex.Match(answer, newre);
+            int totaltries = 0;
+            while check.Length == 0 {  // de check was niet succesvol
+                errorMessage(errorprompt);
+                totaltries++;
+                if (maxTries != 0 && totalTries >= maxTries) {
+                    check = "";
+                    break;
+                }
+                answer = input(prompt);
+                check = Regex.Match(answer, newre);
+            }
+            return check;
+        }
+    }
+
+    class DataHandler{
+        ///<summary>Laad alle objects van een json file in een object</summary>
+        public static dynamic loadJson(string filename) { 
+            string json = File.ReadAllText(filename);
+            dynamic Obj = JsonConvert.DeserializeObject(json);
+            return Obj;
+        }
+        
+        ///<summary>Backup alle data van een object naar een json file</summary>
+        public static void writeJson(string filename, dynamic Obj){
+            string output = JsonConvert.SerializeObject(Obj);
+            File.WriteAllText($"Data/{filename}");
         }
     }
 }

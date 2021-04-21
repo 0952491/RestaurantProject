@@ -70,4 +70,15 @@ namespace MenuPage
             }
         }
     }
+    class Gerecht
+    {
+        string Naam;
+        int Prijs;
+
+        public Gerecht(string naam, int prijs)
+        {
+            Naam = naam;
+            Prijs = prijs
+        }
+    }
 }

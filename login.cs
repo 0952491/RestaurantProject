@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using resourceMethods;
 
 namespace LoginPage
 {
     class Login
     {
-        public static void ReserveerHome()
+        public static void ReserveerHome() {
         // ik heb dit een reserveringsmenu gemaakt want we hadden al deze opties voor inloggen al op de homepagina (p.s. Jeroen)
-        {
             Console.Clear();
             Resources.orderOptions("Hoe wilt u reserveren?", new string[] {"Inloggen", "Registreren", "Reserveer als Gast"}, true);
             string input = Resources.inputCheck("Kies een nummer: ", new string[] {"1", "2", "3", "b", "B"});
@@ -53,7 +53,7 @@ namespace LoginPage
             string tussenvoegsel = Resources.input("Tussenvoegsel: ");
             string achternaam = Resources.input("Achternaam: ");
             string email = Resources.input("E-mail Adres: ");
-            string telefoonnummer = Resources.input("Telefoonnummer: ");
+            string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^{06}\d{8}$"); 
             string geboortedatum = Resources.input("Geboortedatum: ");
             string wachtwoord = Resources.input("Wachtwoord: ");
             string inputHerhaal = Resources.inputCheck("Herhaal Wachtwoord: ", new string[] {wachtwoord}, "Wachtwoorden komen niet overeen", 3);
@@ -71,8 +71,10 @@ namespace LoginPage
             Console.Clear();
             Console.WriteLine("Gast\n");
             // hier geldt hetzelfde als voor de vorige method wat betreft de regex
+            // !!!VOOR JORDEN!!!: ik heb ff een method gemaakt voor input met een regex, je kan m callen via Resources.inputRegex(prompt, regexstr)
+            // er staat boven en onder ook een voorbeeld voor de input van het telefoonnr, Jeroen
             string Email = Resources.input("Email: ");
-            string Teli = Resources.input("Telefoonnummer: ");
+            string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^06\d{8}$"); 
             // hier moet later ook weer een line komen die de gegevens (email en tel.nr.) opslaat in json
             Reserveren();
         }
@@ -81,6 +83,67 @@ namespace LoginPage
             Console.Clear();
             Console.WriteLine("Welkom bij restaurant Wiqui");
             Console.ReadLine();
+        }
+    }
+
+    class Person { 
+        string Voornaam;
+        string Tussenvoegsel = "";
+        string Achternaam;
+        string Email;
+        string Tel_no;
+        int Leeftijd;
+        string Wachtwoord;
+        int ModLevel; // modlevel 0 = subscriber, 1 = admin (mss nog een voor personeel?)
+        
+        public Person(string voornaam, string achternaam, string email, string tel, int leeftijd, string wachtwoord, int modLevel, string tussenvoegsel = ""){
+            Voornaam = voornaam;
+            Tussenvoegsel = tussenvoegsel;
+            Achternaam = achternaam;
+            Email = email;
+            Tel_no = tel;
+            Leeftijd = leeftijd;
+            Wachtwoord = wachtwoord;
+            ModLevel = modLevel;
+        }
+
+        public void Present() {
+            if (Tussenvoegsel != "")
+                Console.WriteLine($"Naam: {Voornaam} {Tussenvoegsel} {Achternaam}");
+            else
+                Console.WriteLine($"Naam: {Voornaam} {Achternaam}");
+            Console.WriteLine($"Email: {Email}");
+            Console.WriteLine($"Telefoon nr.: {Tel_no}");
+            Console.WriteLine($"Leeftijd: {Leeftijd}");
+        }
+
+        ///<summary>Met deze method kan je de gegevens van een persoon veranderen</summary>
+        public void ChangePerson() {
+            this.Present();
+            string[] opties = new string[] {"Voornaam", "Tussenvoegsel", "Achternaam", "Email", "Telefoon nr", "Leeftijd"};
+            string choice = Resources.makeMenuInput("Verander je gegevens", "Kies een van de bovenstaande opties: ", opties, backbutton=true);
+            if (choice == "1") // verander je voornaam
+                Voornaam = Resources.input("Vul je voornaam in: ");
+            else if (choice == "2") // verander je tussenvoegsel
+                Tussenvoegsel = Resources.input("Vul je tussenvoegsel in: ");
+            else if (choice == "3") // verander je achternaam
+                Achternaam = Resources.input("Vul je achternaam in: ");
+            else if (choice == "4") // verander je email
+                Email =   Resources.inputRegex("Vul je email in: ", @"^\w+@\w+\.\w{2,3}$");
+            else if (choice == "5") // verander je tel nr
+                Tel_no = Resources.inputRegex("Vul je Telefoonnr in: ", @"^{06}\d{8}$");
+            else if (choice == "6")
+                Leeftijd = Resources.inputCheck("Vul je leeftijd in: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
+        }
+    }
+
+    class UserAdministration { // De adminstratie waar alle admins en users worden opgeslagen
+        Person[] Subscribers;
+        Person[] Admins;
+
+        public UserAdministration(Person[] subs, Person[] admins) {
+            Subscribers = subs;
+            Admins = admins;
         }
     }
 }
