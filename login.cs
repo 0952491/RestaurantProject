@@ -7,7 +7,7 @@ namespace LoginPage
 {
     class Login
     {
-        public static UserAdministration UserAdmin = new();
+        public static UserAdministration UserAdmin = new UserAdministration();
 
         public static void ReserveerHome() {
         // ik heb dit een reserveringsmenu gemaakt want we hadden al deze opties voor inloggen al op de homepagina (p.s. Jeroen)
@@ -67,12 +67,12 @@ namespace LoginPage
                 ReserveerHome();
             } else {  // de gebruiker registreert alle gegevens TODO: hier moeten alle gegevens van de gebruiker in json worden opgeslagen
                 if (sub) {
-                    Person newuser = new(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
+                    Person newuser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
                     UserAdmin.AddSub(newuser);
                     Resources.succesMessage("U bent succesvol geregistreerd!");
                     ReserveerHome();
                 } else {
-                    Person newadmin = new(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
+                    Person newadmin = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
                     UserAdmin.AddAdmin(newadmin);
                     Resources.succesMessage("U bent succesvol geregistreerd!");
                     ReserveerHome();

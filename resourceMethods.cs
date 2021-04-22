@@ -113,7 +113,7 @@ namespace resourceMethods{
         
         ///<summary>Backup alle data van een object naar een json file</summary>
         public static void writeJson(string filename, dynamic Obj){
-            setRightCwd();
+            setRightCwd();  
             string output = JsonConvert.SerializeObject(Obj, Formatting.Indented);
             File.WriteAllText($"Data/{filename}", output);
         }
