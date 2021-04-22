@@ -1,0 +1,96 @@
+{
+  "Voorgerechten": [
+    {
+      "Naam": "Tomatensoep (V)",
+      "Prijs": 3.0
+    },
+    {
+      "Naam": "Kruidenbouillon",
+      "Prijs": 4.0
+    },
+    {
+      "Naam": "Vissoep",
+      "Prijs": 3.2
+    },
+    {
+      "Naam": "Wisselsoep (soep van de dag)",
+      "Prijs": 3.0
+    },
+    {
+      "Naam": "Carpaccio van coquille met pstinaak",
+      "Prijs": 12.0
+    }
+  ],
+  "Hoofdgerechten": [
+    {
+      "Naam": "Bavette 200gr Amerikaans Black Angus",
+      "Prijs": 19.5
+    },
+    {
+      "Naam": "Picanha 250gr Australisch Angus",
+      "Prijs": 21.5
+    },
+    {
+      "Naam": "Tournedos Rossini 200gr",
+      "Prijs": 27.5
+    },
+    {
+      "Naam": "Patatje Stoofvlees (V)",
+      "Prijs": 15.0
+    },
+    {
+      "Naam": "Burger",
+      "Prijs": 12.0
+    },
+    {
+      "Naam": "Dorade",
+      "Prijs": 12.0
+    },
+    {
+      "Naam": "Cote De Boeuf",
+      "Prijs": 10.0
+    },
+    {
+      "Naam": "Truffelfriet (V)",
+      "Prijs": 15.0
+    },
+    {
+      "Naam": "Steak Tartare",
+      "Prijs": 22.5
+    },
+    {
+      "Naam": "Meat Carpaccio",
+      "Prijs": 11.75
+    },
+    {
+      "Naam": "Vitello Tonnato X Tonijn",
+      "Prijs": 9.75
+    },
+    {
+      "Naam": "Chioggia Biet (V)",
+      "Prijs": 10.5
+    },
+    {
+      "Naam": "Proeverij vanaf 2",
+      "Prijs": 27.9
+    }
+  ],
+  "Desserts": [
+    {
+      "Naam": "Creme Brulee",
+      "Prijs": 7.0
+    },
+    {
+      "Naam": "Slagroom wafel",
+      "Prijs": 4.0
+    },
+    {
+      "Naam": "Tiramisu",
+      "Prijs": 4.0
+    },
+    {
+      "Naam": "Bananasplit",
+      "Prijs": 3.0
+    }
+  ]
+}

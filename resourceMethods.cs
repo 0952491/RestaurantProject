@@ -65,6 +65,7 @@ namespace resourceMethods{
         ///<summary>Een method die een string[] maakt van alle nummers tussen de gegeven min en max (incl. max)</summary>
         public static string[] makeRangeArr(int min, int max, bool backbutton=false) {
             string[] returnArr;
+            int original_min = min;
             if (backbutton)
                 returnArr = new string[max - min + 2];
             else
@@ -73,7 +74,7 @@ namespace resourceMethods{
                 returnArr[i++] = $"{min}";
             }
             if (backbutton)
-                returnArr[max - min + 1] = "b";
+                returnArr[max - original_min + 1] = "b";
             return returnArr;
         }
 

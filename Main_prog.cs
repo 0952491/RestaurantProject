@@ -7,6 +7,8 @@ namespace Main_Restaurant
 {
     class Main_Menu  // hoofdmenu van de applicatie
     {
+        public static MenuKaart Menu = new MenuKaart();
+
         static void Main()
         {
             /*
@@ -26,10 +28,10 @@ namespace Main_Restaurant
                 string[] userActions = {"Registreren", "Inloggen", "Reserveren", "Menu bekijken", "Contact", "Bekijk beschikbare tafels", "Sluit applicatie"};
                 Resources.orderOptions("Welkom bij ons restaurant!", userActions);
                 optie = Resources.inputCheck("Voert u alstublieft een nummer in: ", Resources.makeRangeArr(1, userActions.Length));
-                if (optie == "1") { Login.Registreren(); }
-                else if (optie == "2") { Login.Inloggen(); }
+                /*if (optie == "1") { Login.Registreren(); }*/
+                if (optie == "2") { Login.Inloggen(); }
                 else if (optie == "3") { Login.ReserveerHome(); }
-                else if (optie == "4") { Menu.MenuChoices(); }
+                else if (optie == "4") { Menu.ShowGerechten(); }
                 else if (optie == "5") { ContactPage(); }
                 else if (optie == "6") { TableInit.MainTable(); }
                 else {  // de gebruiker koos de laatste optie dus sluit de applicatie
@@ -40,6 +42,7 @@ namespace Main_Restaurant
                 }
             }
         }
+
         public static void ContactPage()
         {
             Console.Clear();

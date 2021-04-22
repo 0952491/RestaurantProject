@@ -1,120 +1,174 @@
 using System;
-using System.Linq;
+using System.Text;
 using resourceMethods;
 
 
 namespace MenuPage
 {
-    class Menu
+    class Gerecht
     {
-        public static void MenuChoices()
+        public string Naam;
+        public double Prijs;
+
+        public Gerecht(string naam, double prijs)
         {
-            Console.Clear();
-            Resources.orderOptions("", new string[] {"Voorgerecht", "Hoofdgerecht", "Dessert"}, true);
-            string input = Resources.inputCheck("Kies een nummer: ", new string[] {"1", "2", "3", "b", "B"});
-            if (input == "1") { Voorgerecht(); }
-            else if (input == "2") { Hoofdgerecht(); }
-            else if (input == "3") { Dessert(); }
+            Naam = naam;
+            Prijs = prijs;
         }
-        public static void Voorgerecht()
-        {
-            Console.Clear();
-            Console.WriteLine("De voorgerecht:");
-            Console.WriteLine();
-            Console.WriteLine("Tomatensoep (V)                             3");
-            Console.WriteLine("Kruidenbouillon                             4");
-            Console.WriteLine("Vissoep                                     3.2");
-            Console.WriteLine("Wisselsoep (soep van de dag)                3");
-            Console.WriteLine("carpaccio van coquille met pastinaak        12");
-            string choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, maxTries: 1);
-            if (choice == "") {
-                Voorgerecht();
-            } else {  // gebruiker typte 'b' of 'B' om terug te gaan
-                MenuChoices();
+
+        /// <summary>Met deze method kan je de fields/attributes veranderen van je gerecht</summary>
+        public void ChangeGerecht() {
+            string choice = Resources.makeMenuInput("Verander je gerecht", "Kies een van de bovenstaande opties: ", new string[] { "Naam", "Prijs" });
+            if (choice == "1") {
+                Console.WriteLine($"Oude naam: {Naam}");
+                Naam = Resources.input("Geef de nieuwe naam door van het gerecht: ");
+            } else { 
+                Console.WriteLine($"Oude prijs: {Prijs}");
+                Prijs = Convert.ToDouble(Resources.inputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^\d+$"));
             }
         }
-        public static void Hoofdgerecht()
+    }
+
+    class MenuKaart {
+        public Gerecht[] Voorgerechten;
+        public Gerecht[] Hoofdgerechten;
+        public Gerecht[] Desserts;
+        private const string FILENAME = "Menu.json";
+
+        public MenuKaart() {
+            Voorgerechten = LoadGerechten(DataHandler.loadJson(FILENAME).Voorgerechten);
+            Hoofdgerechten = LoadGerechten(DataHandler.loadJson(FILENAME).Hoofdgerechten);
+            Desserts = LoadGerechten(DataHandler.loadJson(FILENAME).Desserts);
+        }
+
+
+        public void AdminMenu()
         {
-            Console.Clear();
-            Console.WriteLine("Hoofdgerecht:");
-            Console.WriteLine();
-            Console.WriteLine("BAVETTE 200gr Amerikaans Black Angus       19,50");
-            Console.WriteLine("PICANHA 250gr Australisch Angus            21.50");
-            Console.WriteLine("TOURNEDOS ROSSINI 200gr                    27.50");
-            Console.WriteLine("PATATJE STOOFVLEES (V)                     15.00");
-            Console.WriteLine("BURGER                                     17.00");
-            Console.WriteLine("DORADE                                     12.00");
-            Console.WriteLine("CÔTE DE BOEUF                              10.00");
-            Console.WriteLine("TRUFFELFRIET  (V)                          15.00");
-            Console.WriteLine("STEAK TARTARE                              22.50");
-            Console.WriteLine("MEAT CARPACCIO                             11.75");
-            Console.WriteLine("VITELLO TONNATO X TONIJN                   9.75");
-            Console.WriteLine("CHIOGGIA BIET  (V)                         10.50");
-            Console.WriteLine("PROEVERIJ vanaf 2                          27.90");
-            string choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, maxTries: 1);
-            if (choice == "") { 
-                Hoofdgerecht(); 
-            } else {  // gebruiker typte 'b' of 'B' om terug te gaan
-                MenuChoices();
+            while (true) {
+                Console.Clear();
+                string input = Resources.makeMenuInput("", "Kies een van de bovenstaande opties: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan", "Sla gerechten op" }, backbutton: true);
+                if (input == "1")
+                { // zie gerechten
+                    ShowGerechten();
+                    Resources.input("Klik op enter om verder te gaan");
+                }
+                else if (input == "2")
+                { // voeg een gerecht toe
+                    AddGerecht(MakeGerecht());
+                }
+                else if (input == "3")
+                { // pas een gerecht aan
+                    string[] alle_namen = GetNames();
+                    string num = Resources.makeMenuInput("Beschikbare Gerechten", "Kies een van de bovenstaande gerechten: ", alle_namen);
+                    string naam = alle_namen[Convert.ToInt32(num) - 1];
+                    GetGerecht(naam).ChangeGerecht();
+                }
+                else if (input == "4")
+                { // sla een gerecht op
+                    Save();
+                } else
+                {
+                    break;
+                }
             }
         }
-        public static void Dessert()
-        {
-            Console.Clear();
-            Console.WriteLine("hello, welcome to Dessert!!!");
-            string choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, "", maxTries: 1);
-            if (choice == "") { 
-                Dessert(); 
-            } else {  // gebruiker typte 'b' of 'B' om terug te gaan
-                MenuChoices();
+
+        /// <summary>slaat de MenuKaart op in "Menu.json" file in Data folder</summary>
+        public void Save() {
+            DataHandler.writeJson(FILENAME, this);
+        }
+
+        /// <summary>Laad alle gegeven gerechten naar een Gerecht[] array</summary>
+        public Gerecht[] LoadGerechten(dynamic gerechten) {
+            return gerechten.ToObject<Gerecht[]>();
+        }
+
+        /// <summary>Print een geordend menu uit van een array van specifieke gerechten</summary>
+        public void ShowGerechten() {
+            while (true) {
+                Console.OutputEncoding = Encoding.UTF8;
+                Gerecht[] gerechtArr = GetCategorie();
+                if (gerechtArr == null) {
+                    break;
+                }
+                Console.Clear();
+                foreach (Gerecht g in gerechtArr) {
+                    string display = $"{g.Naam}{Resources.drawString(100 - g.Naam.Length, " ")}\u20ac{g.Prijs}";
+                    Console.WriteLine(display);
+                }
+                Resources.input("Typ enter om terug te gaan");
             }
         }
-    } 
-    // class Gerecht
-    // {
-    //     string Naam;
-    //     int Prijs;
 
-    //     public Gerecht(string naam, int prijs)
-    //     {
-    //         Naam = naam;
-    //         Prijs = prijs
-    //     }
+        /// <summary>Maakt een gerecht object</summary>
+        public Gerecht MakeGerecht() {
+            string naam = Resources.input("Geef de naam door van het gerecht: ");
+            int prijs = Convert.ToInt32(Resources.inputRegex("Geef de prijs door van het gerecht: ", @"^\d+$")); ;
+            return new Gerecht(naam, prijs);
+        }
 
-        
-    //     // foreach (Gerecht g in Menu.HoofdGerechten) {
-    //     //   Console.WriteLine($"{g.Naam}\t\t\t{g.Prijs} ")
-    //     // }
-    // }
+        /// <summary>Returned een string array met alle namen van de gekozen categorie gerechten</summary>
+        public string[] GetNames() {
+            Gerecht[] gerechten = GetCategorie();
+            string[] namen = new string[gerechten.Length];
+            for (int i = 0; i < namen.Length; i++) {
+                namen[i] = gerechten[i].Naam;
+            }
+            return namen;
+        }
 
-    // MenuKaart menu = DataHandler.loadJson("menu.json")
-    // class MenuKaart { 
-    //     public Gerecht[] Hoofdgerechten;
+        /// <summary>Loopt over alle gerechten van de categorie arrays</summary>
+        private Gerecht loopGerechten(string naam, Gerecht[] gerechtArr) {
+            foreach (Gerecht g in gerechtArr)
+            {
+                if (g.Naam == naam)
+                {
+                    return g;
+                }
+            }
+            return null;
+        }
 
-    //     public MenuKaart() { 
-    //         Hoofdgerechten = DataHandler.loadJson("menu.json").Hoofdgerechten;
-    //     }
+        public Gerecht GetGerecht(string naam) {
+            Gerecht voor = loopGerechten(naam, Voorgerechten);
+            Gerecht hoofd = loopGerechten(naam, Hoofdgerechten);
+            Gerecht dessert = loopGerechten(naam, Desserts);
+            return voor != null ? voor : hoofd != null ? hoofd : dessert;
+        }
 
-    //     public void addGerecht(Gerecht gerecht) 
-    //     { 
-    //         Gerecht[] nieuweHoofd = new Gerecht[Hoofdgerechten.Length + 1];
-    //         for (int i = 0; i < nieuweHoofd.Length; i++)
-    //         { 
-    //             nieuweHoofd[i] = Hoofdgerechten[i];
-    //         }
-    //         nieuweHoofd[Hoofdgerechten.Length] = gerecht;
-    //         Hoofdgerechten = nieuweHoofd;
-    //     }
+        /// <summary>Returned een van de Gerecht[] categorieen gebaseerd op welke keuze er gemaakt word</summary>
+        public Gerecht[] GetCategorie() {
+            Console.Clear();
+            string choice = Resources.makeMenuInput($"Kies een categorie", "Kies een van de bovenstaande opties: ", new string[] { "Voorgerechten", "Hoofdgerechten", "Desserts" }, backbutton: true);
+            return choice == "1" ? Voorgerechten : choice == "2" ? Hoofdgerechten : choice == "3" ? Desserts : null;
+        }
 
-    //     public void removeGerecht(Gerecht gerecht)
-    //     {
-    //         Gerecht[] nieuweHoofd = new Gerecht[Hoofdgerechten.Length - 1];
-    //         for (int i = 0, j = 0; i < nieuweHoofd.Length; i++)
-    //         {
-    //             nieuweHoofd[i] = Hoofdgerechten[j++];
-                
+        /// <summary>Voegt een nieuw gerecht toe aan een bepaalde Menu array</summary>
+        public void AddGerecht(Gerecht gerecht)
+        {
+            Gerecht[] gerechtArr = GetCategorie();
+            Gerecht[] nieuwArr = new Gerecht[gerechtArr.Length + 1];
+            for (int i = 0; i < gerechtArr.Length; i++)
+            { 
+                nieuwArr[i] = gerechtArr[i];
+            }
+            nieuwArr[gerechtArr.Length] = gerecht;
+            if (gerechtArr == Voorgerechten)
+                Voorgerechten = nieuwArr;
+            else if (gerechtArr == Hoofdgerechten)
+                Hoofdgerechten = nieuwArr;
+            else
+                Desserts = nieuwArr;
+        }
 
-    //         }
-    //     }
-    // }
+        /// <summary>Verwijdert een gerecht uit een bepaalde Menu array</summary>
+        public void RemoveGerecht(Gerecht gerecht) {
+            Gerecht[] nieuwArr = new Gerecht[Hoofdgerechten.Length - 1];
+            for (int i = 0, j = 0; i < nieuwArr.Length; i++)
+            {
+                nieuwArr[i] = Hoofdgerechten[j] == gerecht ? Hoofdgerechten[j+=2] : Hoofdgerechten[j++];
+            }
+            Hoofdgerechten = nieuwArr;
+        }
+    }
 }

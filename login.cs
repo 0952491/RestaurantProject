@@ -15,7 +15,7 @@ namespace LoginPage
             string[] options = new string[] {"Inloggen", "Registreren", "Reserveer als Gast", "Backup gebruikers"};
             string input = Resources.makeMenuInput("Hoe wilt u reserveren?", "Kies een nummer: ", options, backbutton: true);
             if (input == "1") { Inloggen(true); }
-            else if (input == "2") { Registreren(true); }
+            /*else if (input == "2") { Registreren(true); }*/
             else if (input == "3") { Gast(); }
             else if (input == "4") { UserAdmin.Save(); } // deze method hoort hier niet maar dit is tijdelijk
         }
@@ -48,38 +48,6 @@ namespace LoginPage
 
         }
 
-        public static void Registreren(bool sub=true)
-        {
-            Console.Clear();
-            Console.WriteLine("Registreren\n");
-            // veel van deze inputs kunnen later gechecked worden met een regex (https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex?view=net-5.0)
-            string voornaam = Resources.inputRegex("Voornaam: ", @"\w+");
-            string tussenvoegsel = Resources.input("Tussenvoegsel: ");
-            string achternaam = Resources.inputRegex("Achternaam: ", @"\w+");
-            string email = Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
-            string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$"); 
-            string geboortedatum = Resources.inputRegex("Geboortedatum(dd-mm-yyyy): ", @"\d{2}\-\d{2}\-\d{4}");
-            string wachtwoord = Resources.inputRegex("Wachtwoord: ", @"\w{8}");
-            string inputHerhaal = Resources.inputCheck("Herhaal Wachtwoord: ", new string[] {wachtwoord}, "Wachtwoorden komen niet overeen", 3);
-            if (inputHerhaal == "") {  // het herhaalde wachtwoord is {int maxtries} te vaak ingevoerd
-                Resources.errorMessage("Te vaak een verkeerd wachtwoord uitgeprobeerd");
-                Resources.errorMessage("U wordt teruggebracht naar de vorige pagina");
-                ReserveerHome();
-            } else {  // de gebruiker registreert alle gegevens TODO: hier moeten alle gegevens van de gebruiker in json worden opgeslagen
-                if (sub) {
-                    Person newuser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
-                    UserAdmin.AddSub(newuser);
-                    Resources.succesMessage("U bent succesvol geregistreerd!");
-                    ReserveerHome();
-                } else {
-                    Person newadmin = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
-                    UserAdmin.AddAdmin(newadmin);
-                    Resources.succesMessage("U bent succesvol geregistreerd!");
-                    ReserveerHome();
-                }
-            }
-        }
-
         public static void Gast()
         {
             Console.Clear();
@@ -98,6 +66,8 @@ namespace LoginPage
             Console.ReadLine();
         }
     }
+
+
     class Person { 
         public string Voornaam;
         public string Tussenvoegsel = "";
@@ -119,6 +89,7 @@ namespace LoginPage
             ModLevel = modLevel;
         }
 
+        /// <summary>Presenteert alle zichtbare attributen van de Person</summary>
         public void Present() {
             if (Tussenvoegsel != "")
                 Console.WriteLine($"Naam: {Voornaam} {Tussenvoegsel} {Achternaam}");
@@ -153,6 +124,7 @@ namespace LoginPage
                 Leeftijd = Resources.inputCheck("Vul je leeftijd in: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
         }
     }
+
 
     class UserAdministration { // De adminstratie waar alle admins en users worden opgeslagen
         public Person[] Subscribers;
@@ -283,6 +255,60 @@ namespace LoginPage
                     returnUser = user;
             }
             return returnUser;
+        }
+
+        /// <summary>Registreer een nieuwe gebruiker</summary>
+        public void Register(bool admin) { // als admin == true dan registreer een admin
+            Person newUser;
+            Console.Clear();
+            string voornaam = Resources.inputRegex("Voornaam: ", @"\w+");
+            string tussenvoegsel = Resources.input("Tussenvoegsel: ");
+            string achternaam = Resources.inputRegex("Achternaam: ", @"\w+");
+            string email = Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+            string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$");
+            string geboortedatum = Resources.inputRegex("Geboortedatum(dd-mm-yyyy): ", @"\d{2}\-\d{2}\-\d{4}");
+            string wachtwoord = Resources.inputRegex("Wachtwoord: ", @"\w{8}");
+            string inputHerhaal = Resources.inputCheck("Herhaal Wachtwoord: ", new string[] { wachtwoord }, "Wachtwoorden komen niet overeen", 3);
+            if (admin && inputHerhaal != "") {
+                newUser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
+                AddAdmin(newUser);
+                Resources.succesMessage("Succesvol Geregistreerd!");
+                Resources.input("Druk op enter om verder te gaan");
+            }
+            else if (!admin && inputHerhaal != "") {
+                newUser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
+                AddSub(newUser);
+                Resources.succesMessage("Succesvol Geregistreerd!");
+                Resources.input("Druk op enter om verder te gaan");
+            }
+            else
+                newUser = null;
+        }
+
+       /* public Person Login() { 
+            
+        }*/
+
+        /// <summary>Een menu voor wanneer een subscriber is ingelogd</summary>
+        public void MainMenu(Person user)
+        {
+            while (true) { // TODO: JEROEN WAS HIER BEZIG, NOG NIET AF!!!!
+                string message;
+                if (user.Tussenvoegsel == "")
+                    message = $"Ingelogd als {user.Voornaam} {user.Achternaam}";
+                else
+                    message = $"Ingelogd als {user.Voornaam} {user.Tussenvoegsel} {user.Achternaam}";
+                if (user.IsAdmin()) {
+                    string[] opties = new string[] {"Maak een reservering", "Verwijder een reservering", "Bekijk reservering", "Bekijk menu", "Wijzig profiel"};
+                    Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties, backbutton: true);
+                }
+                else {
+                    string[] opties = new string[] { };
+                    Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties, backbutton: true);
+                }
+
+            }
+
         }
     }  
 }
