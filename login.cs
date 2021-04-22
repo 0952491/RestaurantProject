@@ -47,10 +47,10 @@ namespace LoginPage
             }
 
         }
+
         public static void Registreren(bool sub=true)
         {
             Console.Clear();
-            var subs = UserAdmin;
             Console.WriteLine("Registreren\n");
             // veel van deze inputs kunnen later gechecked worden met een regex (https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regex?view=net-5.0)
             string voornaam = Resources.inputRegex("Voornaam: ", @"\w+");
@@ -79,6 +79,7 @@ namespace LoginPage
                 }
             }
         }
+
         public static void Gast()
         {
             Console.Clear();
@@ -89,6 +90,7 @@ namespace LoginPage
             // hier moet later ook weer een line komen die de gegevens (email en tel.nr.) opslaat in json
             Reserveren();
         }
+        
         public static void Reserveren()
         {
             Console.Clear();
@@ -216,6 +218,26 @@ namespace LoginPage
             }
         }
 
+        /// <summary>Verwijderd een Admin uit de Admin array</summary>
+        public void RemoveAdmin(Person user) {
+            if (Exists(user) && user.IsAdmin())
+            {
+                Person[] newAdmins = new Person[Admins.Length - 1];
+                for (int i = 0; i < Admins.Length; i++)
+                {
+                    if (Admins[i] == user)
+                    {
+                        continue;
+                    }
+                    newAdmins[i] = Admins[i];
+                }
+                Admins = newAdmins;
+            } else {
+                Resources.errorMessage("That admin doesn't exist");
+                Resources.input("Press enter to continue");
+            }
+        }
+
         /// <summary>Checked of de passed user bestaat gebaseerd op alle mails (van Admins en Subscribers)</summary>
         public bool Exists(Person user) { 
             return GetMails().Contains(user.Email);
@@ -247,6 +269,20 @@ namespace LoginPage
                     pass = user.Wachtwoord;
             }
             return pass;
+        }
+
+        /// <summary>Returneed een Person object uit een van de arrays gebaseerd op de gegeven mail</summary>
+        public Person GetUser(string mail) {
+            Person returnUser = null;
+            foreach (Person user in Subscribers) {
+                if (user.Email == mail)
+                    returnUser = user;
+            }
+            foreach (Person user in Admins) {
+                if (user.Email == mail)
+                    returnUser = user;
+            }
+            return returnUser;
         }
     }  
 }
