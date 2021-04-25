@@ -8,6 +8,7 @@ namespace TablePage
 
         public static void MainTable() {
             DinnerRoom dinnerroom = new DinnerRoom();
+            dinnerroom.VoorVier[2].occupied = true;
             dinnerroom.DrawMap();
             Resources.input("Druk op enter om verder te gaan");
         }
@@ -16,7 +17,7 @@ namespace TablePage
 
     class DinnerRoom
     {
-        public string Tijdvak;
+        public string Tijdvak; // TODO: zorg dat tijdvak en datum moeten worden ingevuld bij het maken van een dinnerroom object, mss dat deze ook een datetime object kunnen worden
         public string Datum;
         public Table[] VoorTwee; // tafelnr eindigt op A
         public Table[] VoorVier; // eindigt op B
@@ -32,18 +33,15 @@ namespace TablePage
             MakeNew();
         }
 
-        /// <summary>Hulp voor de constructor, maakt een alle Table[] fields van het DinnerRoom Object</summary>
+        /// <summary>Hulp voor de constructor, vult alle Table[] fields van de DinnerRoom Object met Table Objects</summary>
         public void MakeNew()
         {
-            for (int i = 0; i < VoorTwee.Length; i++) {
+            for (int i = 0; i < VoorTwee.Length; i++)
                 VoorTwee[i] = new Table(i + 1, 2);
-            }
-            for (int i = 0; i < VoorVier.Length; i++) { 
+            for (int i = 0; i < VoorVier.Length; i++)
                 VoorVier[i] = new Table(i + 1, 4);
-            }
-            for (int i = 0; i < VoorZes.Length; i++) {
+            for (int i = 0; i < VoorZes.Length; i++)
                 VoorZes[i] = new Table(i + 1, 6);
-            }
         }
 
         /// <summary>Returned een Table Object gebaseerd op het gegeven tafel nummer</summary>
@@ -57,32 +55,21 @@ namespace TablePage
             return newTable;
         }
 
-        /// <summary>Yield een Table Object voor elke beschikbare tafel</summary>
-        public System.Collections.Generic.IEnumerable<Table> AvailableTafels() { 
-            foreach (Table tafel in VoorTwee) {
-                if (!tafel.occupied)
-                    yield return tafel;
-            }
+        /// <summary>Yield een Table Object voor elke tafel</summary>
+        public System.Collections.Generic.IEnumerable<Table> AllTafels() { 
+            foreach (Table tafel in VoorTwee)
+                yield return tafel;
             foreach (Table tafel in VoorVier)
-            {
-                if (!tafel.occupied)
-                    yield return tafel;
-            }
+                yield return tafel;
             foreach (Table tafel in VoorZes)
-            {
-                if (!tafel.occupied)
-                    yield return tafel;
-            }
+                yield return tafel;
         }
 
-        /// <summary>Returned een array met alle beschikbare tafelnummers</summary>
-        public string[] GetBeschikbareTafels() {
-            int newlen = 0;
-            foreach (Table tafel in AvailableTafels())
-                newlen++;
-            string[] table_numbers = new string[newlen];
+        /// <summary>Returned een string array met alle tafelnummers</summary>
+        public string[] GetTafels() {
+            string[] table_numbers = new string[VoorTwee.Length + VoorVier.Length + VoorZes.Length];
             int index = 0;
-            foreach (Table tafel in AvailableTafels())
+            foreach (Table tafel in AllTafels())
                 table_numbers[index++] = tafel.table_num;
             return table_numbers;
         }
@@ -103,7 +90,6 @@ namespace TablePage
             for (int row = 0; row < VoorVier[0].TableArr().Length / 2; row++) {
                 for (int col = 0, index = 1; col < VoorVier.Length + 1; col++) {
                     if (col == 2 || col == 5) {
-
                         Console.ForegroundColor = VoorVier[index].occupied ? ConsoleColor.Red : ConsoleColor.Green;
                         Console.Write(VoorVier[index].TableArr()[row]);
                         index += 2;
@@ -118,15 +104,14 @@ namespace TablePage
             // Maakt de bovenste helft van de overgebleven vierpersoonstafels en de onderste helft van voorgaande tafels
             for (int row = 0; row < VoorVier[0].TableArr().Length / 2; row++){
                 for (int col = 1, index = 0; col < 12; col++){
-                    if (col % 2 != 0){
+                    if (index < VoorVier.Length)
+                        Console.ForegroundColor = VoorVier[index].occupied ? ConsoleColor.Red : ConsoleColor.Green;
+                    if (col % 2 != 0)
                         Console.Write(Resources.drawString(7, " "));
-                    } else if (col % 4 == 0) {
-                        Console.ForegroundColor = VoorVier[index].occupied ? ConsoleColor.Red : ConsoleColor.Green;
-                        Console.Write(VoorVier[index++].TableArr()[row + VoorVier[0].TableArr().Length / 2]);
-                    } else {
-                        Console.ForegroundColor = VoorVier[index].occupied ? ConsoleColor.Red : ConsoleColor.Green;
+                    else if (col % 4 == 0)                   
+                        Console.Write(VoorVier[index].TableArr()[row + VoorVier[index++].TableArr().Length / 2]);
+                    else
                         Console.Write(VoorVier[index++].TableArr()[row]);
-                    }
                 }
                 Console.Write("\n");
             }
@@ -142,7 +127,7 @@ namespace TablePage
                         Console.Write(line); indexT3++;
                     } else if (col % 2 == 0) {
                         Console.ForegroundColor = VoorVier[indexT2].occupied ? ConsoleColor.Red : ConsoleColor.Green;
-                        Console.Write(VoorVier[indexT2].TableArr()[row + VoorVier[0].TableArr().Length / 2]);
+                        Console.Write(VoorVier[indexT2].TableArr()[row + VoorVier[indexT2].TableArr().Length / 2]);
                         indexT2 += 2;
                     }
                 }
@@ -152,19 +137,25 @@ namespace TablePage
             // Maakt het laatste deel van de zespersonentafels
             for (int row = 1; row < VoorZes[0].TableArr().Length; row++) {
                 for (int col = 1, index = 0; col < 6; col++) {
-                    if (col % 2 != 0) {
-                        Console.Write(Resources.drawString(28, " "));
-                    } else {
+                    if (index < VoorZes.Length)
                         Console.ForegroundColor = VoorZes[index].occupied ? ConsoleColor.Red : ConsoleColor.Green;
+                    if (col % 2 != 0)
+                        Console.Write(Resources.drawString(28, " "));
+                    else
                         Console.Write(VoorZes[index++].TableArr()[row]);
-                    }
                 }
                 Console.Write("\n");
             }
             Console.ForegroundColor = ConsoleColor.White;
         }
         
-        // TODO: Maak een method die met 1 string parameter (het tafelnummer) die het gegeven tafelnr op occupied zet (tip: gebruik de GetTafel method) 
+        /// <summary>Afhankelijk van het gegeven tafel nummer zet een tafel op occupied</summary>
+        public void Occupy(string tafelNr) {
+            if (GetTafel(tafelNr).isAvailable())
+                GetTafel(tafelNr).occupied = true;
+            else
+                Resources.errorMessage($"Tafel {tafelNr} is helaas niet beschikbaar");
+        }
     }
         
    class Table 
@@ -179,6 +170,11 @@ namespace TablePage
             table_num = t_num.ToString();
             table_num += chairs == 2 ? "A" : chairs == 4 ? "B" : "C";
             occupied = false;
+        }
+
+        /// <summary>Returned het tegenovergestelde van occupied, gemaakt voor makkelijker lezen</summary>
+        public bool isAvailable() {
+            return !occupied;
         }
 
         /// <summary>Maakt een string van de tafel</summary>

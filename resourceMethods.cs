@@ -45,6 +45,8 @@ namespace resourceMethods{
                 errorMessage(errorprompt);
                 totalTries++;
                 if (maxTries != 0 && totalTries >= maxTries) {
+                    errorMessage($"Maximaal aantal pogingen {maxTries} bereikt, druk op enter om verder te gaan");
+                    input("");
                     answer = "";
                     break;
                 }

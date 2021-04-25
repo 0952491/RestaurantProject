@@ -41,33 +41,28 @@ namespace MenuPage
             Desserts = LoadGerechten(DataHandler.loadJson(FILENAME).Desserts);
         }
 
-
+        /// <summary>Een method voor het weergeven van alle opties die de admin heeft voor het menu</summary>
         public void AdminMenu()
         {
             while (true) {
                 Console.Clear();
                 string input = Resources.makeMenuInput("", "Kies een van de bovenstaande opties: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan", "Sla gerechten op" }, backbutton: true);
-                if (input == "1")
-                { // zie gerechten
+                if (input == "1") { // zie gerechten
                     ShowGerechten();
                     Resources.input("Klik op enter om verder te gaan");
                 }
-                else if (input == "2")
-                { // voeg een gerecht toe
+                else if (input == "2") { // voeg een gerecht toe
                     AddGerecht(MakeGerecht());
                 }
-                else if (input == "3")
-                { // pas een gerecht aan
+                else if (input == "3") { // pas een gerecht aan
                     string[] alle_namen = GetNames();
                     string num = Resources.makeMenuInput("Beschikbare Gerechten", "Kies een van de bovenstaande gerechten: ", alle_namen);
                     string naam = alle_namen[Convert.ToInt32(num) - 1];
                     GetGerecht(naam).ChangeGerecht();
                 }
-                else if (input == "4")
-                { // sla een gerecht op
+                else if (input == "4") { // sla een gerecht op
                     Save();
-                } else
-                {
+                } else {
                     break;
                 }
             }
@@ -88,12 +83,11 @@ namespace MenuPage
             while (true) {
                 Console.OutputEncoding = Encoding.UTF8;
                 Gerecht[] gerechtArr = GetCategorie();
-                if (gerechtArr == null) {
+                if (gerechtArr == null)
                     break;
-                }
                 Console.Clear();
                 foreach (Gerecht g in gerechtArr) {
-                    string display = $"{g.Naam}{Resources.drawString(100 - g.Naam.Length, " ")}\u20ac{g.Prijs}";
+                    string display = $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}";
                     Console.WriteLine(display);
                 }
                 Resources.input("Typ enter om terug te gaan");
@@ -111,9 +105,8 @@ namespace MenuPage
         public string[] GetNames() {
             Gerecht[] gerechten = GetCategorie();
             string[] namen = new string[gerechten.Length];
-            for (int i = 0; i < namen.Length; i++) {
+            for (int i = 0; i < namen.Length; i++)
                 namen[i] = gerechten[i].Naam;
-            }
             return namen;
         }
 
@@ -122,9 +115,7 @@ namespace MenuPage
             foreach (Gerecht g in gerechtArr)
             {
                 if (g.Naam == naam)
-                {
                     return g;
-                }
             }
             return null;
         }
@@ -149,9 +140,7 @@ namespace MenuPage
             Gerecht[] gerechtArr = GetCategorie();
             Gerecht[] nieuwArr = new Gerecht[gerechtArr.Length + 1];
             for (int i = 0; i < gerechtArr.Length; i++)
-            { 
                 nieuwArr[i] = gerechtArr[i];
-            }
             nieuwArr[gerechtArr.Length] = gerecht;
             if (gerechtArr == Voorgerechten)
                 Voorgerechten = nieuwArr;
@@ -165,9 +154,7 @@ namespace MenuPage
         public void RemoveGerecht(Gerecht gerecht) {
             Gerecht[] nieuwArr = new Gerecht[Hoofdgerechten.Length - 1];
             for (int i = 0, j = 0; i < nieuwArr.Length; i++)
-            {
                 nieuwArr[i] = Hoofdgerechten[j] == gerecht ? Hoofdgerechten[j+=2] : Hoofdgerechten[j++];
-            }
             Hoofdgerechten = nieuwArr;
         }
     }

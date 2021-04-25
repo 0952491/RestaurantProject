@@ -14,56 +14,9 @@ namespace LoginPage
             Console.Clear();
             string[] options = new string[] {"Inloggen", "Registreren", "Reserveer als Gast", "Backup gebruikers"};
             string input = Resources.makeMenuInput("Hoe wilt u reserveren?", "Kies een nummer: ", options, backbutton: true);
-            if (input == "1") { Inloggen(true); }
-            /*else if (input == "2") { Registreren(true); }*/
-            else if (input == "3") { Gast(); }
-            else if (input == "4") { UserAdmin.Save(); } // deze method hoort hier niet maar dit is tijdelijk
-        }
+            Resources.errorMessage("Dit menu voor reserveren werkt nog niet");
+            Resources.input("Druk op enter om verder te gaan");
 
-        public static void Inloggen(bool reserveren=false)
-        {
-            Console.Clear();
-            string[] registeredEmails = UserAdmin.GetMails();  // laad later alle mails uit de json file naar deze variable (mss met een for loop)
-            Console.WriteLine("Login Pagina\n");
-            int tries = 3;
-            string loginMail = Resources.inputCheck("Email: ", registeredEmails, "Email incorrect", tries);
-            string password = UserAdmin.GetPass(loginMail);
-            string loginPass = loginMail != "" ? Resources.inputCheck("Wachtwoord: ", new string[] {password}, "Wachtwoord incorrect", tries) : "Geen wachtwoord";
-    
-            if (loginMail == "") {  // de gebruiker heeft 3 keer een verkeerde mail opgegeven  
-                Resources.errorMessage($"U heeft {tries} keer een incorrecte mail opgegeven");
-                Resources.errorMessage("U wordt teruggebracht naar de vorige pagina");
-                ReserveerHome();
-            } else if (loginPass == "") {  // de gebruiker heeft 3 keer een incorrect wachtwoord opgegeven
-                Resources.errorMessage($"U heeft {tries} keer een incorrect wachtwoord voor email {loginMail} opgegeven");
-                Resources.errorMessage("U wordt teruggebracht naar de vorige pagina");
-                ReserveerHome();
-            } else if (reserveren) {  // als de parameter reserveren true is ga je meteen door naar reserveren
-                Resources.succesMessage("U bent succesvol ingelogd!");  
-                Reserveren();
-            } else { // als je succesvol inlogt ga je naar je eigen pagina waar je een overzicht hebt van je reserveringen en meer
-                Resources.succesMessage("U bent succesvol ingelogd!");
-                ReserveerHome(); 
-            }
-
-        }
-
-        public static void Gast()
-        {
-            Console.Clear();
-            Console.WriteLine("Gast\n");
-            // hier geldt hetzelfde als voor de vorige method wat betreft de regex
-            string Email = Resources.input("Email: ");
-            string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^06\d{8}$"); 
-            // hier moet later ook weer een line komen die de gegevens (email en tel.nr.) opslaat in json
-            Reserveren();
-        }
-        
-        public static void Reserveren()
-        {
-            Console.Clear();
-            Console.WriteLine("Welkom bij restaurant Wiqui");
-            Console.ReadLine();
         }
     }
 
@@ -147,6 +100,62 @@ namespace LoginPage
             DataHandler.writeJson(FILENAME, this);
         }
 
+        /// <summary>Het menu voor de administrator</summary>
+        public void AdminMenu(Person admin) {
+            string[] options = new string[] { "Registreer Gebruiker", "Registreer Admin", "Zie alle geregistreerde mails", "Wijzig profiel", "Verwijder Gebruiker", "Verwijder Admin", "Verwijder eigen account"};
+            while (true) {
+                Save();
+                string choice = Resources.makeMenuInput("Beheer Gebruikers", "Kies een van de bovenstaande opties: ", options, backbutton: true);
+                if (choice == "1")
+                    Registreren(false);
+                else if (choice == "2")
+                    Registreren(true);
+                else if (choice == "3") {
+                    foreach (string mail in GetMails())
+                        Console.WriteLine(mail);
+                }
+                else if (choice == "4")
+                    admin.ChangePerson();
+                else if (choice == "5")
+                    RemoveUser(false, admin);
+                else if (choice == "6")
+                    RemoveUser(true, admin);
+                else if (choice == "7") {
+                    RemoveAdmin(admin);
+                    Save();
+                    break;
+                }
+                else
+                    break;
+            }
+        }
+        
+        /// <summary>Een menu voor normale gebruikers (geen admins)</summary>
+        public void DefaultMenu(Person user) {
+            string[] options = new string[] { "Zie account informatie", "Wijzig profiel", "Verwijder eigen account" };
+            while (true) {
+                Save();
+                string choice = Resources.makeMenuInput("Gebruiker menu", "Kies een van bovenstaande opties", options, backbutton: true);
+                if (choice == "1")
+                    user.Present();
+                else if (choice == "2")
+                    user.ChangePerson();
+                else if (choice == "3") { // als de method 'RemoveSub' later word verplaatst naar Main menu mag deze clause weg
+                    string passcheck = Resources.inputCheck("Voer je wachtwoord in om je account te verwijderen: ", new string[] { user.Wachtwoord }, "Wachtwoord incorrect", 3);
+                    if (passcheck == "")
+                        continue;
+                    string confirm = Resources.inputCheck("Weet je zeker dat je je account wil verwijderen? (j/n): ", new string[] { "j", "n", "ja", "nee" }, "Kies alsjeblieft uit ja of nee");
+                    if (new string[] { "j", "ja" }.Contains(confirm)) {
+                        RemoveSub(user);
+                        Save();
+                        break;
+                    }
+                }
+                else
+                    break;
+            }
+        }
+
         /// <summary>Voegt een Subscriber toe aan Subscribers array</summary>
         public void AddSub(Person sub) {
             if (!Exists(sub) && !sub.IsAdmin()) {
@@ -173,8 +182,31 @@ namespace LoginPage
             }
         }
 
+        /// <summary>Geeft een prompt en verwijderd gebruiker gebaseerd op email, mag alleen worden gebruikt door admins</summary>
+        public void RemoveUser(bool adminRemove, Person user) {
+            string removeMail = Resources.inputCheck("Email van te verwijderen gebruiker: ", GetMails(), "Email incorrect", 3);
+            if (removeMail == "")
+                return;
+            if (removeMail == user.Email) {
+                Resources.errorMessage("If you want to delete your own account please pick option 7 from the administrator menu");
+                return;
+            }
+            if (!adminRemove) { // if no admin will be removed he/she doesn't need to have the password of that user
+                RemoveSub(GetUser(removeMail));
+                return;
+            }
+            string removePass = Resources.inputCheck("Wachtwoord van de te verwijderen gebruiker: ", new string[] { GetPass(removeMail) }, "Wachtwoord incorrect", 3);
+            if (removePass == "") // wachtwoord was 3 keer verkeerd ingevoerd
+                return;
+            if (adminRemove)
+                RemoveAdmin(GetUser(removeMail));
+            else
+                RemoveSub(GetUser(removeMail));
+        }
+
         /// <summary>Verwijderd een Subscriber uit de Subscribers array</summary>
         public void RemoveSub(Person user) {
+            // TODO: later in deze method ook de user verwijderen uit de reserveeradministratie of deze method naar main menu verplaatsen
             if (Exists(user) && !user.IsAdmin()) {
                 Person[] newSubscribers = new Person[Subscribers.Length - 1];
                 for (int i = 0; i < Subscribers.Length; i++) { 
@@ -185,28 +217,25 @@ namespace LoginPage
                 }
                 Subscribers = newSubscribers;
             } else { 
-                Resources.errorMessage("That subscriber doesn't exist");
-                Resources.input("Press enter to continue");
+                Resources.errorMessage("Die gebruiker bestaat niet");
+                Resources.input("Druk op enter om verder te gaan");
             }
         }
 
         /// <summary>Verwijderd een Admin uit de Admin array</summary>
         public void RemoveAdmin(Person user) {
-            if (Exists(user) && user.IsAdmin())
-            {
+            if (Exists(user) && user.IsAdmin()) {
                 Person[] newAdmins = new Person[Admins.Length - 1];
-                for (int i = 0; i < Admins.Length; i++)
-                {
-                    if (Admins[i] == user)
-                    {
+                for (int i = 0; i < Admins.Length; i++) {
+                    if (Admins[i] == user) {
                         continue;
                     }
                     newAdmins[i] = Admins[i];
                 }
                 Admins = newAdmins;
             } else {
-                Resources.errorMessage("That admin doesn't exist");
-                Resources.input("Press enter to continue");
+                Resources.errorMessage("Die admin bestaat niet");
+                Resources.input("Druk op enter om verder te gaan");
             }
         }
 
@@ -258,57 +287,49 @@ namespace LoginPage
         }
 
         /// <summary>Registreer een nieuwe gebruiker</summary>
-        public void Register(bool admin) { // als admin == true dan registreer een admin
+        public void Registreren(bool admin) { // als admin == true dan registreer een admin
             Person newUser;
             Console.Clear();
             string voornaam = Resources.inputRegex("Voornaam: ", @"\w+");
             string tussenvoegsel = Resources.input("Tussenvoegsel: ");
             string achternaam = Resources.inputRegex("Achternaam: ", @"\w+");
             string email = Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+            while (GetMails().Contains(email)) {
+                Resources.errorMessage($"{email} is al geregistreerd, probeer alstublieft opnieuw");
+                Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+            }
             string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$");
             string geboortedatum = Resources.inputRegex("Geboortedatum(dd-mm-yyyy): ", @"\d{2}\-\d{2}\-\d{4}");
             string wachtwoord = Resources.inputRegex("Wachtwoord: ", @"\w{8}");
             string inputHerhaal = Resources.inputCheck("Herhaal Wachtwoord: ", new string[] { wachtwoord }, "Wachtwoorden komen niet overeen", 3);
-            if (admin && inputHerhaal != "") {
+            if (admin && inputHerhaal != "")
+            {
                 newUser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
                 AddAdmin(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
                 Resources.input("Druk op enter om verder te gaan");
             }
-            else if (!admin && inputHerhaal != "") {
+            else if (!admin && inputHerhaal != "")
+            {
                 newUser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
                 AddSub(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
                 Resources.input("Druk op enter om verder te gaan");
             }
             else
-                newUser = null;
+                Resources.errorMessage("3 keer een verkeerd wachtwoord ingevoerd voor herhaling, Registratie mislukt");
+                Resources.input("Druk op enter om verder te gaan");
         }
 
-       /* public Person Login() { 
-            
-        }*/
-
-        /// <summary>Een menu voor wanneer een subscriber is ingelogd</summary>
-        public void MainMenu(Person user)
+        /// <summary>Laat gebruiker inloggen en returned ingelogde gebruiker</summary>
+        public Person Login()
         {
-            while (true) { // TODO: JEROEN WAS HIER BEZIG, NOG NIET AF!!!!
-                string message;
-                if (user.Tussenvoegsel == "")
-                    message = $"Ingelogd als {user.Voornaam} {user.Achternaam}";
-                else
-                    message = $"Ingelogd als {user.Voornaam} {user.Tussenvoegsel} {user.Achternaam}";
-                if (user.IsAdmin()) {
-                    string[] opties = new string[] {"Maak een reservering", "Verwijder een reservering", "Bekijk reservering", "Bekijk menu", "Wijzig profiel"};
-                    Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties, backbutton: true);
-                }
-                else {
-                    string[] opties = new string[] { };
-                    Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties, backbutton: true);
-                }
-
-            }
-
+            string loginMail = Resources.inputCheck("Email: ", GetMails(), "Email incorrect", 3);
+            string loginPass = loginMail != "" ? Resources.inputCheck("Wachtwoord: ", new string[] { GetPass(loginMail) }, "Wachtwoord incorrect", 3) : "Geen wachtwoord";
+            if (loginMail != "" && loginPass != "Geen wachtwoord")
+                return GetUser(loginMail);
+            else
+                return null;
         }
     }  
 }
