@@ -118,6 +118,17 @@ namespace resourceMethods{
             return answer;
         }
 
+        /// <summary>Een method die ja of nee krijgt als input en een bool returned (ja = true, nee = false)</summary>
+        public static bool YesOrNo(string prompt) {
+            string[] yesoptions = new string[] { "ja", "j", "y", "yes" };
+            string[] options = new string[] { "ja", "j", "y", "yes", "nee", "n", "no" };
+            string choice = inputCheck(prompt, options, "Dat is geen ja of nee, typ alsjeblieft 'ja' of 'nee'");
+            if (yesoptions.Contains(choice))
+                return true;
+            else
+                return false;
+        }
+
         /// <summary>Vraagt om een enter input van de user voordat het programma verder gaat</summary>
         public static void EnterMessage() => input("Druk op enter om verder te gaan");
     }
@@ -125,22 +136,28 @@ namespace resourceMethods{
     class DataHandler{
 
         ///<summary>Laad alle objects van een json file in een object</summary>
-        public static dynamic loadJson(string filename) {
-            setRightCwd();
+        public static dynamic LoadJson(string filename) {
+            SetRightCwd();
             string json = File.ReadAllText($"Data/{filename}");
             dynamic Obj = JsonConvert.DeserializeObject(json);
             return Obj;
         }
-        
+
+        ///<summary>Returns een bool afhankelijk van of de file bestaat in de data folder of niet</summary>
+        public static bool FileExists(string file) {
+            SetRightCwd();
+            return File.Exists($"Data/{file}");
+        }
+
         ///<summary>Backup alle data van een object naar een json file</summary>
-        public static void writeJson(string filename, dynamic Obj){
-            setRightCwd();  
+        public static void WriteJson(string filename, dynamic Obj){
+            SetRightCwd();  
             string output = JsonConvert.SerializeObject(Obj, Formatting.Indented);
             File.WriteAllText($"Data/{filename}", output);
         }
 
         ///<summary>Zet de current working directory naar de juiste hoofdfolder</summary>
-        public static void setRightCwd() {
+        public static void SetRightCwd() {
             string curdir = Directory.GetCurrentDirectory();
             while (!Directory.Exists($"{curdir}/Data")) {
                 Directory.SetCurrentDirectory("..");  // .. staat voor de parent folder

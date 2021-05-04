@@ -1,26 +1,26 @@
 {
   "Subscribers": [
     {
+      "Wachtwoord": "12345678",
+      "ModLevel": 0,
       "Voornaam": "Jeroen",
       "Tussenvoegsel": "",
       "Achternaam": "Visser",
       "Email": "0952491@hr.nl",
       "Tel_no": "0612345678",
-      "Leeftijd": "02-07-1999",
-      "Wachtwoord": "12345678",
-      "ModLevel": 0
+      "Leeftijd": "02-07-1999"
     }
   ],
   "Admins": [
     {
+      "Wachtwoord": "12345678",
+      "ModLevel": 1,
       "Voornaam": "Ad",
       "Tussenvoegsel": "",
       "Achternaam": "min",
       "Email": "Admin@mail.com",
       "Tel_no": "0612345678",
-      "Leeftijd": "08-09-1998",
-      "Wachtwoord": "12345678",
-      "ModLevel": 1
+      "Leeftijd": "08-09-1998"
     }
   ]
 }

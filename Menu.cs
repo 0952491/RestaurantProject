@@ -37,9 +37,17 @@ namespace MenuPage
 
 
         public MenuKaart() {
-            Voorgerechten = LoadGerechten(DataHandler.loadJson(FILENAME).Voorgerechten);
-            Hoofdgerechten = LoadGerechten(DataHandler.loadJson(FILENAME).Hoofdgerechten);
-            Desserts = LoadGerechten(DataHandler.loadJson(FILENAME).Desserts);
+            if (!DataHandler.FileExists(FILENAME)) {
+                Voorgerechten = new Gerecht[0];
+                Hoofdgerechten = new Gerecht[0];
+                Desserts = new Gerecht[0];
+            } 
+            else {
+                Voorgerechten = LoadGerechten(DataHandler.LoadJson(FILENAME).Voorgerechten);
+                Hoofdgerechten = LoadGerechten(DataHandler.LoadJson(FILENAME).Hoofdgerechten);
+                Desserts = LoadGerechten(DataHandler.LoadJson(FILENAME).Desserts);
+            }
+            
         }
 
         /// <summary>Een method voor het weergeven van alle opties die de admin heeft voor het menu</summary>
@@ -70,7 +78,7 @@ namespace MenuPage
         }
 
         /// <summary>slaat de MenuKaart op in "Menu.json" file in Data folder</summary>
-        public void Save() => DataHandler.writeJson(FILENAME, this);
+        public void Save() => DataHandler.WriteJson(FILENAME, this);
 
         /// <summary>Laad alle gegeven gerechten naar een Gerecht[] array</summary>
         public Gerecht[] LoadGerechten(dynamic gerechten) => gerechten.ToObject<Gerecht[]>();

@@ -11,15 +11,14 @@ namespace Main_Restaurant
         public static MenuKaart Menu = new MenuKaart();
         public static UserAdministration UserAdmin = new UserAdministration();
         public static DinnerRoom dinnerroom = new DinnerRoom("");
-        public static Week dezeWeek = new Week(true);
-        public static ReserveringsAdministration ReserveerAdmin = new ReserveringsAdministration(dezeWeek);
+        // public static Week dezeWeek = new Week();
+        public static ReserveringsAdministration ReserveerAdmin = new ReserveringsAdministration();
 
         /// <summary> START METHOD VAN HET PROGRAMMA!!!! </summary>
         public static void Main() => BeginMenu();
 
         /// <summary>Het menu dat je te zien krijgt wanneer je de applicatie opstart</summary>
         public static void BeginMenu() {
-            dezeWeek.UpdateWeek();
             while (true) {
                 Console.Clear();
                 // de optie om beschikbare tafels te bekijken moet weg op een gegeven moment
@@ -35,7 +34,7 @@ namespace Main_Restaurant
                     else
                         Resources.errorMessage("Inloggen mislukt"); }
                 else if (optie == "3")
-                    Login.ReserveerHome(); // TODO: verander naar een basismenu in de reserveeradmin class
+                    ReserveerAdmin.ReserveringMenu(false, Menu, UserAdmin); // TODO: verander naar een basismenu in de reserveeradmin class
                 else if (optie == "4")
                     Menu.ShowGerechten();
                 else if (optie == "5")
@@ -50,13 +49,13 @@ namespace Main_Restaurant
                     break;
                 }
             }
-            dezeWeek.Save();
         }
 
 
         /// <summary>Een menu voor wanneer een user is ingelogd</summary>
-        public static void LoggedInMenu(Person user) {
+        public static void LoggedInMenu(User user) {
             while (true) {
+                Console.Clear();
                 string message;
                 if (user.Tussenvoegsel == "")
                     message = $"Ingelogd als {user.Voornaam} {user.Achternaam}";
@@ -66,7 +65,7 @@ namespace Main_Restaurant
                     string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Uitloggen"};
                     string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
                     if (choice == "1")
-                        ReserveerAdmin.AdminMenu(user, Menu);
+                        ReserveerAdmin.AdminMenu(user, Menu, UserAdmin);
                     else if (choice == "2")
                         Menu.AdminMenu();
                     else if (choice == "3")

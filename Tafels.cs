@@ -1,17 +1,19 @@
 ﻿using System;
+using Newtonsoft.Json;
 using resourceMethods;
 
 namespace TablePage
 {
     class Week {
         public Day[] reserveringsWeek = new Day[9]; // een array van days die bestaat uit de komende 7 dagen, vandaag en gister
-        private const string FILENAME = "Week.json";
+        public const string FILENAME = "Week.json";
 
-        public Week(bool newWeek) {
-            if (newWeek)
+        public Week() {
+            if (!DataHandler.FileExists(FILENAME))
                 MakeDays();
-            else
-                LoadWeek(DataHandler.loadJson(FILENAME).reserveringsWeek);
+            else {
+                reserveringsWeek = LoadWeek(DataHandler.LoadJson(FILENAME).reserveringsWeek);
+            }
         }
         public Week(Day[] days) => reserveringsWeek = days;
 
@@ -19,7 +21,7 @@ namespace TablePage
         public Day[] LoadWeek(dynamic Dagen) => Dagen.ToObject<Day[]>();
 
         /// <summary>slaat de week op in "Week.json" file in Data folder</summary>
-        public void Save() => DataHandler.writeJson(FILENAME, this);
+        public void Save() => DataHandler.WriteJson(FILENAME, this);
 
         /// <summary>Maakt alle dagen van de reserveringsWeek array, alle dagen in deze array zijn nieuw en hebben nog geen initiele values</summary>
         public void MakeDays() {  
@@ -42,6 +44,7 @@ namespace TablePage
                     newWeek[i] = reserveringsWeek[i + 1];  // copy all to newWeek except one
                 }
                 newWeek[8] = new Day(newWeek[1].Datum.AddDays(7));
+                reserveringsWeek = newWeek;
                 UpdateWeek();
             }
         }
@@ -89,21 +92,14 @@ namespace TablePage
         public DinnerRoom VoorAchtTotTien; // voor 8.30 tot 10.15
 
 
-        public Day(DateTime date) => MakeSelf(date);
-        public Day(Day day) => new Day(day.Datum, day.VoorVijfTotZes, day.VoorZesTotAcht, day.VoorAchtTotTien);
+        public Day(DateTime date) : this(date, new DinnerRoom("17:00 - 18:45"), new DinnerRoom("18:45 - 20:30"), new DinnerRoom("20:30 - 22:15")) { }
+        public Day(Day day) : this(day.Datum, day.VoorVijfTotZes, day.VoorZesTotAcht, day.VoorAchtTotTien) { }
+        [JsonConstructor]
         public Day(DateTime date, DinnerRoom voorvijf, DinnerRoom voorzes, DinnerRoom vooracht) {
             Datum = date;
             VoorVijfTotZes = voorvijf;
             VoorZesTotAcht = voorzes;
             VoorAchtTotTien = vooracht;
-        }
-
-        /// <summary>Hulp voor constructor, maakt een nieuwe dag met een dinnerroom object voor elke beschikbare tijd</summary>
-        public void MakeSelf(DateTime date) {
-            Datum = date;
-            VoorVijfTotZes = new DinnerRoom("17:00 - 18:45");  // voor 5 - 6.45
-            VoorZesTotAcht = new DinnerRoom("18:45 - 20:30");  // voor 6.45 tot 8.30
-            VoorAchtTotTien = new DinnerRoom("20:30 - 22:15");  // voor 8.30 tot 10.15
         }
 
         /// <summary>Geeft een menu van tijden weer en returned een DinnerRoom object gebaseerd op de keuze</summary>
@@ -127,6 +123,14 @@ namespace TablePage
         public Table[] VoorVier; // eindigt op B
         public Table[] VoorZes; // eindigt op C
         public string Tijdvak;
+
+        [JsonConstructor]
+        public DinnerRoom(string tijd, Table[] voortwee, Table[] voorvier, Table[] voorzes) {
+            Tijdvak = tijd;
+            VoorTwee = voortwee;
+            VoorVier = voorvier;
+            VoorZes = voorzes;
+        }
 
         public DinnerRoom(string tijd)
         {
