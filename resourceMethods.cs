@@ -55,6 +55,18 @@ namespace resourceMethods{
             return answer;
         }
 
+        /// <summary>Laat een menu zien met datums en laat de gebruiker uit een datum kiezen</summary>
+        public static DateTime inputDate(string prompt, DateTime[] dates, string errorprompt= "Die datum is helaas niet beschikbaar. Kiest u alstublieft opnieuw.", int maxtries=0) {
+            string[] options = new string[dates.Length];
+            for (int i = 0; i < dates.Length; i++)
+                options[i] = dates[i].ToString("dd/MM/yyyy");
+            string returned = makeMenuInput("De volgende dagen zijn beschikbaar", prompt, options, errorprompt, true, maxtries);
+            if (returned == "b")
+                return DateTime.MinValue;
+            return dates[Convert.ToInt32(returned) - 1];
+        }
+
+
         ///<summary>Een method die een array van strings organiseert in genummerde opties en print</summary>
         public static void orderOptions(string prompt, string[] options, bool backbutton=false) {
             Console.WriteLine(prompt);
@@ -80,11 +92,14 @@ namespace resourceMethods{
             return returnArr;
         }
 
+        /// <summary>Maakt een menu van de gegeven opties en controleert de gegeven input tegen de beschikbare input</summary>
         public static string makeMenuInput(string title, string prompt, string[] options, string errorprompt="Helaas is die optie niet beschikbaar. Kiest u alstublieft opnieuw.",bool backbutton=false, int maxtries=0){
             orderOptions(title, options, backbutton);
             return inputCheck(prompt, makeRangeArr(1, options.Length, backbutton), errorprompt, maxtries);
         }
 
+
+        /// <summary>Controleert de gegeven input tegen de gegeven regexStr</summary>
         public static string inputRegex(string prompt, string regexStr, string errorprompt="Input onjuist, probeer het opnieuw", int maxtries=0) {
             string answer = input(prompt);
             Regex newre = new Regex(regexStr);
@@ -102,6 +117,9 @@ namespace resourceMethods{
             }
             return answer;
         }
+
+        /// <summary>Vraagt om een enter input van de user voordat het programma verder gaat</summary>
+        public static void EnterMessage() => input("Druk op enter om verder te gaan");
     }
 
     class DataHandler{

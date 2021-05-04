@@ -54,9 +54,7 @@ namespace LoginPage
         }
 
         /// <summary>Returned true if modLevel = 1, anders returns false</summary>
-        public bool IsAdmin() { 
-            return ModLevel == 1;
-        }
+        public bool IsAdmin() => ModLevel == 1;
 
         /// <summary>Met deze method kan je de gegevens van een persoon veranderen</summary>
         public void ChangePerson() {
@@ -90,15 +88,10 @@ namespace LoginPage
         }
 
         /// <summary>Zet de gegevens om in Person arrays</summary>
-        public Person[] LoadUsers(dynamic Users)
-        {
-            return Users.ToObject<Person[]>();
-        }
+        public Person[] LoadUsers(dynamic Users) => Users.ToObject<Person[]>();
 
         /// <summary>slaat de UserAdministration op in "Users.json" file in Data folder</summary>
-        public void Save() {
-            DataHandler.writeJson(FILENAME, this);
-        }
+        public void Save() => DataHandler.writeJson(FILENAME, this);
 
         /// <summary>Het menu voor de administrator</summary>
         public void AdminMenu(Person admin) {
@@ -240,9 +233,7 @@ namespace LoginPage
         }
 
         /// <summary>Checked of de passed user bestaat gebaseerd op alle mails (van Admins en Subscribers)</summary>
-        public bool Exists(Person user) { 
-            return GetMails().Contains(user.Email);
-        }
+        public bool Exists(Person user) => GetMails().Contains(user.Email);
 
         /// <summary>Verzamelt alle mails van alle gebruikers in een array en returned die array</summary>
         public string[] GetMails() {
@@ -299,19 +290,19 @@ namespace LoginPage
                 Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
             }
             string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$");
-            string geboortedatum = Resources.inputRegex("Geboortedatum(dd-mm-yyyy): ", @"\d{2}\-\d{2}\-\d{4}");
+            string leeftijd = Resources.inputCheck("Leeftijd: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
             string wachtwoord = Resources.inputRegex("Wachtwoord: ", @"\w{8}");
             string inputHerhaal = Resources.inputCheck("Herhaal Wachtwoord: ", new string[] { wachtwoord }, "Wachtwoorden komen niet overeen", 3);
             if (admin && inputHerhaal != "")
             {
-                newUser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 1, tussenvoegsel);
+                newUser = new Person(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 1, tussenvoegsel);
                 AddAdmin(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
                 Resources.input("Druk op enter om verder te gaan");
             }
             else if (!admin && inputHerhaal != "")
             {
-                newUser = new Person(voornaam, achternaam, email, telefoonnummer, geboortedatum, wachtwoord, 0, tussenvoegsel);
+                newUser = new Person(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 0, tussenvoegsel);
                 AddSub(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
                 Resources.input("Druk op enter om verder te gaan");

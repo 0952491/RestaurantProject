@@ -35,6 +35,7 @@ namespace MenuPage
         public Gerecht[] Desserts;
         private const string FILENAME = "Menu.json";
 
+
         public MenuKaart() {
             Voorgerechten = LoadGerechten(DataHandler.loadJson(FILENAME).Voorgerechten);
             Hoofdgerechten = LoadGerechten(DataHandler.loadJson(FILENAME).Hoofdgerechten);
@@ -69,14 +70,10 @@ namespace MenuPage
         }
 
         /// <summary>slaat de MenuKaart op in "Menu.json" file in Data folder</summary>
-        public void Save() {
-            DataHandler.writeJson(FILENAME, this);
-        }
+        public void Save() => DataHandler.writeJson(FILENAME, this);
 
         /// <summary>Laad alle gegeven gerechten naar een Gerecht[] array</summary>
-        public Gerecht[] LoadGerechten(dynamic gerechten) {
-            return gerechten.ToObject<Gerecht[]>();
-        }
+        public Gerecht[] LoadGerechten(dynamic gerechten) => gerechten.ToObject<Gerecht[]>();
 
         /// <summary>Print een geordend menu uit van een array van specifieke gerechten</summary>
         public void ShowGerechten() {
@@ -90,8 +87,25 @@ namespace MenuPage
                     string display = $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}";
                     Console.WriteLine(display);
                 }
-                Resources.input("Typ enter om terug te gaan");
+                Resources.EnterMessage();
             }
+        }
+
+        /// <summary>Een method die alle gerechten laat zien en een Gerecht returned</summary>
+        public Gerecht ChooseGerechten() {
+            Console.OutputEncoding = Encoding.UTF8;
+            Gerecht[] gerechtArr = GetCategorie();
+            if (gerechtArr == null)
+                return null;
+            Console.Clear();
+            int index = 0;
+            string[] options = new string[gerechtArr.Length];
+            foreach (Gerecht g in gerechtArr) {
+                string line = $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}";
+                options[index++] = line;
+            }
+            string choice = Resources.makeMenuInput("Beschikbare gerechten", "Kies een van bovenstaande gerechten: ", options);
+            return gerechtArr[Convert.ToInt32(choice) - 1];
         }
 
         /// <summary>Maakt een gerecht object</summary>
@@ -120,6 +134,7 @@ namespace MenuPage
             return null;
         }
 
+        /// <summary>Returned een gerecht gebaseerd op de naam van het gerecht</summary>
         public Gerecht GetGerecht(string naam) {
             Gerecht voor = loopGerechten(naam, Voorgerechten);
             Gerecht hoofd = loopGerechten(naam, Hoofdgerechten);

@@ -3,34 +3,138 @@ using resourceMethods;
 
 namespace TablePage
 {
-    class TableInit
-    {   
+    class Week {
+        public Day[] reserveringsWeek = new Day[9]; // een array van days die bestaat uit de komende 7 dagen, vandaag en gister
+        private const string FILENAME = "Week.json";
 
-        public static void MainTable() {
-            DinnerRoom dinnerroom = new DinnerRoom();
-            dinnerroom.VoorVier[2].occupied = true;
-            dinnerroom.DrawMap();
-            Resources.input("Druk op enter om verder te gaan");
+        public Week(bool newWeek) {
+            if (newWeek)
+                MakeDays();
+            else
+                LoadWeek(DataHandler.loadJson(FILENAME).reserveringsWeek);
+        }
+        public Week(Day[] days) => reserveringsWeek = days;
+
+        /// <summary>Vormt een json object naar een Day[] Array</summary>
+        public Day[] LoadWeek(dynamic Dagen) => Dagen.ToObject<Day[]>();
+
+        /// <summary>slaat de week op in "Week.json" file in Data folder</summary>
+        public void Save() => DataHandler.writeJson(FILENAME, this);
+
+        /// <summary>Maakt alle dagen van de reserveringsWeek array, alle dagen in deze array zijn nieuw en hebben nog geen initiele values</summary>
+        public void MakeDays() {  
+            TimeSpan oneday = new TimeSpan(1, 0, 0, 0); // represents one day
+            DateTime today = DateTime.Now;
+            DateTime yesterday = today.Subtract(oneday);
+            reserveringsWeek[0] = new Day(yesterday);
+            reserveringsWeek[1] = new Day(today);
+            for (int i = 0; i < 7; i++) {
+                TimeSpan newspan = oneday * (i + 1);
+                reserveringsWeek[i + 2] = new Day(today + newspan);
+            }
+        }
+
+        /// <summary>Een update methode die checkt of alle dagen nog steeds kloppen en zo niet update die deze en checkt het opnieuw</summary>
+        public void UpdateWeek() { 
+            if (reserveringsWeek[1].Datum.Date != DateTime.Today) {  // if the first element in the array is not today's date
+                Day[] newWeek = new Day[9];
+                for (int i = 0; i < newWeek.Length - 1; i++) {
+                    newWeek[i] = reserveringsWeek[i + 1];  // copy all to newWeek except one
+                }
+                newWeek[8] = new Day(newWeek[1].Datum.AddDays(7));
+                UpdateWeek();
+            }
+        }
+
+        /// <summary>Returned alle datums van alle day objecten in de week</summary>
+        public DateTime[] GetDates() {
+            DateTime[] newDates = new DateTime[reserveringsWeek.Length];
+            for (int i = 0; i < newDates.Length; i++) {
+                newDates[i] = reserveringsWeek[i].Datum;
+            }
+            return newDates;
+        }
+
+        /// <summary>Returned alle datums behalve gister</summary>
+        public DateTime[] GetRelevantDates() { 
+            DateTime[] newDates = new DateTime[reserveringsWeek.Length - 1];
+            for (int i = 0, j = 1; i < newDates.Length; i++) {
+                newDates[i] = reserveringsWeek[j++].Datum;
+            }
+            return newDates;
+        }
+
+        /// <summary>Een methode die een bepaalde dag van de week returned</summary>
+        public Day GetDay(bool all) {
+            Day returnDag = null;
+            DateTime selectedDate = new DateTime();
+            if (all) {
+                selectedDate = Resources.inputDate("Kies een van de bovenstaande data: ", GetDates()); 
+            }
+            else {
+                selectedDate = Resources.inputDate("Kies een van de bovenstaande data: ", GetRelevantDates());
+            }
+            foreach (Day dag in reserveringsWeek) {
+                if (dag.Datum.Date == selectedDate.Date)
+                    returnDag = dag;
+            }
+            return returnDag;  // returned null als gebruiker op "b" voor back heeft geklikt
         }
     }
 
+    class Day {
+        public DateTime Datum; // de datum van de bezettingsdag
+        public DinnerRoom VoorVijfTotZes; // voor 5 - 6.45
+        public DinnerRoom VoorZesTotAcht; // voor 6.45 tot 8.30
+        public DinnerRoom VoorAchtTotTien; // voor 8.30 tot 10.15
+
+
+        public Day(DateTime date) => MakeSelf(date);
+        public Day(Day day) => new Day(day.Datum, day.VoorVijfTotZes, day.VoorZesTotAcht, day.VoorAchtTotTien);
+        public Day(DateTime date, DinnerRoom voorvijf, DinnerRoom voorzes, DinnerRoom vooracht) {
+            Datum = date;
+            VoorVijfTotZes = voorvijf;
+            VoorZesTotAcht = voorzes;
+            VoorAchtTotTien = vooracht;
+        }
+
+        /// <summary>Hulp voor constructor, maakt een nieuwe dag met een dinnerroom object voor elke beschikbare tijd</summary>
+        public void MakeSelf(DateTime date) {
+            Datum = date;
+            VoorVijfTotZes = new DinnerRoom("17:00 - 18:45");  // voor 5 - 6.45
+            VoorZesTotAcht = new DinnerRoom("18:45 - 20:30");  // voor 6.45 tot 8.30
+            VoorAchtTotTien = new DinnerRoom("20:30 - 22:15");  // voor 8.30 tot 10.15
+        }
+
+        /// <summary>Geeft een menu van tijden weer en returned een DinnerRoom object gebaseerd op de keuze</summary>
+        public DinnerRoom GetRoom() {
+            string[] options = new string[] { "17:00 - 18:45", "18:45 - 20:30", "20:30 - 22:15" };
+            string choice = Resources.makeMenuInput("Alle beschikbare tijden", "Kies uit een van de bovenstaande tijden: ", options, backbutton: true);
+            if (choice == "1")
+                return VoorVijfTotZes;
+            else if (choice == "2")
+                return VoorZesTotAcht;
+            else if (choice == "3")
+                return VoorAchtTotTien;
+            else  // gebruiker wil terug
+                return null;
+        }
+    }
 
     class DinnerRoom
     {
-        public string Tijdvak; // TODO: zorg dat tijdvak en datum moeten worden ingevuld bij het maken van een dinnerroom object, mss dat deze ook een datetime object kunnen worden
-        public string Datum;
         public Table[] VoorTwee; // tafelnr eindigt op A
         public Table[] VoorVier; // eindigt op B
         public Table[] VoorZes; // eindigt op C
+        public string Tijdvak;
 
-        public DinnerRoom()
+        public DinnerRoom(string tijd)
         {
-            Tijdvak = "";
-            Datum = "";
             VoorTwee = new Table[8];
             VoorVier = new Table[5];
             VoorZes = new Table[2];
             MakeNew();
+            Tijdvak = tijd;
         }
 
         /// <summary>Hulp voor de constructor, vult alle Table[] fields van de DinnerRoom Object met Table Objects</summary>
@@ -48,9 +152,19 @@ namespace TablePage
         public Table GetTafel(string tafel_no) {
             Table[] tafelArr = tafel_no.EndsWith("A") ? VoorTwee : tafel_no.EndsWith("B") ? VoorVier : VoorZes;
             Table newTable = null;
-            for (int i = 0; i < tafelArr.Length; i++) {
-                if (tafelArr[i].table_num == tafel_no)
-                    newTable = tafelArr[i];
+            foreach (Table tafel in tafelArr) {
+                if (tafel.table_num == tafel_no)
+                    newTable = tafel;
+            }
+            return newTable;
+        }
+
+        /// <summary>Returned een Table Object gebaseerd op de code van de reservering gekoppelt aan die tafel</summary>
+        public Table GetGereserveerdeTafel(string code) {
+            Table newTable = null;
+            foreach (Table tafel in AllTafels()) {
+                if (tafel.reserveerCode == code)
+                    newTable = tafel;
             }
             return newTable;
         }
@@ -148,14 +262,6 @@ namespace TablePage
             }
             Console.ForegroundColor = ConsoleColor.White;
         }
-        
-        /// <summary>Afhankelijk van het gegeven tafel nummer zet een tafel op occupied</summary>
-        public void Occupy(string tafelNr) {
-            if (GetTafel(tafelNr).isAvailable())
-                GetTafel(tafelNr).occupied = true;
-            else
-                Resources.errorMessage($"Tafel {tafelNr} is helaas niet beschikbaar");
-        }
     }
         
    class Table 
@@ -163,6 +269,7 @@ namespace TablePage
         public string table_num;  // het tafelnummer
         public int seats;  // het aantal stoelen van de tafel
         public bool occupied;  // een bool die noteert of de tafel bezet is of niet.
+        public string reserveerCode; // de code gekoppelt aan de eventuele reservering
        
         // de Table constructor
         public Table(int t_num, int chairs) {
@@ -173,9 +280,7 @@ namespace TablePage
         }
 
         /// <summary>Returned het tegenovergestelde van occupied, gemaakt voor makkelijker lezen</summary>
-        public bool isAvailable() {
-            return !occupied;
-        }
+        public bool isAvailable() => !occupied;
 
         /// <summary>Maakt een string van de tafel</summary>
         public string[] TableArr() {
@@ -208,5 +313,11 @@ namespace TablePage
             }
             return tafel;
         }
-    }
+
+        /// <summary>Zet een reservering voor de tafel en geeft de code mee die gekoppelt is aan de reservering</summary>
+        public void SetReservering(string code) { occupied = true; reserveerCode = code;  }
+
+        /// <summary>Verwijderd alle reserveringsgegevens van een tafel zodat deze weer vrij is</summary>
+        public void DelReservering() { occupied = false; reserveerCode = null; }
+   }
 }

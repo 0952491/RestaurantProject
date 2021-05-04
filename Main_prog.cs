@@ -3,21 +3,23 @@ using resourceMethods;
 using LoginPage; // namespace van login.cs
 using MenuPage; // namespace van Menu.cs
 using TablePage; // namespace van Tafels.cs
+using ReserveringPage; // namespace van Reserveren.cs
 namespace Main_Restaurant
 {
-    class Main_Menu  // hoofdmenu van de applicatie
+    class Restaurant  // hoofdmenu van de applicatie
     {
         public static MenuKaart Menu = new MenuKaart();
         public static UserAdministration UserAdmin = new UserAdministration();
-        public static DinnerRoom dinnerroom = new DinnerRoom();
-        // TODO: zie hieronder
-        /* public static ReserveerAdministration ReserveerAdmin;*/
+        public static DinnerRoom dinnerroom = new DinnerRoom("");
+        public static Week dezeWeek = new Week(true);
+        public static ReserveringsAdministration ReserveerAdmin = new ReserveringsAdministration(dezeWeek);
 
+        /// <summary> START METHOD VAN HET PROGRAMMA!!!! </summary>
+        public static void Main() => BeginMenu();
 
         /// <summary>Het menu dat je te zien krijgt wanneer je de applicatie opstart</summary>
         public static void BeginMenu() {
-            dinnerroom.Occupy("4B"); // voorbeeldfunctie om te laten zien hoe de plattegrond eruit ziet met tafels die bezet zijn
-            dinnerroom.Occupy("1C");
+            dezeWeek.UpdateWeek();
             while (true) {
                 Console.Clear();
                 // de optie om beschikbare tafels te bekijken moet weg op een gegeven moment
@@ -33,14 +35,14 @@ namespace Main_Restaurant
                     else
                         Resources.errorMessage("Inloggen mislukt"); }
                 else if (optie == "3")
-                    Login.ReserveerHome();
+                    Login.ReserveerHome(); // TODO: verander naar een basismenu in de reserveeradmin class
                 else if (optie == "4")
                     Menu.ShowGerechten();
                 else if (optie == "5")
                     ContactPage();
                 else if (optie == "6") {
                     dinnerroom.DrawMap();
-                    Resources.input("Druk op enter om verder te gaan");
+                    Resources.EnterMessage();
                 }
                 else {  // de gebruiker koos de laatste optie dus sluit de applicatie
                     Resources.succesMessage("Dankjewel voor het gebruiken van onze app, tot volgende keer ; )");
@@ -48,6 +50,7 @@ namespace Main_Restaurant
                     break;
                 }
             }
+            dezeWeek.Save();
         }
 
 
@@ -62,10 +65,9 @@ namespace Main_Restaurant
                 if (user.IsAdmin()) { // geef het menu weer van een admin
                     string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Uitloggen"};
                     string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
-                    // TODO: zie hieronder
-                    /*if (choice == "1")
-                        ReserveerAdmin.AdminMenu();*/
-                    if (choice == "2")
+                    if (choice == "1")
+                        ReserveerAdmin.AdminMenu(user, Menu);
+                    else if (choice == "2")
                         Menu.AdminMenu();
                     else if (choice == "3")
                         UserAdmin.AdminMenu(user);
@@ -74,11 +76,11 @@ namespace Main_Restaurant
                 }
                 else {
                     string[] opties = new string[] {"Reserveringen", "Menu", "Profiel", "Uitloggen"};
-                    string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties, backbutton: true);
+                    string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
                     // TODO: zie hieronder
-                    /*if (choice == "1")
-                    ReserveerAdmin.DefaultMenu();  */
-                    if (choice == "2")
+                    if (choice == "1")
+                        ReserveerAdmin.DefaultMenu(user, Menu);
+                    else if (choice == "2")
                         Menu.ShowGerechten();
                     else if (choice == "3")
                         UserAdmin.DefaultMenu(user);
@@ -90,13 +92,8 @@ namespace Main_Restaurant
 
         }
 
-        public static void Main()
-        {
-            BeginMenu();
-        }
-
-        public static void ContactPage()
-        {
+        /// <summary>Geeft de contactgegevens weer van het restaurant</summary>
+        public static void ContactPage() {
             Console.Clear();
             string contact = $"Adres: \t \t Wijnhaven 107 \n" +
                 "\t\t 3011 WN Rotterdam\n" +
@@ -108,27 +105,6 @@ namespace Main_Restaurant
                 ContactPage();
             } else {  // gebruiker typte 'b' of 'B' om terug te gaan
                 return;
-            }
-        }
-
-        // op dit moment is overzicht onzichtbaar voor gebruikers, overzicht moet worden gekoppeld aan alle invoer na de reservering [ #FransZijnDing :-) ]
-        public static void Overzicht()
-        {
-            Console.Clear();
-            Console.WriteLine("Reservering Overzicht \n" +
-                $"Naam: \n" +
-                $"Email: \n" +
-                $"Tel.nr: \n" +
-                $"Datum \n" +
-                $"Tijd: \n" +
-                $"Tafel: \n" +
-                $"vooraf besteld: \n" +
-                $"Totale Prijs: \n");
-            string choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, maxTries: 1);
-            if (choice == "") {
-                Overzicht();
-            } else {  // gebruiker typte 'b' of 'B' om terug te gaan
-                return; // dit moet later worden vervangen door reserveren als de reserveermethod goed werkt
             }
         }
     }
