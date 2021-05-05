@@ -112,7 +112,9 @@ namespace MenuPage
                 string line = $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}";
                 options[index++] = line;
             }
-            string choice = Resources.makeMenuInput("Beschikbare gerechten", "Kies een van bovenstaande gerechten: ", options);
+            string choice = Resources.makeMenuInput("Beschikbare gerechten", "Kies een van bovenstaande gerechten: ", options, backbutton: true);
+            if (choice == "b")
+                return null;
             return gerechtArr[Convert.ToInt32(choice) - 1];
         }
 

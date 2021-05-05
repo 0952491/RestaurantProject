@@ -10,9 +10,13 @@ namespace Main_Restaurant
     {
         public static MenuKaart Menu = new MenuKaart();
         public static UserAdministration UserAdmin = new UserAdministration();
-        public static DinnerRoom dinnerroom = new DinnerRoom("");
-        // public static Week dezeWeek = new Week();
+        public static DinnerRoom dinnerroom = new DinnerRoom(""); // word gemaakt om een plattegrond van de tafels te laten zien
         public static ReserveringsAdministration ReserveerAdmin = new ReserveringsAdministration();
+        public static string ADRES = "Wijnhaven 107";
+        public static string POSTCODE = "3011 WN";
+        public static string PLAATS = "Rotterdam";
+        public static string EMAIL = "info@restaurantTeam4.nl";
+        public static string TEL_NO = "0612345678";
 
         /// <summary> START METHOD VAN HET PROGRAMMA!!!! </summary>
         public static void Main() => BeginMenu();
@@ -23,7 +27,6 @@ namespace Main_Restaurant
                 Console.Clear();
                 // de optie om beschikbare tafels te bekijken moet weg op een gegeven moment
                 string[] userActions = {"Registreren", "Inloggen", "Reserveren", "Menu bekijken", "Contact", "Bekijk beschikbare tafels", "Sluit applicatie"};
-                Resources.errorMessage("ALLE ACTIES DIE MET RESERVEREN TE MAKEN HEBBEN WERKEN NOG NIET\nHIER MOET NOG EEN APARTE CLASS VOOR GEBOUWD WORDEN\n");
                 string optie = Resources.makeMenuInput("Welkom bij ons restaurant!", "Voert u alstublieft een nummer in: ", userActions);
                 if (optie == "1") 
                     UserAdmin.Registreren(false);
@@ -34,7 +37,7 @@ namespace Main_Restaurant
                     else
                         Resources.errorMessage("Inloggen mislukt"); }
                 else if (optie == "3")
-                    ReserveerAdmin.ReserveringMenu(false, Menu, UserAdmin); // TODO: verander naar een basismenu in de reserveeradmin class
+                    ReserveerAdmin.ReserveringMenu(false, Menu, UserAdmin);
                 else if (optie == "4")
                     Menu.ShowGerechten();
                 else if (optie == "5")
@@ -48,6 +51,7 @@ namespace Main_Restaurant
                     Console.ReadLine();
                     break;
                 }
+                SaveAll();
             }
         }
 
@@ -65,40 +69,55 @@ namespace Main_Restaurant
                     string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Uitloggen"};
                     string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
                     if (choice == "1")
-                        ReserveerAdmin.AdminMenu(user, Menu, UserAdmin);
+                        ReserveerAdmin.Menu(user, Menu, UserAdmin);
                     else if (choice == "2")
                         Menu.AdminMenu();
                     else if (choice == "3")
-                        UserAdmin.AdminMenu(user);
+                        UserAdmin.AdminMenu(user, ReserveerAdmin);
                     else
                         break;
                 }
                 else {
                     string[] opties = new string[] {"Reserveringen", "Menu", "Profiel", "Uitloggen"};
                     string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
-                    // TODO: zie hieronder
                     if (choice == "1")
-                        ReserveerAdmin.DefaultMenu(user, Menu);
+                        ReserveerAdmin.Menu(user, Menu, UserAdmin);
                     else if (choice == "2")
                         Menu.ShowGerechten();
                     else if (choice == "3")
-                        UserAdmin.DefaultMenu(user);
+                        UserAdmin.DefaultMenu(user, ReserveerAdmin);
                     else
                         break;
                 }
-
+                SaveAll();
             }
+        }
 
+        public static void SaveAll() {
+            Menu.Save();
+            UserAdmin.Save();
+            ReserveerAdmin.Save();
+        }
+
+        /// <summary>Geeft een menu om de contactinfo te veranderen</summary>
+        public static void ChangeContacts() { // TODO: deze functie moet nog een plek krijgen voor de admin
+            while (true) {
+                ContactPage();
+                string[] options = new string[] { "Adres", "Postcode", "Plaats", "Telefoonnummer", "Email" };
+                string choice = Resources.makeMenuInput("Welke contactinformatie wilt u wijzigen?", "Kies een van de bovenstaande opties: ", options, backbutton: true);
+                if (choice == "b")
+                    return;
+                // TODO: hier moet de code komen met een aantal inputregex functies die checken of de nieuwe input correct is
+            }
         }
 
         /// <summary>Geeft de contactgegevens weer van het restaurant</summary>
         public static void ContactPage() {
             Console.Clear();
-            string contact = $"Adres: \t \t Wijnhaven 107 \n" +
-                "\t\t 3011 WN Rotterdam\n" +
-                "Email: \t \t info@restaurantTeam4.nl \n" +
-                "Telefoonnummer:\t 0612345678";
-            Console.WriteLine(contact);
+            Console.WriteLine($"Adres : {ADRES}  {POSTCODE}");
+            Console.WriteLine($"Plaats: {PLAATS}");
+            Console.WriteLine($"Tel.no: {TEL_NO}");
+            Console.WriteLine($"Email : {EMAIL}");
             string choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, maxTries: 1);
             if (choice == "") {
                 ContactPage();

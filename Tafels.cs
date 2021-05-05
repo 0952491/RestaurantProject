@@ -11,9 +11,8 @@ namespace TablePage
         public Week() {
             if (!DataHandler.FileExists(FILENAME))
                 MakeDays();
-            else {
+            else
                 reserveringsWeek = LoadWeek(DataHandler.LoadJson(FILENAME).reserveringsWeek);
-            }
         }
         public Week(Day[] days) => reserveringsWeek = days;
 
@@ -40,9 +39,8 @@ namespace TablePage
         public void UpdateWeek() { 
             if (reserveringsWeek[1].Datum.Date != DateTime.Today) {  // if the first element in the array is not today's date
                 Day[] newWeek = new Day[9];
-                for (int i = 0; i < newWeek.Length - 1; i++) {
+                for (int i = 0; i < newWeek.Length - 1; i++)
                     newWeek[i] = reserveringsWeek[i + 1];  // copy all to newWeek except one
-                }
                 newWeek[8] = new Day(newWeek[1].Datum.AddDays(7));
                 reserveringsWeek = newWeek;
                 UpdateWeek();
@@ -52,31 +50,27 @@ namespace TablePage
         /// <summary>Returned alle datums van alle day objecten in de week</summary>
         public DateTime[] GetDates() {
             DateTime[] newDates = new DateTime[reserveringsWeek.Length];
-            for (int i = 0; i < newDates.Length; i++) {
+            for (int i = 0; i < newDates.Length; i++)
                 newDates[i] = reserveringsWeek[i].Datum;
-            }
             return newDates;
         }
 
         /// <summary>Returned alle datums behalve gister</summary>
         public DateTime[] GetRelevantDates() { 
             DateTime[] newDates = new DateTime[reserveringsWeek.Length - 1];
-            for (int i = 0, j = 1; i < newDates.Length; i++) {
+            for (int i = 0, j = 1; i < newDates.Length; i++)
                 newDates[i] = reserveringsWeek[j++].Datum;
-            }
             return newDates;
         }
 
         /// <summary>Een methode die een bepaalde dag van de week returned</summary>
         public Day GetDay(bool all) {
             Day returnDag = null;
-            DateTime selectedDate = new DateTime();
-            if (all) {
-                selectedDate = Resources.inputDate("Kies een van de bovenstaande data: ", GetDates()); 
-            }
-            else {
+            DateTime selectedDate;
+            if (all)
+                selectedDate = Resources.inputDate("Kies een van de bovenstaande data: ", GetDates());
+            else
                 selectedDate = Resources.inputDate("Kies een van de bovenstaande data: ", GetRelevantDates());
-            }
             foreach (Day dag in reserveringsWeek) {
                 if (dag.Datum.Date == selectedDate.Date)
                     returnDag = dag;
@@ -114,6 +108,20 @@ namespace TablePage
                 return VoorAchtTotTien;
             else  // gebruiker wil terug
                 return null;
+        }
+
+        /// <summary>Returned de correcte datetime object voor elk verschillend tijdsvak</summary>
+        public DateTime GetCorrectTime(string timeSpecifier) {
+            DateTime correctDate = DateTime.Now;
+            if (timeSpecifier == "17:00 - 18:45")
+                correctDate = new DateTime(Datum.Year, Datum.Month, Datum.Day, 17, 0, 0);
+            else if (timeSpecifier == "18:45 - 20:30")
+                correctDate = new DateTime(Datum.Year, Datum.Month, Datum.Day, 18, 45, 0);
+            else if (timeSpecifier == "20:30 - 22:15")
+                correctDate = new DateTime(Datum.Year, Datum.Month, Datum.Day, 20, 30, 0);
+            else
+                throw new Exception("Time Specified does not exist, please review code accordingly");
+            return correctDate;
         }
     }
 
@@ -153,7 +161,12 @@ namespace TablePage
         }
 
         /// <summary>Returned een Table Object gebaseerd op het gegeven tafel nummer</summary>
-        public Table GetTafel(string tafel_no) {
+        public Table GetTafel() {
+            DrawMap();
+            string tafel_no = Resources.inputCheck("Kies een van de beschikbare tafels (of typ 'b' om terug te gaan): ", GetAvailableTafels(backbutton: true), "Die tafel is helaas niet beschikbaar, probeer het opnieuw");
+            if (tafel_no == "b")
+                return null;
+            // vanaf hieronder is de oude method
             Table[] tafelArr = tafel_no.EndsWith("A") ? VoorTwee : tafel_no.EndsWith("B") ? VoorVier : VoorZes;
             Table newTable = null;
             foreach (Table tafel in tafelArr) {
@@ -190,6 +203,26 @@ namespace TablePage
             foreach (Table tafel in AllTafels())
                 table_numbers[index++] = tafel.table_num;
             return table_numbers;
+        }
+
+        /// <summary>Returned een string array met alle beschikbare tafels</summary>
+        public string[] GetAvailableTafels(bool backbutton = false) {
+            int totalTables = 0;
+            foreach (Table tafel in AllTafels())
+                totalTables += tafel.isAvailable() ? 1 : 0;
+            string[] tableNums;
+            if (backbutton)
+                tableNums = new string[totalTables + 1];
+            else
+                tableNums = new string[totalTables];
+            int index = 0;
+            foreach (Table tafel in AllTafels()) {
+                if (tafel.isAvailable())
+                    tableNums[index++] = tafel.table_num;
+            }
+            if (backbutton)
+                tableNums[index++] = "b";
+            return tableNums;
         }
 
         /// <summary>Print een overzicht van alle beschikbare tafels van de DinnerRoom Object</summary>

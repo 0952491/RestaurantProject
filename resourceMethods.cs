@@ -14,19 +14,15 @@ namespace resourceMethods{
 
         ///<summary>Geeft een string weer in error kleuren</summary>
         public static void errorMessage(string prompt) {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.BackgroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine(prompt);
-            Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         ///<summary>Geeft een string weer in succes kleuren</summary>
         public static void succesMessage(string prompt) {
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine(prompt);
-            Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -134,7 +130,6 @@ namespace resourceMethods{
     }
 
     class DataHandler{
-
         ///<summary>Laad alle objects van een json file in een object</summary>
         public static dynamic LoadJson(string filename) {
             SetRightCwd();
