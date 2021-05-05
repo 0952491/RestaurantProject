@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using ReserveringPage;
 using resourceMethods;
 
 namespace LoginPage
@@ -99,7 +100,7 @@ namespace LoginPage
         public void Save() => DataHandler.WriteJson(FILENAME, this);
 
         /// <summary>Het menu voor de administrator</summary>
-        public void AdminMenu(User admin) {
+        public void AdminMenu(User admin, ReserveringsAdministration resAdmin) {
             string[] options = new string[] { "Registreer Gebruiker", "Registreer Admin", "Zie alle geregistreerde mails", "Wijzig profiel", "Verwijder Gebruiker", "Verwijder Admin", "Verwijder eigen account"};
             while (true) {
                 Save();
@@ -115,9 +116,9 @@ namespace LoginPage
                 else if (choice == "4")
                     admin.ChangePerson();
                 else if (choice == "5")
-                    RemoveUser(false, admin);
+                    RemoveUser(false, admin, resAdmin);
                 else if (choice == "6")
-                    RemoveUser(true, admin);
+                    RemoveUser(true, admin, resAdmin);
                 else if (choice == "7") {
                     RemoveAdmin(admin);
                     Save();
@@ -129,7 +130,7 @@ namespace LoginPage
         }
         
         /// <summary>Een menu voor normale gebruikers (geen admins)</summary>
-        public void DefaultMenu(User user) {
+        public void DefaultMenu(User user, ReserveringsAdministration resAdmin) {
             string[] options = new string[] { "Zie account informatie", "Wijzig profiel", "Verwijder eigen account" };
             while (true) {
                 Console.Clear();
@@ -142,14 +143,14 @@ namespace LoginPage
                 }
                 else if (choice == "2")
                     user.ChangePerson();
-                else if (choice == "3") { // als de method 'RemoveSub' later word verplaatst naar Main menu mag deze clause weg
+                else if (choice == "3") {
                     string passcheck = Resources.inputCheck("Voer je wachtwoord in om je account te verwijderen: ", new string[] { user.Wachtwoord }, "Wachtwoord incorrect", 3);
                     if (passcheck == "")
                         continue;
                     bool confirm = Resources.YesOrNo("Weet je zeker dat je je account wil verwijderen? (j/n): ");
                     if (confirm) {
                         RemoveSub(user);
-                        Save();
+                        resAdmin.RemoveReservering(user);
                         break;
                     }
                 }
@@ -185,7 +186,7 @@ namespace LoginPage
         }
 
         /// <summary>Geeft een prompt en verwijderd gebruiker gebaseerd op email, mag alleen worden gebruikt door admins</summary>
-        public void RemoveUser(bool adminRemove, User user) {
+        public void RemoveUser(bool adminRemove, User user, ReserveringsAdministration resAdmin) {
             string removeMail = Resources.inputCheck("Email van te verwijderen gebruiker: ", GetMails(), "Email incorrect", 3);
             if (removeMail == "")
                 return;
@@ -208,7 +209,6 @@ namespace LoginPage
 
         /// <summary>Verwijderd een Subscriber uit de Subscribers array</summary>
         public void RemoveSub(User user) {
-            // TODO: later in deze method ook de user verwijderen uit de reserveeradministratie of deze method naar main menu verplaatsen
             if (Exists(user) && !user.IsAdmin()) {
                 User[] newSubscribers = new User[Subscribers.Length - 1];
                 for (int i = 0; i < Subscribers.Length; i++) { 
