@@ -297,9 +297,11 @@ namespace ReserveringPage
             return strArr;
         }
 
+        // TODO: zorg ervoor dat reserveringen worden opgeslagen.
         /// <summary>Een method die het menu voor reserveringen weergeeft voor admins</summary>
         public void Menu(User user, MenuKaart menu, UserAdministration useradmin) {
             string[] options;
+            Resources.errorMessage("Reserveringen opslaan werkt helaas nog niet naar behoren, dit wordt zsm gefixt");
             if (user.IsAdmin())
                 options = new string[] { "Zie reserveringen", "Maak een nieuwe reservering aan", "Pas een reservering aan", "Verwijder een reservering" };
             else
@@ -338,6 +340,7 @@ namespace ReserveringPage
         public void ReserveringMenu(bool isadmin, MenuKaart menu, UserAdministration useradmin) {
             while (true) {
                 Console.Clear();
+                Resources.errorMessage("Reserveringen opslaan werkt helaas nog niet naar behoren, dit wordt zsm gefixt");
                 string[] reserveOptions = new string[] { "Reserveer als gast", "Reserveer als gebruiker" };
                 string reserveChoice = Resources.makeMenuInput("Hoe wilt u een reservering maken?", "Kies een van de bovenstaande opties", reserveOptions, backbutton: true);
                 if (reserveChoice == "1") {

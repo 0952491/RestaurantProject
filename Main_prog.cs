@@ -51,7 +51,8 @@ namespace Main_Restaurant
                     Console.ReadLine();
                     break;
                 }
-                SaveAll();
+                Menu.Save();
+                UserAdmin.Save();
             }
         }
 
@@ -89,14 +90,9 @@ namespace Main_Restaurant
                     else
                         break;
                 }
-                SaveAll();
+                Menu.Save();
+                UserAdmin.Save();
             }
-        }
-
-        public static void SaveAll() {
-            Menu.Save();
-            UserAdmin.Save();
-            ReserveerAdmin.Save();
         }
 
         /// <summary>Geeft een menu om de contactinfo te veranderen</summary>

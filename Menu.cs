@@ -47,7 +47,6 @@ namespace MenuPage
                 Hoofdgerechten = LoadGerechten(DataHandler.LoadJson(FILENAME).Hoofdgerechten);
                 Desserts = LoadGerechten(DataHandler.LoadJson(FILENAME).Desserts);
             }
-            
         }
 
         /// <summary>Een method voor het weergeven van alle opties die de admin heeft voor het menu</summary>
