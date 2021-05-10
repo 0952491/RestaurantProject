@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using resourceMethods;
 using LoginPage; // namespace van login.cs
 using MenuPage; // namespace van Menu.cs
@@ -25,6 +25,7 @@ namespace Main_Restaurant
         public static void BeginMenu() {
             while (true) {
                 Console.Clear();
+                Logo();
                 // de optie om beschikbare tafels te bekijken moet weg op een gegeven moment
                 string[] userActions = {"Registreren", "Inloggen", "Reserveren", "Menu bekijken", "Contact", "Bekijk beschikbare tafels", "Sluit applicatie"};
                 string optie = Resources.makeMenuInput("Welkom bij ons restaurant!", "Voert u alstublieft een nummer in: ", userActions);
@@ -105,6 +106,45 @@ namespace Main_Restaurant
                     return;
                 // TODO: hier moet de code komen met een aantal inputregex functies die checken of de nieuwe input correct is
             }
+        }
+
+        /// <summary>Laat het logo zien</summary>
+        public static void Logo()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@ (@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&.@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     @@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@       (@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%    %@@@( .@@@@@@@@@");
+            Console.WriteLine("@@@@@/         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     @@@@    .@@@@@@@@@");
+            Console.WriteLine("@@@@@@           (@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%    %@@@(    @@@@*  .@@@@");
+            Console.WriteLine("@@@@@@@             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     @@@@    .@@@@    @@@@@@");
+            Console.WriteLine("@@@@@@@@/             (@@@@@@@@@@@@@@@@@@@@@@@@@@#        .    @@@@*   .@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@               @@@@@@@@@@@@@@@@@@@@@@,             &@@@    &@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@               (@@@@@@@@@@@@@@@@@@%                   .@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@                @@@@@@@@@@@@@@@@@                 @@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@(               (@@@@@@@@@@@@@.              .@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@/               @@@@@@@@(               &@@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@██@@@@@@@@@.             (@@@#        @@@@@@@@@@@@@██@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@██@@@@@@@@@@@@@#.           @@@@   /@@@@@@@@@@@@@@@██@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@██@@@@@@@@@@@@@@@@@@@@@.      /@@@@@@@@@@@@@@@@@@@@██@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@██@@@██@@@@@@@@@@@@@@@@@@@#@@@,       @@@@@@@@@@@@@@@@@@██@@@██@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@█████@@@@@@@@@@@@@@@@@/    /@@@*       /@@@@@@@@@@@@@@@@█████@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@&         ,@@@/        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@.         ,@@@@@@@(        /@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@(          %@@@@@@@@@@@#         @@@@@@@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@           @@@@@@@@@@@@@@@@%         /@@@@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@,          *@@@@@@@███████@@@@@@&          @@@@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@%           &@@@@@@@@@██@@@@@@@@@@@@@&          /@@@@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@            @@@@@@@@@@@@█████@@@@@@@@@@@@@           @@@@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@@@/           (@@@@@@@@@@@@@@██@@@@@@@@@@@@@@@@@@           /@@@@@@@@@@@@");
+            Console.WriteLine("@@@@@@@            @@@@@@@@@@@@@@@@@██@@@@@@@@@@@@@@@@@@@@            @@@@@@@@@@");
+            Console.WriteLine("@@@@             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@            @@@@@@@@");
+            Console.WriteLine("@@@@          #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          /@@@@@@@");
+            Console.WriteLine("@@@@#       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        @@@@@@@@");
+            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         /// <summary>Geeft de contactgegevens weer van het restaurant</summary>
