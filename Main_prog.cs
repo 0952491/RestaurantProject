@@ -13,12 +13,7 @@ namespace Main_Restaurant
         public static DinnerRoom dinnerroom = new DinnerRoom(""); // word gemaakt om een plattegrond van de tafels te laten zien
         public static ReserveringsAdministration ReserveerAdmin = new ReserveringsAdministration();
         public static Tuple<string, string, string, string, string> Contact = Tuple.Create("Wijnhaven 107", "3011 WN", "Rotterdam", "info@restaurantTeam4.nl", "0612345678");
-        public static string ADRES = "Wijnhaven 107";
-        public static string POSTCODE = "3011 WN";
-        public static string PLAATS = "Rotterdam";
-        public static string EMAIL = "info@restaurantTeam4.nl";
-        public static string TEL_NO = "0612345678";
-
+        
         /// <summary> START METHOD VAN HET PROGRAMMA!!!! </summary>
         public static void Main() => BeginMenu();
 
@@ -153,10 +148,10 @@ namespace Main_Restaurant
         /// <summary>Geeft de contactgegevens weer van het restaurant</summary>
         public static void ContactPage() {
             Console.Clear();
-            Console.WriteLine($"Adres : {ADRES}  {POSTCODE}");
-            Console.WriteLine($"Plaats: {PLAATS}");
-            Console.WriteLine($"Tel.no: {TEL_NO}");
-            Console.WriteLine($"Email : {EMAIL}");
+            Console.WriteLine($"Adres : {Contact.Item1}  {Contact.Item2}");
+            Console.WriteLine($"Plaats: {Contact.Item3}");
+            Console.WriteLine($"Tel.no: {Contact.Item4}");
+            Console.WriteLine($"Email : {Contact.Item5}");
             string choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, maxTries: 1);
             if (choice == "") {
                 ContactPage();
