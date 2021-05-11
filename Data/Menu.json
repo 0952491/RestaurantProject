@@ -19,12 +19,16 @@
     {
       "Naam": "Carpaccio van coquille met pstinaak",
       "Prijs": 12.0
+    },
+    {
+      "Naam": "Caprese",
+      "Prijs": 11.0
     }
   ],
   "Hoofdgerechten": [
     {
       "Naam": "Bavette 200gr Amerikaans Black Angus",
-      "Prijs": 19.5
+      "Prijs": 19.0
     },
     {
       "Naam": "Picanha 250gr Australisch Angus",
@@ -73,6 +77,10 @@
     {
       "Naam": "Proeverij vanaf 2",
       "Prijs": 27.9
+    },
+    {
+      "Naam": "Carpaccio2",
+      "Prijs": 10.0
     }
   ],
   "Desserts": [

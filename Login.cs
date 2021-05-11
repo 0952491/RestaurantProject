@@ -4,7 +4,6 @@ using ReserveringPage;
 using resourceMethods;
 
 namespace LoginPage
-
 {
     class Person { 
         public string Voornaam;
@@ -50,9 +49,9 @@ namespace LoginPage
                 else if (choice == "3") // verander je achternaam
                     Achternaam = Resources.input("Vul je achternaam in: ");
                 else if (choice == "4") // verander je email
-                    Email = Resources.inputRegex("Vul je email in: ", @"^\w+@\w+\.\w{2,3}$");
+                    Email = Resources.InputRegex("Vul je email in: ", @"^\w+@\w+\.\w{2,3}$");
                 else if (choice == "5") // verander je tel nr
-                    Tel_no = Resources.inputRegex("Vul je Telefoonnr in: ", @"^{06}\d{8}$");
+                    Tel_no = Resources.InputRegex("Vul je Telefoonnr in: ", @"^{06}\d{8}$");
                 else if (choice == "6")
                     Leeftijd = Resources.inputCheck("Vul je leeftijd in: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
                 else
@@ -144,7 +143,7 @@ namespace LoginPage
                 else if (choice == "2")
                     user.ChangePerson();
                 else if (choice == "3") {
-                    string passcheck = Resources.inputCheck("Voer je wachtwoord in om je account te verwijderen: ", new string[] { user.Wachtwoord }, "Wachtwoord incorrect", 3);
+                    string passcheck = Resources.InputWachtwoord("Voer je wachtwoord in om je account te verwijderen: ", user.Wachtwoord, "Wachtwoord incorrect", 3);
                     if (passcheck == "")
                         continue;
                     bool confirm = Resources.YesOrNo("Weet je zeker dat je je account wil verwijderen? (j/n): ");
@@ -220,7 +219,7 @@ namespace LoginPage
                 Subscribers = newSubscribers;
             } else { 
                 Resources.errorMessage("Die gebruiker bestaat niet");
-                Resources.input("Druk op enter om verder te gaan");
+                Resources.EnterMessage();
             }
         }
 
@@ -237,7 +236,7 @@ namespace LoginPage
                 Admins = newAdmins;
             } else {
                 Resources.errorMessage("Die admin bestaat niet");
-                Resources.input("Druk op enter om verder te gaan");
+                Resources.EnterMessage();
             }
         }
 
@@ -290,43 +289,42 @@ namespace LoginPage
         public void Registreren(bool admin) { // als admin == true dan registreer een admin
             User newUser;
             Console.Clear();
-            string voornaam = Resources.inputRegex("Voornaam: ", @"\w+");
+            string voornaam = Resources.InputRegex("Voornaam: ", @"\w+");
             string tussenvoegsel = Resources.input("Tussenvoegsel: ");
-            string achternaam = Resources.inputRegex("Achternaam: ", @"\w+");
-            string email = Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+            string achternaam = Resources.InputRegex("Achternaam: ", @"\w+");
+            string email = Resources.InputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
             while (GetMails().Contains(email)) {
                 Resources.errorMessage($"{email} is al geregistreerd, probeer alstublieft opnieuw");
-                Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+                email = Resources.InputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
             }
-            string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$");
+            string telefoonnummer = Resources.InputRegex("Telefoonnr: ", @"^\d{10}$", "Voert u alstublieft 10 cijfers in als telefoonnummer");
             string leeftijd = Resources.inputCheck("Leeftijd: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
-            string wachtwoord = Resources.inputRegex("Wachtwoord: ", @"\w{8}");
-            string inputHerhaal = Resources.inputCheck("Herhaal Wachtwoord: ", new string[] { wachtwoord }, "Wachtwoorden komen niet overeen", 3);
-            if (admin && inputHerhaal != "")
-            {
+            string wachtwoord = Resources.InputWachtwoord("Wachtwoord: ");
+            string inputHerhaal = Resources.InputWachtwoord("Wachtwoord: ", wachtwoord);
+            if (admin && inputHerhaal != "") {
                 newUser = new User(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 1, tussenvoegsel);
                 AddAdmin(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
                 Resources.input("Druk op enter om verder te gaan");
             }
-            else if (!admin && inputHerhaal != "")
-            {
+            else if (!admin && inputHerhaal != "") {
                 newUser = new User(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 0, tussenvoegsel);
                 AddSub(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
                 Resources.input("Druk op enter om verder te gaan");
             }
-            else
+            else {
                 Resources.errorMessage("3 keer een verkeerd wachtwoord ingevoerd voor herhaling, Registratie mislukt");
                 Resources.input("Druk op enter om verder te gaan");
+            }
         }
 
         /// <summary>Laat gebruiker inloggen en returned ingelogde gebruiker</summary>
-        public User Login()
-        {
+        public User Login() {
+            Console.Clear();
             string loginMail = Resources.inputCheck("Email: ", GetMails(), "Email incorrect", 3);
-            string loginPass = loginMail != "" ? Resources.inputCheck("Wachtwoord: ", new string[] { GetPass(loginMail) }, "Wachtwoord incorrect", 3) : "Geen wachtwoord";
-            if (loginMail != "" && loginPass != "Geen wachtwoord")
+            string loginPass = loginMail != "" ? Resources.InputWachtwoord("Wachtwoord: ", GetPass(loginMail), "Wachtwoord incorrect", 3) : "";
+            if (loginMail != "" && loginPass != "")
                 return GetUser(loginMail);
             else
                 return null;

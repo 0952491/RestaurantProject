@@ -24,7 +24,7 @@ namespace MenuPage
                 Naam = Resources.input("Geef de nieuwe naam door van het gerecht: ");
             } else { 
                 Console.WriteLine($"Oude prijs: {Prijs}");
-                Prijs = Convert.ToDouble(Resources.inputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^\d+$"));
+                Prijs = Convert.ToDouble(Resources.InputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^\d+$"));
             }
         }
     }
@@ -120,7 +120,7 @@ namespace MenuPage
         /// <summary>Maakt een gerecht object</summary>
         public Gerecht MakeGerecht() {
             string naam = Resources.input("Geef de naam door van het gerecht: ");
-            int prijs = Convert.ToInt32(Resources.inputRegex("Geef de prijs door van het gerecht: ", @"^\d+$")); ;
+            int prijs = Convert.ToInt32(Resources.InputRegex("Geef de prijs door van het gerecht: ", @"^\d+$")); ;
             return new Gerecht(naam, prijs);
         }
 

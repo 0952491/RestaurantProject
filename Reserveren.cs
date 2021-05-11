@@ -379,11 +379,11 @@ namespace ReserveringPage
 
         /// <summary>Maakt een person object, dit is een gast dus word niet opgeslagen in de useradministration, alleen in de reservering</summary>
         public Person MakeGuest() {
-            string voornaam = Resources.inputRegex("Voornaam: ", @"\w+");
+            string voornaam = Resources.InputRegex("Voornaam: ", @"\w+");
             string tussenvoegsel = Resources.input("Tussenvoegsel: ");
-            string achternaam = Resources.inputRegex("Achternaam: ", @"\w+");
-            string email = Resources.inputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
-            string telefoonnummer = Resources.inputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$");
+            string achternaam = Resources.InputRegex("Achternaam: ", @"\w+");
+            string email = Resources.InputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+            string telefoonnummer = Resources.InputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$");
             string leeftijd = Resources.inputCheck("Leeftijd: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
             return new Person(voornaam, achternaam, email, telefoonnummer, leeftijd, tussenvoegsel);
         }

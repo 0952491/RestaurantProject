@@ -12,6 +12,7 @@ namespace Main_Restaurant
         public static UserAdministration UserAdmin = new UserAdministration();
         public static DinnerRoom dinnerroom = new DinnerRoom(""); // word gemaakt om een plattegrond van de tafels te laten zien
         public static ReserveringsAdministration ReserveerAdmin = new ReserveringsAdministration();
+        public static Tuple<string, string, string, string, string> Contact = Tuple.Create("Wijnhaven 107", "3011 WN", "Rotterdam", "info@restaurantTeam4.nl", "0612345678");
         public static string ADRES = "Wijnhaven 107";
         public static string POSTCODE = "3011 WN";
         public static string PLAATS = "Rotterdam";
@@ -23,6 +24,8 @@ namespace Main_Restaurant
 
         /// <summary>Het menu dat je te zien krijgt wanneer je de applicatie opstart</summary>
         public static void BeginMenu() {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
             while (true) {
                 Console.Clear();
                 Logo();

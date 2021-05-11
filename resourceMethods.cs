@@ -94,9 +94,8 @@ namespace resourceMethods{
             return inputCheck(prompt, makeRangeArr(1, options.Length, backbutton), errorprompt, maxtries);
         }
 
-
         /// <summary>Controleert de gegeven input tegen de gegeven regexStr</summary>
-        public static string inputRegex(string prompt, string regexStr, string errorprompt="Input onjuist, probeer het opnieuw", int maxtries=0) {
+        public static string InputRegex(string prompt, string regexStr, string errorprompt="Input onjuist, probeer het opnieuw", int maxtries=0) {
             string answer = input(prompt);
             Regex newre = new Regex(regexStr);
             bool check = newre.IsMatch(answer);
@@ -113,6 +112,64 @@ namespace resourceMethods{
             }
             return answer;
         }
+
+        /// <summary>Controleert wachtwoord input</summary>
+        public static string InputWachtwoord(string prompt, string checkpass="", string errorprompt="Input onjuist, probeer het opnieuw", int maxtries=0) {
+            string answer = HiddenInput(prompt);
+            bool check;
+            Regex newre = new Regex(@"");
+            if (checkpass == "") {
+                newre = new Regex(@"\w{8,}");
+                check = newre.IsMatch(answer);
+            }
+            else {
+                check = answer == checkpass;
+            }
+            int totaltries = 0;
+            while (!check) {  // de check was niet succesvol
+                errorMessage(errorprompt);
+                totaltries++;
+                if (maxtries != 0 && totaltries >= maxtries) {
+                    answer = "";
+                    break;
+                }
+                answer = HiddenInput(prompt);
+                if (checkpass == "") {
+                    newre = new Regex(@"\w{8,}");
+                    check = newre.IsMatch(answer);
+                }
+                else {
+                    check = answer == checkpass;
+                }
+            }
+            Console.WriteLine(answer);
+            EnterMessage();
+            return answer;
+        }
+
+        /// <summary>Zorgt ervoor dat de input niet zichtbaar is</summary>
+        private static string HiddenInput(string prompt) {
+            string password = "";
+            Console.Write(prompt);
+            while (true) {
+                var key = Console.ReadKey(intercept: true);
+                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                {
+                    password = password[0..^1];
+                    Console.Write("\b \b");
+                }
+                else if (key.Key == ConsoleKey.Enter)
+                    break;
+                else if (key.Key != ConsoleKey.Enter && key.Key != ConsoleKey.Backspace)
+                {
+                    password += key.KeyChar;
+                    Console.Write("*");
+                }
+            }
+            Console.Write("\n");
+            return password;
+        }
+
 
         /// <summary>Een method die ja of nee krijgt als input en een bool returned (ja = true, nee = false)</summary>
         public static bool YesOrNo(string prompt) {
