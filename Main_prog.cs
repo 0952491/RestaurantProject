@@ -55,7 +55,6 @@ namespace Main_Restaurant
             }
         }
 
-
         /// <summary>Een menu voor wanneer een user is ingelogd</summary>
         public static void LoggedInMenu(User user) {
             while (true) {
