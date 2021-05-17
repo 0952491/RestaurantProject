@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Newtonsoft.Json;
 using ReserveringPage;
 using resourceMethods;
 
@@ -51,7 +52,7 @@ namespace LoginPage
                 else if (choice == "4") // verander je email
                     Email = Resources.InputRegex("Vul je email in: ", @"^\w+@\w+\.\w{2,3}$");
                 else if (choice == "5") // verander je tel nr
-                    Tel_no = Resources.InputRegex("Vul je Telefoonnr in: ", @"^{06}\d{8}$");
+                    Tel_no = Resources.InputRegex("Vul je Telefoonnr in: ", @"^\d{10}$");
                 else if (choice == "6")
                     Leeftijd = Resources.inputCheck("Vul je leeftijd in: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
                 else
@@ -65,14 +66,28 @@ namespace LoginPage
         public string Wachtwoord;
         public int ModLevel; // modlevel 0 = subscriber, 1 = admin (mss nog een voor personeel?)
         
+        [JsonConstructor]
         public User(string voornaam, string achternaam, string email, string tel, string leeftijd, string wachtwoord, int modlevel, string tussenvoegsel = "") 
             : base(voornaam, achternaam, email, tel, leeftijd, tussenvoegsel) {
             Wachtwoord = wachtwoord;
             ModLevel = modlevel;
         }
+        public User(User copy) : this(copy.Voornaam, copy.Achternaam, copy.Email, copy.Tel_no, copy.Leeftijd, copy.Wachtwoord, copy.ModLevel, copy.Tussenvoegsel) {}
 
         /// <summary>Returned true if modLevel = 1, anders returns false</summary>
         public bool IsAdmin() => ModLevel == 1;
+
+        public static bool operator ==(User p1, User p2) {
+            if (ReferenceEquals(p1, p2))
+                return true;
+            else if (ReferenceEquals(p1, null) || ReferenceEquals(p2, null))
+                return false;
+            return p1.ModLevel == p2.ModLevel && p1.Wachtwoord == p2.Wachtwoord && p1.Email == p2.Email && p1.Voornaam == p2.Voornaam && p1.Achternaam == p2.Achternaam && p1.Leeftijd == p2.Leeftijd && p1.Tel_no == p2.Tel_no && p1.Tussenvoegsel == p2.Tussenvoegsel;
+        }
+
+        public static bool operator !=(User p1, User p2) {
+            return !(p1 == p2);
+        }
     }
 
 
@@ -140,8 +155,11 @@ namespace LoginPage
                     user.Present();
                     Resources.EnterMessage();
                 }
-                else if (choice == "2")
+                else if (choice == "2") {
+                    User oldPerson = new User(user);
                     user.ChangePerson();
+                    resAdmin.ResetPerson(oldPerson, user);
+                }
                 else if (choice == "3") {
                     string passcheck = Resources.InputWachtwoord("Voer je wachtwoord in om je account te verwijderen: ", user.Wachtwoord, "Wachtwoord incorrect", 3);
                     if (passcheck == "")
@@ -190,11 +208,12 @@ namespace LoginPage
             if (removeMail == "")
                 return;
             if (removeMail == user.Email) {
-                Resources.errorMessage("If you want to delete your own account please pick option 7 from the administrator menu");
+                Resources.errorMessage("Als je je eigen account wil verwijderen kies dan optie 7 van het admin menu");
                 return;
             }
-            if (!adminRemove) { // if no admin will be removed he/she doesn't need to have the password of that user
+            if (!adminRemove) { // als er geen admin word verwijderd dan heeft diegene geen wachtwoord nodig om het account te verwijderen
                 RemoveSub(GetUser(removeMail));
+                resAdmin.RemoveReservering(user);
                 return;
             }
             string removePass = Resources.inputCheck("Wachtwoord van de te verwijderen gebruiker: ", new string[] { GetPass(removeMail) }, "Wachtwoord incorrect", 3);
@@ -217,6 +236,8 @@ namespace LoginPage
                     newSubscribers[i] = Subscribers[i];
                 }
                 Subscribers = newSubscribers;
+                Resources.succesMessage($"Account onder email {user.Email} succesvol verwijderd!");
+                Resources.EnterMessage();
             } else { 
                 Resources.errorMessage("Die gebruiker bestaat niet");
                 Resources.EnterMessage();
@@ -234,6 +255,8 @@ namespace LoginPage
                     newAdmins[i] = Admins[i];
                 }
                 Admins = newAdmins;
+                Resources.succesMessage($"Account onder email {user.Email} succesvol verwijderd!");
+                Resources.EnterMessage();
             } else {
                 Resources.errorMessage("Die admin bestaat niet");
                 Resources.EnterMessage();
@@ -271,7 +294,7 @@ namespace LoginPage
             return pass;
         }
 
-        /// <summary>Returneed een User object uit een van de arrays gebaseerd op de gegeven mail</summary>
+        /// <summary>Returned een User object uit een van de arrays gebaseerd op de gegeven mail</summary>
         public User GetUser(string mail) {
             User returnUser = null;
             foreach (User user in Subscribers) {
