@@ -142,8 +142,6 @@ namespace resourceMethods{
                     check = answer == checkpass;
                 }
             }
-            Console.WriteLine(answer);
-            EnterMessage();
             return answer;
         }
 
@@ -183,7 +181,7 @@ namespace resourceMethods{
         }
 
         /// <summary>Vraagt om een enter input van de user voordat het programma verder gaat</summary>
-        public static void EnterMessage() => input("Druk op enter om verder te gaan");
+        public static void EnterMessage() => input("Druk op enter om terug te gaan");
     }
 
     class DataHandler{

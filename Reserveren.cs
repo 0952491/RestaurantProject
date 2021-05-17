@@ -8,33 +8,27 @@ using TablePage; // namespace van Tafels.cs
 
 namespace ReserveringPage
 {
-    class Reservering
-    {
+    class Reservering {
         public string ToegangsCode; // de code om bij de reservering te kunnen
         public Day Dag;
         public DinnerRoom Tijdsvak;
         public Table Tafel;
-        public Gerecht[] Bestelling;
+        public Bestelling bestelling1;
         public User Gebruiker;
-        public Person Guest;
         
-        public Reservering(string code, Day dag, DinnerRoom tijdsvak, Table tafel, Gerecht[] bestelling, User user=null, Person guest=null) {
+        public Reservering(string code, Day dag, DinnerRoom tijdsvak, Table tafel, Bestelling bestelling, User user=null, Person guest=null) {
             Dag = dag;
             Tijdsvak = tijdsvak;
             Tafel = tafel;
             ToegangsCode = code;
-            Bestelling = bestelling;
+            bestelling1 = bestelling;
             Gebruiker = user;
-            Guest = guest;
         }
         public Reservering() => new Reservering("", null, null, null, null, null);
 
 
         /// <summary>Returned true als de reservering van een gast is, anders returned false</summary>
-        public bool IsGuest() => Guest == null;
-
-        /// <summary>Een curried functie om het verschil in tijd uit te rekenen tussen nu en de reserveringstijd</summary>
-        public Func<DateTime, Func<DateTime, Func<TimeSpan, bool>>> CompareTimeBuilder = ResTijd => CurTijd => VergelijkTS => (ResTijd - CurTijd) > VergelijkTS;
+        public bool IsGuest() => Gebruiker.ModLevel == -1;
 
         /// <summary>Laat een bericht zien voor een geannuleerde verandering van de reservering</summary>
         public void CancelChange() {
@@ -44,6 +38,7 @@ namespace ReserveringPage
 
         /// <summary>Returned een bool kijkend of de eerste datum en tijd nog ver weg genoeg zijn om een reservering te doen</summary>
         public bool CompareTime(DateTime restijd) {
+            Func<DateTime, Func<DateTime, Func<TimeSpan, bool>>> CompareTimeBuilder = ResTijd => CurTijd => VergelijkTS => (ResTijd - CurTijd) > VergelijkTS;
             var firstFun = CompareTimeBuilder(restijd)(DateTime.Now);
             return firstFun(new TimeSpan(1, 0, 0));  // voor nu staat de vergelijkingstijd op 1 uur van de reserveringstijd, dit kan later veranderd worden
         }
@@ -51,13 +46,14 @@ namespace ReserveringPage
         /// <summary>veranderd de reservering gebaseerd op de input van de gebruiker</summary>
         public void Change(Week week, User changingUser, MenuKaart menu) {  // TODO: DEZE METHOD UITVOERIG TESTEN
             if (!CompareTime(Dag.GetCorrectTime(Tijdsvak.Tijdvak)) && !changingUser.IsAdmin()) {
-                Console.WriteLine("Het is niet meer mogelijk deze reservering te veranderen");
-                Console.WriteLine("Als u toch nog een verandering wilt doorvoeren kunt u bellen naar het nummer van het restaurant onder 'Contact'");
+                Resources.errorMessage("Het is niet meer mogelijk deze reservering te veranderen");
+                Resources.errorMessage("Als u toch nog een verandering wilt doorvoeren kunt u bellen naar het nummer van het restaurant onder 'Contact'");
                 Resources.EnterMessage();
                 return;
             }
             string[] options = new string[] { "Datum en Tijd", "Tafel", "Bestelling" };
             while (true) {
+                Console.Clear();
                 OneLine();
                 string choice = Resources.makeMenuInput("Verander je reservering", "Kies een van de bovenstaande opties: ", options, backbutton: true);
                 if (choice == "1") {
@@ -123,7 +119,7 @@ namespace ReserveringPage
 
         public void ChangeOrder(MenuKaart menu) {
             while (true) {
-                Console.WriteLine(StringBestelling());
+                Console.WriteLine(bestelling1.StringBestelling());
                 string[] options = new string[] { "Gerecht toevoegen", "Gerecht verwijderen" };
                 string choice = Resources.makeMenuInput("Verander je bestelling", "Kies een van de bovenstaande opties: ", options, backbutton: true);
                 if (choice == "b")
@@ -132,27 +128,9 @@ namespace ReserveringPage
                 if (gerecht == null)
                     continue;
                 if (choice == "1")
-                    ReserveringsAdministration.AddGerechtToArr(gerecht, Bestelling);
-                else 
-                    ReserveringsAdministration.RemoveGerechtFromArr(gerecht, Bestelling);
-            }
-        }
-
-        /// <summary>Maakt een soort menu met de volledige bestelling die bij de reservering hoort en returned een string daarvan</summary>
-        public string StringBestelling() {  // TODO: Zorg ervoor dat gerechten die vaker in de bestelling staan bij elkaar worden opgeteld en niet vaker worden geprint naar de terminal
-            Console.OutputEncoding = Encoding.UTF8;
-            string outputStr = "";
-            if (Bestelling == null || Bestelling.Length == 0)
-                return outputStr;
-            else {
-                double totaalprijs = 0;
-                foreach (Gerecht g in Bestelling) {
-                    outputStr += $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}\n";
-                    totaalprijs += g.Prijs;
-                }
-                outputStr += Resources.drawString(55, "~");
-                outputStr += $"Totaalprijs{Resources.drawString(50 - "Totaalprijs".Length, " ")}€{totaalprijs}";
-                return outputStr;
+                    bestelling1.AddGerecht(gerecht);
+                else if (choice == "2")
+                    bestelling1.RemoveGerecht(gerecht);
             }
         }
 
@@ -162,24 +140,75 @@ namespace ReserveringPage
             Console.WriteLine($"Datum      : {Dag.Datum:dd/MM/yyyy}       Tijdsvak: {Tijdsvak.Tijdvak}");
             Console.WriteLine($"Tafel      : {Tafel.table_num}");
             Console.WriteLine("\n\nBestelling:");
-            Console.WriteLine(StringBestelling());
+            Console.WriteLine(bestelling1.StringBestelling());
         }
 
         /// <summary>Laat in een line alle info van de reservering zien</summary>
         public string OneLine() {
             string returnLine = "";
             returnLine += ToegangsCode + Resources.drawString(10 - ToegangsCode.Length, " ");
-            returnLine += Dag.Datum.ToString("dd/MM/yyyy") + ":";
-            returnLine += Tijdsvak.Tijdvak + Resources.drawString(10 - (Dag.Datum.ToString("dd/MM/yyyy") + ":").Length, " ");
+            returnLine += Dag.Datum.ToString("dd/MM/yyyy") + "  ";
+            returnLine += Tijdsvak.Tijdvak + Resources.drawString(10 - (Dag.Datum.ToString("dd/MM/yyyy") + "  ").Length, " ");
             returnLine += Tafel.table_num + Resources.drawString(10 - Tafel.table_num.Length, " ");
             returnLine += Gebruiker.Email;
             return returnLine;
         }
     }
 
+
+    class Bestelling {
+        public Gerecht[] bestelling;
+        public Bestelling() { bestelling = new Gerecht[0]; }
+        public Bestelling(Gerecht[] best) => bestelling = best;
+        public int Length => bestelling.Length;
+
+        /// <summary>Maakt een soort menu met de volledige bestelling die bij de reservering hoort en returned een string daarvan</summary>
+        public string StringBestelling() {  // TODO: Zorg ervoor dat gerechten die vaker in de bestelling staan bij elkaar worden opgeteld en niet vaker worden geprint naar de terminal
+            Console.OutputEncoding = Encoding.UTF8;
+            string outputStr = "";
+            if (bestelling == null || Length == 0)
+                return outputStr;
+            else {
+                double totaalprijs = 0;
+                foreach (Gerecht g in bestelling) {
+                    outputStr += $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}\n";
+                    totaalprijs += g.Prijs;
+                }
+                outputStr += Resources.drawString(55, "~");
+                outputStr += "\n";
+                outputStr += $"Totaalprijs{Resources.drawString(50 - "Totaalprijs".Length, " ")}€{totaalprijs}\n";
+                return outputStr;
+            }
+        }
+
+        /// <summary>Voegt een gerecht toe aan de bestelling</summary>
+        public void AddGerecht(Gerecht gerecht) {
+            Gerecht[] nieuwBestelling = new Gerecht[Length + 1];
+            for (int i = 0; i < Length; i++) {
+                nieuwBestelling[i] = bestelling[i];
+            }
+            nieuwBestelling[Length] = gerecht;
+            bestelling = nieuwBestelling;
+        }
+
+        /// <summary>Verwijderd een gerecht van de bestelling</summary>
+        public void RemoveGerecht(Gerecht gerecht) {
+            Gerecht[] nieuwBestelling = new Gerecht[bestelling.Length - 1];
+            for (int i = 0, j = 0, x = 0; i < Length; i++) {
+                if (gerecht == bestelling[i] && j == 0) {
+                    j++;
+                }
+                else {
+                    nieuwBestelling[x++] = bestelling[i];
+                }
+            }
+            bestelling = nieuwBestelling;
+        }
+    }
+
+
     class ReserveringsAdministration {
         public Reservering[] Reserveringen;
-        public Reservering[] GastReservering;
         public Week DezeWeek;
         private const string FILENAME = "Reserveringen.json";
 
@@ -187,13 +216,11 @@ namespace ReserveringPage
             if (!DataHandler.FileExists(FILENAME)) {
                 DezeWeek = new Week();
                 Reserveringen = new Reservering[0];
-                GastReservering = new Reservering[0];
             }
             else {
                 DezeWeek = LoadWeek(DataHandler.LoadJson(FILENAME).DezeWeek);
                 DezeWeek.UpdateWeek();
                 Reserveringen = Load(DataHandler.LoadJson(FILENAME).Reserveringen);
-                GastReservering = Load(DataHandler.LoadJson(FILENAME).GastReservering);
             }
         }
 
@@ -207,9 +234,9 @@ namespace ReserveringPage
         public void Save() => DataHandler.WriteJson(FILENAME, this);
 
         /// <summary>Voegt een nieuwe reservering toe aan alle reserveringen</summary>
-        public void AddReservering(Reservering res, bool guest=false) {
+        public void AddReservering(Reservering res) {
             res.Tafel.SetReservering(res.ToegangsCode);
-            Reservering[] resArr = guest ? GastReservering : Reserveringen;
+            Reservering[] resArr = Reserveringen;
             int totalRes = 0;
             foreach (Reservering _ in resArr)
                 totalRes++;
@@ -218,10 +245,7 @@ namespace ReserveringPage
                 nieuweRes[i] = resArr[i];
             }
             nieuweRes[totalRes] = res;
-            if (guest)
-                GastReservering = nieuweRes;
-            else
-                Reserveringen = nieuweRes;
+            Reserveringen = nieuweRes;
         }
 
         /// <summary>Verwijderd een reservering van alle reserveringen gebaseerd op de code van de reservering</summary>
@@ -230,16 +254,15 @@ namespace ReserveringPage
                 Console.WriteLine("De gegeven code bestaat niet in de huidige reserveringen"); 
                 return;
             }
-            int totalRes = 0;
-            foreach (Reservering _ in Reserveringen) {
-                totalRes++;
-            }
-            Reservering[] nieuweRes = new Reservering[totalRes - 1];
+            Reservering[] nieuweRes = new Reservering[Reserveringen.Length - 1];
             for (int i = 0, j = 0; i < Reserveringen.Length; i++) {
-                if (Reserveringen[i].ToegangsCode == code)
+                if (Reserveringen[i].ToegangsCode == code) {
+                    Reserveringen[i].Tafel.DelReservering();
                     continue;
+                }
                 nieuweRes[j++] = Reserveringen[i];
             }
+            Reserveringen = nieuweRes;
         }
 
         /// <summary>Verwijderd een reservering van alle reserveringen gebaseerd op een reservering object</summary>
@@ -248,32 +271,36 @@ namespace ReserveringPage
         /// <summary>Verwijderd alle reserveringen van een bepaalde gebruiker</summary>
         public void RemoveReservering(User user) { 
             foreach (Reservering res in Reserveringen) {
-                if (user != null && (res.Gebruiker == user || res.Guest == user))
+                if (user != null && (res.Gebruiker == user))
                     RemoveReservering(res.ToegangsCode);
             }
         }
 
         /// <summary>Laat reserveringen zien afhankelijk van wie de method callt</summary>
-        public void SeeReserveringen(User user) { 
-            foreach (Reservering res in GetReserveringen(user)) {
-                if (user.ModLevel == 1)
-                    res.OneLine();
-                else if (res.Gebruiker == user)
-                    res.ShowReservering();
+        public void SeeReserveringen(User user) {
+            Console.Clear();
+            if (GetReserveringen(user).Length > 0) {
+                foreach (Reservering res in GetReserveringen(user)) {
+                    if (user.ModLevel == 1)
+                        Console.WriteLine(res.OneLine());
+                    else if (res.Gebruiker == user)
+                        res.ShowReservering();
+                }
             }
+            else
+            {
+                Resources.errorMessage("Nog geen reserveringen om te laten zien");
+                Console.WriteLine("");
+            }
+            Resources.EnterMessage();
         }
 
         /// <summary>Returned een array met reserveringen afhankelijk van de gegeven gebruiker</summary>
         public Reservering[] GetReserveringen(User user) {
             int totalLength = 0;
             Reservering[] returnReserveringen;
-            if (user.ModLevel == 1) {  // voor admins
-                returnReserveringen = new Reservering[Reserveringen.Length + GastReservering.Length];
-                for (int i = 0; i < Reserveringen.Length; i++)
-                    returnReserveringen[i] = Reserveringen[i];
-                for (int i = 0; i < GastReservering.Length; i++)
-                    returnReserveringen[Reserveringen.Length + i] = GastReservering[i];
-            }
+            if (user.ModLevel == 1)  // voor admins
+                returnReserveringen = Reserveringen;
             else {  // voor normale gebruikers
                 foreach (Reservering res in Reserveringen) {
                     if (res.Gebruiker == user)
@@ -297,42 +324,41 @@ namespace ReserveringPage
             return strArr;
         }
 
-        // TODO: zorg ervoor dat reserveringen worden opgeslagen.
         /// <summary>Een method die het menu voor reserveringen weergeeft voor admins</summary>
         public void Menu(User user, MenuKaart menu, UserAdministration useradmin) {
             string[] options;
-            Resources.errorMessage("Reserveringen opslaan werkt helaas nog niet naar behoren, dit wordt zsm gefixt");
             if (user.IsAdmin())
                 options = new string[] { "Zie reserveringen", "Maak een nieuwe reservering aan", "Pas een reservering aan", "Verwijder een reservering" };
             else
                 options = new string[] { "Zie eigen reserveringen", "Maak een nieuwe reservering aan", "Pas een reservering aan", "Verwijder een reservering" };
             while (true) {
-                Save();
+                Console.Clear();
                 string choice = Resources.makeMenuInput($"Welkom bij de reservering opties {user.Voornaam}", "Kies een van bovenstaande opties: ", options, backbutton: true);
-                if (choice == "1") { // zie reserveringen
+                if (choice == "1") // zie reserveringen
                     SeeReserveringen(user);
-                    Resources.EnterMessage();
-                }
                 else if (choice == "2" && user.IsAdmin()) // maak een nieuwe reservering als admin
                     ReserveringMenu(true, menu, useradmin);
                 else if (choice == "2") // maak een nieuwe reservering als gebruiker
-                    MakeReservering(user, menu);
+                    MakeReservering(user, menu, false);
                 else if (choice == "3") { // pas een reservering aan
+                    Console.Clear();
                     Reservering[] UserReserveringen = GetReserveringen(user);
-                    string changechoice = Resources.makeMenuInput("Reserveringen om aan te passen", "Kies een van de bovenstaande opties", ToStrArray(UserReserveringen), backbutton: true);
+                    string changechoice = Resources.makeMenuInput("Reserveringen om aan te passen", "Kies een van de bovenstaande opties: ", ToStrArray(UserReserveringen), backbutton: true);
                     if (changechoice == "b")
                         continue;
                     UserReserveringen[Convert.ToInt32(changechoice) - 1].Change(DezeWeek, user, menu);
                 }
                 else if (choice == "4") { // verwijder een reservering
+                    Console.Clear();
                     Reservering[] UserReserveringen = GetReserveringen(user);
-                    string changechoice = Resources.makeMenuInput("Reserveringen om aan te passen", "Kies een van de bovenstaande opties", ToStrArray(UserReserveringen), backbutton: true);
+                    string changechoice = Resources.makeMenuInput("Reserveringen om te verwijderen", "Kies een van de bovenstaande opties: ", ToStrArray(UserReserveringen), backbutton: true);
                     if (changechoice == "b")
                         continue;
                     RemoveReservering(UserReserveringen[Convert.ToInt32(changechoice) - 1]);
                 }
                 else // ga terug naar het vorige menu
                     break;
+                Save();
             }
         }   
 
@@ -340,14 +366,13 @@ namespace ReserveringPage
         public void ReserveringMenu(bool isadmin, MenuKaart menu, UserAdministration useradmin) {
             while (true) {
                 Console.Clear();
-                Resources.errorMessage("Reserveringen opslaan werkt helaas nog niet naar behoren, dit wordt zsm gefixt");
                 string[] reserveOptions = new string[] { "Reserveer als gast", "Reserveer als gebruiker" };
-                string reserveChoice = Resources.makeMenuInput("Hoe wilt u een reservering maken?", "Kies een van de bovenstaande opties", reserveOptions, backbutton: true);
+                string reserveChoice = Resources.makeMenuInput("Hoe wilt u een reservering maken?", "Kies een van de bovenstaande opties: ", reserveOptions, backbutton: true);
                 if (reserveChoice == "1") {
                     Person guest = MakeGuest();
                     guest.Present();
                     if (Resources.YesOrNo("Is deze informatie correct?: "))
-                        MakeReservering(new User(guest.Voornaam, guest.Achternaam, guest.Email, guest.Tel_no, guest.Leeftijd, null, -1, guest.Tussenvoegsel), menu);
+                        MakeReservering(new User(guest.Voornaam, guest.Achternaam, guest.Email, guest.Tel_no, guest.Leeftijd, null, -1, guest.Tussenvoegsel), menu, true);
                     else
                         continue;
                 }
@@ -357,7 +382,7 @@ namespace ReserveringPage
                         if (loggedIn == null || loggedIn.IsAdmin()) {
                             Resources.errorMessage("De ingelogde gebruiker kan geen reservering doen op zijn/haar naam");
                         }
-                        MakeReservering(loggedIn, menu);
+                        MakeReservering(loggedIn, menu, false);
                         return;
                     }
                     string mail = Resources.inputCheck("Voer de mail van de gebruiker in die een reservering doet", useradmin.GetMails(), "Die email is helaas niet beschikbaar", maxTries: 3);
@@ -370,10 +395,11 @@ namespace ReserveringPage
                         Resources.errorMessage("De geselecteerde gebruiker kan geen reservering doen op zijn/haar naam");
                         Resources.EnterMessage();
                     }
-                    MakeReservering(selected, menu);
+                    MakeReservering(selected, menu, false);
                 }
                 else
                     break;
+                Save();
             }
         }
 
@@ -382,22 +408,28 @@ namespace ReserveringPage
             string voornaam = Resources.InputRegex("Voornaam: ", @"\w+");
             string tussenvoegsel = Resources.input("Tussenvoegsel: ");
             string achternaam = Resources.InputRegex("Achternaam: ", @"\w+");
-            string email = Resources.InputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
-            string telefoonnummer = Resources.InputRegex("Telefoonnr: ", @"^(06|\+316)\d{8}$");
+            string email = Resources.InputRegex("E-mail Adres: ", @"^(\w|\.)+@\w+\.\w{2,3}$");
+            string telefoonnummer = Resources.InputRegex("Telefoonnr: ", @"^\d{10}$");
             string leeftijd = Resources.inputCheck("Leeftijd: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
             return new Person(voornaam, achternaam, email, telefoonnummer, leeftijd, tussenvoegsel);
         }
 
+        public void ShowStep(int step) {
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine($"{Resources.drawString(20, " ")}Stap {step}/5{Resources.drawString(20, " ")}");
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+
         /// <summary>Maakt een reservering gebaseerd op de gegeven input, hiervoor moet al een gebruiker zijn geregistreerd</summary>
-        public void MakeReservering(User user, MenuKaart menu) {
+        public void MakeReservering(User user, MenuKaart menu, bool guest) {
             int step = 1;
             Day chosenDay = null;
             DinnerRoom chosenRoom = null;
             Table chosenTable = null;
-            Gerecht[] bestelling = null;
+            Bestelling bestelling = new Bestelling();
             while (step < 6) {
                 Console.Clear();
-                Console.WriteLine($"{step}/5");
+                ShowStep(step);
                 if (step == 1) { // selecteer de reserveerdag
                     chosenDay = DezeWeek.GetDay(false);
                     if (chosenDay == null)
@@ -419,25 +451,31 @@ namespace ReserveringPage
                         step++;
                 }
                 else if (step == 4) { // doe een bestelling voor de reservering
-                    while (true) {
-                        string choice = Resources.makeMenuInput("Weet je al wat je wilt? Dan kan je alvast een bestelling doen!", "Kies een van bovenstaande opties: ", new string[] { "Voeg een gerecht toe aan de bestelling", "Verwijder een gerecht van bestelling", "Ga verder" }, backbutton: true);
-                        if (choice == "1") {
-                            Gerecht addgerecht = menu.ChooseGerechten();
-                            bestelling = AddGerechtToArr(addgerecht, bestelling);
-                        }
-                        else if (choice == "2") {
-                            Gerecht removegerecht = menu.ChooseGerechten();
-                            bestelling = RemoveGerechtFromArr(removegerecht, bestelling);
-                        }
-                        else if (choice == "3") {
-                            step++;
-                            break;
-                        }
-                        else {
-                            step--;
-                            break;
-                        }
+                    if (bestelling.Length > 0) {
+                        Console.WriteLine(bestelling.StringBestelling());
                     }
+                    string choice = Resources.makeMenuInput("Weet je al wat je wilt? Dan kan je alvast een bestelling doen!", "Kies een van bovenstaande opties: ", new string[] { "Voeg een gerecht toe aan je bestelling", "Verwijder een gerecht van je bestelling", "Ga verder" }, backbutton: true);
+                    if (choice == "1") {
+                        Gerecht addgerecht = menu.ChooseGerechten();
+                        if (addgerecht != null)
+                            bestelling.AddGerecht(addgerecht);
+                    }
+                    else if (choice == "2") {
+                        Gerecht removegerecht = menu.ChooseGerechten();
+                        if (removegerecht != null && bestelling.bestelling.Contains(removegerecht))
+                            bestelling.RemoveGerecht(removegerecht);
+                        else if (removegerecht != null && !bestelling.bestelling.Contains(removegerecht)) {
+                            Resources.errorMessage($"{removegerecht.Naam} staat niet op je bestelling");
+                            Resources.EnterMessage();
+                        }  
+                    }
+                    else if (choice == "3") {
+                        step++;
+                    }
+                    else {
+                        step--;
+                    }
+
                 }
                 else if (step == 5) { // Geef een overzicht van de bestelling 
                     string Code = GenerateCode();
@@ -476,26 +514,6 @@ namespace ReserveringPage
             return strPart + first + second;
         }
 
-        /// <summary>Voegt een gerecht toe aan een gerecht[] array</summary>
-        public static Gerecht[] AddGerechtToArr(Gerecht gerecht, Gerecht[] Bestelling) {
-            Gerecht[] nieuwBestelling = new Gerecht[Bestelling.Length + 1];
-            for (int i = 0; i < Bestelling.Length; i++) {
-                nieuwBestelling[i] = Bestelling[i];
-            }
-            nieuwBestelling[Bestelling.Length] = gerecht;
-            return nieuwBestelling;
-        }
-
-        /// <summary>Verwijdert een gerecht van een gerecht[] array</summary>
-        public static Gerecht[] RemoveGerechtFromArr(Gerecht gerecht, Gerecht[] Bestelling) {
-            Gerecht[] nieuwBestelling = new Gerecht[Bestelling.Length - 1];
-            for (int i = 0; i < Bestelling.Length; i++) {
-                if (gerecht != Bestelling[i])
-                    nieuwBestelling[i] = Bestelling[i];  // TODO: verbeter dit zodat je maar een kopie van een gerecht verwijdert per keer en niet meteen alle gerechten met dezelfde naam
-            }
-            return nieuwBestelling;
-        }
-
         /// <summary>Checked of de reservering bestaat en returned een bool</summary>
         public bool Exists(Reservering res) => GetCodes().Contains(res.ToegangsCode);
         public bool Exists(string code) => GetCodes().Contains(code); 
@@ -507,6 +525,14 @@ namespace ReserveringPage
                 Codes[i] = Reserveringen[i].ToegangsCode;
             }
             return Codes;
+        }
+
+        /// <summary>Reset alle reserveringen van de gevonden persoon naar reserveringen van de nieuwe persoon</summary>
+        public void ResetPerson(User oldPerson, User newPerson) {
+            Reservering[] oldReserveringen = GetReserveringen(oldPerson);
+            foreach (Reservering res in oldReserveringen) {
+                res.Gebruiker = newPerson;
+            }
         }
     }
 }
