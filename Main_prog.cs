@@ -65,7 +65,7 @@ namespace Main_Restaurant
                 else
                     message = $"Ingelogd als {user.Voornaam} {user.Tussenvoegsel} {user.Achternaam}";
                 if (user.IsAdmin()) { // geef het menu weer van een admin
-                    string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Uitloggen"};
+                    string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Verander Contactgegevens", "Uitloggen"};
                     string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
                     if (choice == "1")
                         ReserveerAdmin.Menu(user, Menu, UserAdmin);
@@ -73,6 +73,8 @@ namespace Main_Restaurant
                         Menu.AdminMenu();
                     else if (choice == "3")
                         UserAdmin.AdminMenu(user, ReserveerAdmin);
+                    else if (choice == "4")
+                        ChangeContacts();
                     else
                         break;
                 }
@@ -145,13 +147,17 @@ namespace Main_Restaurant
         }
 
         /// <summary>Geeft de contactgegevens weer van het restaurant</summary>
-        public static void ContactPage() {
+        public static void ContactPage(bool ForAdmin=false) {
             Console.Clear();
             Console.WriteLine($"Adres : {Contact.Item1}  {Contact.Item2}");
             Console.WriteLine($"Plaats: {Contact.Item3}");
             Console.WriteLine($"Tel.no: {Contact.Item4}");
             Console.WriteLine($"Email : {Contact.Item5}");
-            string choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, maxTries: 1);
+            string choice;
+            if (ForAdmin)
+                choice = "b";
+            else
+                choice = Resources.inputCheck("Typ 'b' om terug te gaan\n", new string[] {"b", "B"}, maxTries: 1);
             if (choice == "") {
                 ContactPage();
             } else {  // gebruiker typte 'b' of 'B' om terug te gaan

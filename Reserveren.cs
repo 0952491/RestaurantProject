@@ -287,8 +287,7 @@ namespace ReserveringPage
                         res.ShowReservering();
                 }
             }
-            else
-            {
+            else {
                 Resources.errorMessage("Nog geen reserveringen om te laten zien");
                 Console.WriteLine("");
             }
@@ -310,7 +309,7 @@ namespace ReserveringPage
                 for (int i = 0, j = 0; i < Reserveringen.Length; i++) {
                     if (Reserveringen[i].Gebruiker == user)
                         returnReserveringen[j++] = Reserveringen[i];
-                } 
+                }
             }
             return returnReserveringen;
         }
@@ -475,7 +474,6 @@ namespace ReserveringPage
                     else {
                         step--;
                     }
-
                 }
                 else if (step == 5) { // Geef een overzicht van de bestelling 
                     string Code = GenerateCode();

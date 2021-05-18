@@ -83,18 +83,21 @@ namespace MenuPage
         public Gerecht[] LoadGerechten(dynamic gerechten) => gerechten.ToObject<Gerecht[]>();
 
         /// <summary>Print een geordend menu uit van een array van specifieke gerechten</summary>
-        public void ShowGerechten() {
+        public void ShowGerechten(bool ForAdmin=false) {
             while (true) {
                 Console.OutputEncoding = Encoding.UTF8;
                 Gerecht[] gerechtArr = GetCategorie();
                 if (gerechtArr == null)
                     break;
                 Console.Clear();
+                Console.WriteLine(Resources.drawString(60, "~"));
                 foreach (Gerecht g in gerechtArr) {
-                    string display = $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}";
+                    string display = $"| {g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}";
                     Console.WriteLine(display);
                 }
-                Resources.EnterMessage();
+                Console.WriteLine(Resources.drawString(60, "~"));
+                if (!ForAdmin)
+                    Resources.EnterMessage();
             }
         }
 
@@ -135,8 +138,7 @@ namespace MenuPage
 
         /// <summary>Loopt over alle gerechten van de categorie arrays</summary>
         private Gerecht loopGerechten(string naam, Gerecht[] gerechtArr) {
-            foreach (Gerecht g in gerechtArr)
-            {
+            foreach (Gerecht g in gerechtArr) {
                 if (g.Naam == naam)
                     return g;
             }
