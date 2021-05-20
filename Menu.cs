@@ -24,7 +24,7 @@ namespace MenuPage
                 Naam = Resources.input("Geef de nieuwe naam door van het gerecht: ");
             } else { 
                 Console.WriteLine($"Oude prijs: {Prijs}");
-                Prijs = Convert.ToDouble(Resources.InputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^\d+$"));
+                Prijs = Convert.ToDouble(Resources.InputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^\d+\.\d+$"));
             }
         }
     }
@@ -54,25 +54,25 @@ namespace MenuPage
         {
             while (true) {
                 Console.Clear();
-                string input = Resources.makeMenuInput("", "Kies een van de bovenstaande opties: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan", "Sla gerechten op" }, backbutton: true);
+                Save();
+                string input = Resources.makeMenuInput("", "Kies een van de bovenstaande opties: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan"}, backbutton: true);
                 if (input == "1") { // zie gerechten
                     ShowGerechten();
-                    Resources.input("Klik op enter om verder te gaan");
                 }
                 else if (input == "2") { // voeg een gerecht toe
                     AddGerecht(MakeGerecht());
                 }
                 else if (input == "3") { // pas een gerecht aan
                     string[] alle_namen = GetNames();
-                    string num = Resources.makeMenuInput("Beschikbare Gerechten", "Kies een van de bovenstaande gerechten: ", alle_namen);
+                    Console.Clear();
+                    string num = Resources.makeMenuInput("Beschikbare Gerechten", "Kies een van de bovenstaande gerechten: ", alle_namen, backbutton: true);
+                    if (num == "b")
+                        continue;
                     string naam = alle_namen[Convert.ToInt32(num) - 1];
                     GetGerecht(naam).ChangeGerecht();
                 }
-                else if (input == "4") { // sla een gerecht op
-                    Save();
-                } else {
+                else
                     break;
-                }
             }
         }
 
@@ -164,6 +164,9 @@ namespace MenuPage
         public void AddGerecht(Gerecht gerecht)
         {
             Gerecht[] gerechtArr = GetCategorie();
+            if (gerechtArr == null || gerechtArr.Length == 0) {
+                return;
+            }
             Gerecht[] nieuwArr = new Gerecht[gerechtArr.Length + 1];
             for (int i = 0; i < gerechtArr.Length; i++)
                 nieuwArr[i] = gerechtArr[i];

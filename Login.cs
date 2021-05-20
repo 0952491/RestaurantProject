@@ -15,7 +15,7 @@ namespace LoginPage
         public string Leeftijd;
         
         
-        public Person(string voornaam, string achternaam, string email, string tel, string leeftijd, string tussenvoegsel = ""){
+        public Person(string voornaam, string achternaam, string email, string tel, string leeftijd, string tussenvoegsel = "") {
             Voornaam = voornaam;
             Tussenvoegsel = tussenvoegsel;
             Achternaam = achternaam;
@@ -50,7 +50,7 @@ namespace LoginPage
                 else if (choice == "3") // verander je achternaam
                     Achternaam = Resources.input("Vul je achternaam in: ");
                 else if (choice == "4") // verander je email
-                    Email = Resources.InputRegex("Vul je email in: ", @"^\w+@\w+\.\w{2,3}$");
+                    Email = Resources.InputRegex("Vul je email in: ", @"^(\w|\.)+@\w+\.\w{2,3}$");
                 else if (choice == "5") // verander je tel nr
                     Tel_no = Resources.InputRegex("Vul je Telefoonnr in: ", @"^\d{10}$");
                 else if (choice == "6")
@@ -117,6 +117,7 @@ namespace LoginPage
         public void AdminMenu(User admin, ReserveringsAdministration resAdmin) {
             string[] options = new string[] { "Registreer Gebruiker", "Registreer Admin", "Zie alle geregistreerde mails", "Wijzig profiel", "Verwijder Gebruiker", "Verwijder Admin", "Verwijder eigen account"};
             while (true) {
+                Console.Clear();
                 Save();
                 string choice = Resources.makeMenuInput("Beheer Gebruikers", "Kies een van de bovenstaande opties: ", options, backbutton: true);
                 if (choice == "1")
@@ -149,7 +150,7 @@ namespace LoginPage
             while (true) {
                 Console.Clear();
                 Save();
-                string choice = Resources.makeMenuInput("Gebruiker menu", "Kies een van bovenstaande opties", options, backbutton: true);
+                string choice = Resources.makeMenuInput("Gebruiker menu", "Kies een van bovenstaande opties: ", options, backbutton: true);
                 if (choice == "1") {
                     Console.Clear();
                     user.Present();
@@ -207,7 +208,7 @@ namespace LoginPage
             string removeMail = Resources.inputCheck("Email van te verwijderen gebruiker: ", GetMails(), "Email incorrect", 3);
             if (removeMail == "")
                 return;
-            if (removeMail == user.Email) {
+            if (removeMail.ToLower() == user.Email.ToLower()) {
                 Resources.errorMessage("Als je je eigen account wil verwijderen kies dan optie 7 van het admin menu");
                 return;
             }
@@ -264,7 +265,7 @@ namespace LoginPage
         }
 
         /// <summary>Checked of de passed user bestaat gebaseerd op alle mails (van Admins en Subscribers)</summary>
-        public bool Exists(User user) => GetMails().Contains(user.Email);
+        public bool Exists(User user) => Resources.MailCheck(user.Email, GetMails());
 
         /// <summary>Verzamelt alle mails van alle gebruikers in een array en returned die array</summary>
         public string[] GetMails() {
@@ -284,11 +285,11 @@ namespace LoginPage
         public string GetPass(string mail) {
             string pass = "";
             foreach (User user in Subscribers) {
-                if (user.Email == mail)
+                if (user.Email.ToLower() == mail.ToLower())
                     pass = user.Wachtwoord;
             }
             foreach (User user in Admins) {
-                if (user.Email == mail)
+                if (user.Email.ToLower() == mail.ToLower())
                     pass = user.Wachtwoord;
             }
             return pass;
@@ -298,11 +299,11 @@ namespace LoginPage
         public User GetUser(string mail) {
             User returnUser = null;
             foreach (User user in Subscribers) {
-                if (user.Email == mail)
+                if (user.Email.ToLower() == mail.ToLower())
                     returnUser = user;
             }
             foreach (User user in Admins) {
-                if (user.Email == mail)
+                if (user.Email.ToLower() == mail.ToLower())
                     returnUser = user;
             }
             return returnUser;
@@ -315,37 +316,37 @@ namespace LoginPage
             string voornaam = Resources.InputRegex("Voornaam: ", @"\w+");
             string tussenvoegsel = Resources.input("Tussenvoegsel: ");
             string achternaam = Resources.InputRegex("Achternaam: ", @"\w+");
-            string email = Resources.InputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+            string email = Resources.InputRegex("E-mail Adres: ", @"^(\w|\.)+@\w+\.\w{2,3}$");
             while (GetMails().Contains(email)) {
                 Resources.errorMessage($"{email} is al geregistreerd, probeer alstublieft opnieuw");
-                email = Resources.InputRegex("E-mail Adres: ", @"^\w+@\w+\.\w{2,3}$");
+                email = Resources.InputRegex("E-mail Adres: ", @"^(\w|\.)+@\w+\.\w{2,3}$");
             }
             string telefoonnummer = Resources.InputRegex("Telefoonnr: ", @"^\d{10}$", "Voert u alstublieft 10 cijfers in als telefoonnummer");
             string leeftijd = Resources.inputCheck("Leeftijd: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
             string wachtwoord = Resources.InputWachtwoord("Wachtwoord: ");
-            string inputHerhaal = Resources.InputWachtwoord("Wachtwoord: ", wachtwoord);
+            string inputHerhaal = Resources.InputWachtwoord("Wachtwoord: ", wachtwoord, maxtries: 3);
             if (admin && inputHerhaal != "") {
                 newUser = new User(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 1, tussenvoegsel);
                 AddAdmin(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
-                Resources.input("Druk op enter om verder te gaan");
+                Resources.EnterMessage();
             }
             else if (!admin && inputHerhaal != "") {
                 newUser = new User(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 0, tussenvoegsel);
                 AddSub(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
-                Resources.input("Druk op enter om verder te gaan");
+                Resources.EnterMessage();
             }
             else {
                 Resources.errorMessage("3 keer een verkeerd wachtwoord ingevoerd voor herhaling, Registratie mislukt");
-                Resources.input("Druk op enter om verder te gaan");
+                Resources.EnterMessage();
             }
         }
 
         /// <summary>Laat gebruiker inloggen en returned ingelogde gebruiker</summary>
         public User Login() {
             Console.Clear();
-            string loginMail = Resources.inputCheck("Email: ", GetMails(), "Email incorrect", 3);
+            string loginMail = Resources.inputMail("Email: ", GetMails(), "Email incorrect", 3);
             string loginPass = loginMail != "" ? Resources.InputWachtwoord("Wachtwoord: ", GetPass(loginMail), "Wachtwoord incorrect", 3) : "";
             if (loginMail != "" && loginPass != "")
                 return GetUser(loginMail);

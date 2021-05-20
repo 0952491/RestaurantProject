@@ -36,15 +36,17 @@ namespace ReserveringPage
             Resources.EnterMessage();
         }
 
+        /// <summary>Deze functie returned een functie waarmee je tijd kan vergelijken met elkaar</summary>
+        public Func<DateTime, Func<TimeSpan, bool>> CompareTimeBuilder(DateTime ResTijd) => CurTijd => VergelijkTS => (ResTijd - CurTijd) > VergelijkTS;
+
         /// <summary>Returned een bool kijkend of de eerste datum en tijd nog ver weg genoeg zijn om een reservering te doen</summary>
-        public bool CompareTime(DateTime restijd) {
-            Func<DateTime, Func<DateTime, Func<TimeSpan, bool>>> CompareTimeBuilder = ResTijd => CurTijd => VergelijkTS => (ResTijd - CurTijd) > VergelijkTS;
+        public bool CompareTime(DateTime restijd) { 
             var firstFun = CompareTimeBuilder(restijd)(DateTime.Now);
             return firstFun(new TimeSpan(1, 0, 0));  // voor nu staat de vergelijkingstijd op 1 uur van de reserveringstijd, dit kan later veranderd worden
         }
 
         /// <summary>veranderd de reservering gebaseerd op de input van de gebruiker</summary>
-        public void Change(Week week, User changingUser, MenuKaart menu) {  // TODO: DEZE METHOD UITVOERIG TESTEN
+        public void Change(Week week, User changingUser, MenuKaart menu) {
             if (!CompareTime(Dag.GetCorrectTime(Tijdsvak.Tijdvak)) && !changingUser.IsAdmin()) {
                 Resources.errorMessage("Het is niet meer mogelijk deze reservering te veranderen");
                 Resources.errorMessage("Als u toch nog een verandering wilt doorvoeren kunt u bellen naar het nummer van het restaurant onder 'Contact'");
@@ -111,7 +113,7 @@ namespace ReserveringPage
             DinnerRoom chosenRoom = dag.GetRoom();
             return chosenRoom;
         }
-
+        
         public Table ChangeTable(DinnerRoom room) {
             Table chosenTable = room.GetTafel();
             return chosenTable;
@@ -135,22 +137,39 @@ namespace ReserveringPage
         }
 
         /// <summary>Laat een overzicht zien van alle componenten van de reservering</summary>
-        public void ShowReservering() {
-            Console.WriteLine($"Op naam van: {Gebruiker.Voornaam} {Gebruiker.Achternaam}");
-            Console.WriteLine($"Datum      : {Dag.Datum:dd/MM/yyyy}       Tijdsvak: {Tijdsvak.Tijdvak}");
-            Console.WriteLine($"Tafel      : {Tafel.table_num}");
-            Console.WriteLine("\n\nBestelling:");
-            Console.WriteLine(bestelling1.StringBestelling());
+        public void ShowReservering(bool blueOutLine=false) {
+            string nameLine = $"Op naam van: {Gebruiker.Voornaam} {Gebruiker.Achternaam}";
+            string timeLine = $"Datum      : {Dag.Datum:dd/MM/yyyy}       Tijdsvak: {Tijdsvak.Tijdvak}";
+            string tableLine = $"Tafel      : {Tafel.table_num}";
+            if (blueOutLine) {
+                Console.Write(nameLine + Resources.drawString(59 - nameLine.Length, " "));
+                Resources.printBlue(" ");
+                Console.Write(timeLine + Resources.drawString(59 - timeLine.Length, " "));
+                Resources.printBlue(" ");
+                Console.Write(tableLine + Resources.drawString(59 - tableLine.Length, " "));
+                Resources.printBlue(" ");
+                Console.Write("Bestelling:" + Resources.drawString(59 - "Bestelling:".Length, " "));
+                Resources.printBlue(" ");
+                bestelling1.OutlinedBestelling();
+            }
+            else {
+                Console.WriteLine(nameLine);
+                Console.WriteLine(timeLine);
+                Console.WriteLine(tableLine);
+                Console.WriteLine("Bestelling:");
+                Console.WriteLine(bestelling1.StringBestelling());
+            }
+            
         }
 
         /// <summary>Laat in een line alle info van de reservering zien</summary>
         public string OneLine() {
             string returnLine = "";
-            returnLine += ToegangsCode + Resources.drawString(10 - ToegangsCode.Length, " ");
-            returnLine += Dag.Datum.ToString("dd/MM/yyyy") + "  ";
-            returnLine += Tijdsvak.Tijdvak + Resources.drawString(10 - (Dag.Datum.ToString("dd/MM/yyyy") + "  ").Length, " ");
-            returnLine += Tafel.table_num + Resources.drawString(10 - Tafel.table_num.Length, " ");
-            returnLine += Gebruiker.Email;
+            returnLine += "Reserveringsnummer: " + ToegangsCode + " | ";
+            returnLine += "Datum: " + Dag.Datum.ToString("dd/MM/yyyy") + " | ";
+            returnLine += "Tijd: " + Tijdsvak.Tijdvak + " | ";
+            returnLine += "Tafel: " + Tafel.table_num + " | ";
+            returnLine += "E-mail: " + Gebruiker.Email;
             return returnLine;
         }
     }
@@ -163,7 +182,7 @@ namespace ReserveringPage
         public int Length => bestelling.Length;
 
         /// <summary>Maakt een soort menu met de volledige bestelling die bij de reservering hoort en returned een string daarvan</summary>
-        public string StringBestelling() {  // TODO: Zorg ervoor dat gerechten die vaker in de bestelling staan bij elkaar worden opgeteld en niet vaker worden geprint naar de terminal
+        public string StringBestelling() {
             Console.OutputEncoding = Encoding.UTF8;
             string outputStr = "";
             if (bestelling == null || Length == 0)
@@ -178,6 +197,28 @@ namespace ReserveringPage
                 outputStr += "\n";
                 outputStr += $"Totaalprijs{Resources.drawString(50 - "Totaalprijs".Length, " ")}€{totaalprijs}\n";
                 return outputStr;
+            }
+        }
+
+        /// <summary>Print de bestelling met een blauwe grens aan de rechterkant</summary>
+        public void OutlinedBestelling() {
+            Console.OutputEncoding = Encoding.UTF8;
+            if (bestelling == null || Length == 0)
+                return;
+            else {
+                double totaalprijs = 0;
+                string currentLine = "";
+                foreach (Gerecht g in bestelling) {
+                    currentLine += $"{g.Naam}{Resources.drawString(40 - g.Naam.Length, " ")}€{g.Prijs}";
+                    totaalprijs += g.Prijs;
+                    Console.Write(currentLine + Resources.drawString(59 - currentLine.Length, " "));
+                    Resources.printBlue(" ");
+                }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(Resources.drawString(59, "~"));
+                Console.ForegroundColor = ConsoleColor.White;
+                Resources.printBlue(" ");
+                Console.WriteLine($"Totaalprijs{Resources.drawString(50 - "Totaalprijs".Length, " ")}€{totaalprijs}\n");
             }
         }
 
@@ -280,11 +321,20 @@ namespace ReserveringPage
         public void SeeReserveringen(User user) {
             Console.Clear();
             if (GetReserveringen(user).Length > 0) {
+                int index = 1;
                 foreach (Reservering res in GetReserveringen(user)) {
                     if (user.ModLevel == 1)
                         Console.WriteLine(res.OneLine());
-                    else if (res.Gebruiker == user)
-                        res.ShowReservering();
+                    else if (res.Gebruiker == user) {
+                        Console.BackgroundColor = ConsoleColor.DarkBlue;
+                        Console.WriteLine($"Reservering {index}" + Resources.drawString(60 - $"Reservering {index}".Length, " "));
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        index++;
+                        res.ShowReservering(true);
+                        Console.BackgroundColor = ConsoleColor.DarkBlue;
+                        Console.WriteLine(Resources.drawString(60, " "));
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
                 }
             }
             else {
@@ -384,17 +434,18 @@ namespace ReserveringPage
                         MakeReservering(loggedIn, menu, false);
                         return;
                     }
-                    string mail = Resources.inputCheck("Voer de mail van de gebruiker in die een reservering doet", useradmin.GetMails(), "Die email is helaas niet beschikbaar", maxTries: 3);
+                    string mail = Resources.inputCheck("Voer de mail van de gebruiker in die een reservering doet: ", useradmin.GetMails(), "Die email is helaas niet beschikbaar", maxTries: 3);
                     if (mail == null) {
                         Resources.EnterMessage();
                         return;
                     }
                     User selected = useradmin.GetUser(mail);
-                    if (selected.IsAdmin() || selected == null) {
+                    if (selected == null || selected.IsAdmin()) {
                         Resources.errorMessage("De geselecteerde gebruiker kan geen reservering doen op zijn/haar naam");
                         Resources.EnterMessage();
                     }
-                    MakeReservering(selected, menu, false);
+                    else
+                        MakeReservering(selected, menu, false);
                 }
                 else
                     break;

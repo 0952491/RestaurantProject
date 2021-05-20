@@ -29,6 +29,46 @@
       "Email": "TestMail@mail.com",
       "Tel_no": "0612345678",
       "Leeftijd": "21"
+    },
+    {
+      "Wachtwoord": "12345678",
+      "ModLevel": 0,
+      "Voornaam": "Jarno",
+      "Tussenvoegsel": "",
+      "Achternaam": "de Groot",
+      "Email": "Jarno@mail.com",
+      "Tel_no": "0123456789",
+      "Leeftijd": "18"
+    },
+    {
+      "Wachtwoord": "12345678",
+      "ModLevel": 0,
+      "Voornaam": "gene",
+      "Tussenvoegsel": "",
+      "Achternaam": "en",
+      "Email": "e@e.nl",
+      "Tel_no": "0123456789",
+      "Leeftijd": "18"
+    },
+    {
+      "Wachtwoord": "wachtwoo",
+      "ModLevel": 0,
+      "Voornaam": "e",
+      "Tussenvoegsel": "",
+      "Achternaam": "e",
+      "Email": "e@e.com",
+      "Tel_no": "0123456789",
+      "Leeftijd": "18"
+    },
+    {
+      "Wachtwoord": "12345678",
+      "ModLevel": 0,
+      "Voornaam": "Frans",
+      "Tussenvoegsel": "",
+      "Achternaam": "Fouad",
+      "Email": "Frans@gmail.com",
+      "Tel_no": "0644080808",
+      "Leeftijd": "18"
     }
   ],
   "Admins": [

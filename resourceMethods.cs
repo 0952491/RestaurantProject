@@ -51,9 +51,43 @@ namespace resourceMethods{
             return answer;
         }
 
+        /// <summary>Vergelijkt de ingevoerde mail (ToLower) met alle strings uit de array (ook ToLower)</summary>
+        public static string inputMail(string prompt, string[] mails, string errorprompt="De ingevoerde mail is niet in gebruik", int maxTries=0) {
+            string answer = input(prompt);
+            int totalTries = 0;
+            while (!MailCheck(answer, mails)) {
+                errorMessage(errorprompt);
+                totalTries++;
+                if (maxTries != 0 && totalTries >= maxTries) {
+                    errorMessage($"Maximaal aantal pogingen {maxTries} bereikt, druk op enter om verder te gaan");
+                    input("");
+                    answer = "";
+                    break;
+                }
+                answer = input(prompt);
+            }
+            return answer;
+        }
+
+        /// <summary>Checked of de mail in de array van mails zit en returned een boolean</summary>
+        public static bool MailCheck(string mail, string[] mails) { 
+            foreach (string m in mails) {
+                if (m.ToLower() == mail.ToLower())
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>Maakt de gegeven string zijn achtergrond donkerblauw</summary>
+        public static void printBlue(string mess) {
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.WriteLine(mess);
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+
         /// <summary>Laat een menu zien met datums en laat de gebruiker uit een datum kiezen</summary>
         public static DateTime inputDate(string prompt, DateTime[] dates, string errorprompt= "Die datum is helaas niet beschikbaar. Kiest u alstublieft opnieuw.", int maxtries=0) {
-            string[] options = new string[dates.Length];
+            string[] options = new string[dates.Length];  
             for (int i = 0; i < dates.Length; i++)
                 options[i] = dates[i].ToString("dd/MM/yyyy");
             string returned = makeMenuInput("De volgende dagen zijn beschikbaar", prompt, options, errorprompt, true, maxtries);

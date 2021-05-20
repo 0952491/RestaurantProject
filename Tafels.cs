@@ -150,8 +150,7 @@ namespace TablePage
         }
 
         /// <summary>Hulp voor de constructor, vult alle Table[] fields van de DinnerRoom Object met Table Objects</summary>
-        public void MakeNew()
-        {
+        public void MakeNew() {
             for (int i = 0; i < VoorTwee.Length; i++)
                 VoorTwee[i] = new Table(i + 1, 2);
             for (int i = 0; i < VoorVier.Length; i++)

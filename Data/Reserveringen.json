@@ -1,9 +1,9 @@
 {
-  "Reserveringen": [],
-  "DezeWeek": {
-    "reserveringsWeek": [
-      {
-        "Datum": "2021-05-17T09:54:27.4834333+02:00",
+  "Reserveringen": [
+    {
+      "ToegangsCode": "0001AA",
+      "Dag": {
+        "Datum": "2021-05-18T09:54:27.4834333+02:00",
         "VoorVijfTotZes": {
           "VoorTwee": [
             {
@@ -17,6 +17,428 @@
               "seats": 2,
               "occupied": false,
               "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "17:00 - 18:45"
+        },
+        "VoorZesTotAcht": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "18:45 - 20:30"
+        },
+        "VoorAchtTotTien": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0000AA"
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": true,
+              "reserveerCode": "0001AA"
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "20:30 - 22:15"
+        }
+      },
+      "Tijdsvak": {
+        "VoorTwee": [
+          {
+            "table_num": "1A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0000AA"
+          },
+          {
+            "table_num": "3A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "4A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "6A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "7A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "8A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorVier": [
+          {
+            "table_num": "1B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2B",
+            "seats": 4,
+            "occupied": true,
+            "reserveerCode": "0001AA"
+          },
+          {
+            "table_num": "3B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "4B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorZes": [
+          {
+            "table_num": "1C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "Tijdvak": "20:30 - 22:15"
+      },
+      "Tafel": {
+        "table_num": "2B",
+        "seats": 4,
+        "occupied": true,
+        "reserveerCode": "0001AA"
+      },
+      "bestelling1": {
+        "bestelling": [],
+        "Length": 0
+      },
+      "Gebruiker": {
+        "Wachtwoord": "12345678",
+        "ModLevel": 0,
+        "Voornaam": "Jeroen",
+        "Tussenvoegsel": "",
+        "Achternaam": "Visser",
+        "Email": "0952491@hr.nl",
+        "Tel_no": "0612345678",
+        "Leeftijd": "02-07-1999"
+      }
+    },
+    {
+      "ToegangsCode": "0001AA",
+      "Dag": {
+        "Datum": "2021-05-19T09:54:27.4834333+02:00",
+        "VoorVijfTotZes": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0001AA"
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0002AA"
             },
             {
               "table_num": "3A",
@@ -302,6 +724,973 @@
           "Tijdvak": "20:30 - 22:15"
         }
       },
+      "Tijdsvak": {
+        "VoorTwee": [
+          {
+            "table_num": "1A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0001AA"
+          },
+          {
+            "table_num": "2A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0002AA"
+          },
+          {
+            "table_num": "3A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "4A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "6A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "7A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "8A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorVier": [
+          {
+            "table_num": "1B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "3B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "4B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorZes": [
+          {
+            "table_num": "1C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "Tijdvak": "17:00 - 18:45"
+      },
+      "Tafel": {
+        "table_num": "1A",
+        "seats": 2,
+        "occupied": true,
+        "reserveerCode": "0001AA"
+      },
+      "bestelling1": {
+        "bestelling": [],
+        "Length": 0
+      },
+      "Gebruiker": {
+        "Wachtwoord": null,
+        "ModLevel": -1,
+        "Voornaam": "sd",
+        "Tussenvoegsel": "s",
+        "Achternaam": "s",
+        "Email": "s@smail.com",
+        "Tel_no": "0123456789",
+        "Leeftijd": "19"
+      }
+    },
+    {
+      "ToegangsCode": "0002AA",
+      "Dag": {
+        "Datum": "2021-05-19T09:54:27.4834333+02:00",
+        "VoorVijfTotZes": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0001AA"
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0002AA"
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "17:00 - 18:45"
+        },
+        "VoorZesTotAcht": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "18:45 - 20:30"
+        },
+        "VoorAchtTotTien": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "20:30 - 22:15"
+        }
+      },
+      "Tijdsvak": {
+        "VoorTwee": [
+          {
+            "table_num": "1A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0001AA"
+          },
+          {
+            "table_num": "2A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0002AA"
+          },
+          {
+            "table_num": "3A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "4A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "6A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "7A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "8A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorVier": [
+          {
+            "table_num": "1B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "3B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "4B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorZes": [
+          {
+            "table_num": "1C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "Tijdvak": "17:00 - 18:45"
+      },
+      "Tafel": {
+        "table_num": "2A",
+        "seats": 2,
+        "occupied": true,
+        "reserveerCode": "0002AA"
+      },
+      "bestelling1": {
+        "bestelling": [],
+        "Length": 0
+      },
+      "Gebruiker": {
+        "Wachtwoord": "12345678",
+        "ModLevel": 0,
+        "Voornaam": "Frans",
+        "Tussenvoegsel": "",
+        "Achternaam": "Fouad",
+        "Email": "Frans@gmail.com",
+        "Tel_no": "0644080808",
+        "Leeftijd": "18"
+      }
+    },
+    {
+      "ToegangsCode": "0003AA",
+      "Dag": {
+        "Datum": "2021-05-19T09:54:27.4834333+02:00",
+        "VoorVijfTotZes": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0001AA"
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0002AA"
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": true,
+              "reserveerCode": "0003AA"
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "17:00 - 18:45"
+        },
+        "VoorZesTotAcht": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "18:45 - 20:30"
+        },
+        "VoorAchtTotTien": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "20:30 - 22:15"
+        }
+      },
+      "Tijdsvak": {
+        "VoorTwee": [
+          {
+            "table_num": "1A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0001AA"
+          },
+          {
+            "table_num": "2A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0002AA"
+          },
+          {
+            "table_num": "3A",
+            "seats": 2,
+            "occupied": true,
+            "reserveerCode": "0003AA"
+          },
+          {
+            "table_num": "4A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "6A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "7A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "8A",
+            "seats": 2,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorVier": [
+          {
+            "table_num": "1B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "3B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "4B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "5B",
+            "seats": 4,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "VoorZes": [
+          {
+            "table_num": "1C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          },
+          {
+            "table_num": "2C",
+            "seats": 6,
+            "occupied": false,
+            "reserveerCode": null
+          }
+        ],
+        "Tijdvak": "17:00 - 18:45"
+      },
+      "Tafel": {
+        "table_num": "3A",
+        "seats": 2,
+        "occupied": true,
+        "reserveerCode": "0003AA"
+      },
+      "bestelling1": {
+        "bestelling": [],
+        "Length": 0
+      },
+      "Gebruiker": {
+        "Wachtwoord": "12345678",
+        "ModLevel": 0,
+        "Voornaam": "Jeroen",
+        "Tussenvoegsel": "",
+        "Achternaam": "Visser",
+        "Email": "0952491@hr.nl",
+        "Tel_no": "0612345678",
+        "Leeftijd": "02-07-1999"
+      }
+    }
+  ],
+  "DezeWeek": {
+    "reserveringsWeek": [
       {
         "Datum": "2021-05-18T09:54:27.4834333+02:00",
         "VoorVijfTotZes": {
@@ -513,8 +1902,8 @@
             {
               "table_num": "2A",
               "seats": 2,
-              "occupied": false,
-              "reserveerCode": null
+              "occupied": true,
+              "reserveerCode": "0000AA"
             },
             {
               "table_num": "3A",
@@ -563,8 +1952,8 @@
             {
               "table_num": "2B",
               "seats": 4,
-              "occupied": false,
-              "reserveerCode": null
+              "occupied": true,
+              "reserveerCode": "0001AA"
             },
             {
               "table_num": "3B",
@@ -609,20 +1998,20 @@
             {
               "table_num": "1A",
               "seats": 2,
-              "occupied": false,
-              "reserveerCode": null
+              "occupied": true,
+              "reserveerCode": "0001AA"
             },
             {
               "table_num": "2A",
               "seats": 2,
-              "occupied": false,
-              "reserveerCode": null
+              "occupied": true,
+              "reserveerCode": "0002AA"
             },
             {
               "table_num": "3A",
               "seats": 2,
-              "occupied": false,
-              "reserveerCode": null
+              "occupied": true,
+              "reserveerCode": "0003AA"
             },
             {
               "table_num": "4A",
@@ -2404,6 +3793,306 @@
       },
       {
         "Datum": "2021-05-25T09:54:27.4834333+02:00",
+        "VoorVijfTotZes": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "17:00 - 18:45"
+        },
+        "VoorZesTotAcht": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "18:45 - 20:30"
+        },
+        "VoorAchtTotTien": {
+          "VoorTwee": [
+            {
+              "table_num": "1A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "6A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "7A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "8A",
+              "seats": 2,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorVier": [
+            {
+              "table_num": "1B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "3B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "4B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "5B",
+              "seats": 4,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "VoorZes": [
+            {
+              "table_num": "1C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            },
+            {
+              "table_num": "2C",
+              "seats": 6,
+              "occupied": false,
+              "reserveerCode": null
+            }
+          ],
+          "Tijdvak": "20:30 - 22:15"
+        }
+      },
+      {
+        "Datum": "2021-05-26T09:54:27.4834333+02:00",
         "VoorVijfTotZes": {
           "VoorTwee": [
             {
