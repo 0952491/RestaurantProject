@@ -150,7 +150,7 @@ namespace LoginPage
             while (true) {
                 Console.Clear();
                 Save();
-                string choice = Resources.makeMenuInput("Gebruiker menu", "Kies een van bovenstaande opties: ", options, backbutton: true);
+                string choice = Resources.makeMenuInput("Gebruiker menu", "Voer hier een van de bovenstaande opties in: ", options, backbutton: true);
                 if (choice == "1") {
                     Console.Clear();
                     user.Present();
@@ -324,7 +324,7 @@ namespace LoginPage
             string telefoonnummer = Resources.InputRegex("Telefoonnr: ", @"^\d{10}$", "Voert u alstublieft 10 cijfers in als telefoonnummer");
             string leeftijd = Resources.inputCheck("Leeftijd: ", Resources.makeRangeArr(18, 125), "Het ingevoerde getal is helaas onjuist, wees ervan bewust dat wij alleen gebruikers aannemen boven de 18");
             string wachtwoord = Resources.InputWachtwoord("Wachtwoord: ");
-            string inputHerhaal = Resources.InputWachtwoord("Wachtwoord: ", wachtwoord, maxtries: 3);
+            string inputHerhaal = Resources.InputWachtwoord("Herhaal wachtwoord: ", wachtwoord, maxtries: 3);
             if (admin && inputHerhaal != "") {
                 newUser = new User(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 1, tussenvoegsel);
                 AddAdmin(newUser);
