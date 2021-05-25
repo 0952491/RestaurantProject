@@ -68,9 +68,9 @@ namespace TablePage
             Day returnDag = null;
             DateTime selectedDate;
             if (all)
-                selectedDate = Resources.inputDate("Kies een van de bovenstaande data: ", GetDates());
+                selectedDate = Resources.inputDate("Voer hier een van de bovenstaande opties in: ", GetDates());
             else
-                selectedDate = Resources.inputDate("Kies een van de bovenstaande data: ", GetRelevantDates());
+                selectedDate = Resources.inputDate("Voer hier een van de bovenstaande opties in: ", GetRelevantDates());
             foreach (Day dag in reserveringsWeek) {
                 if (dag.Datum.Date == selectedDate.Date)
                     returnDag = dag;
@@ -99,7 +99,7 @@ namespace TablePage
         /// <summary>Geeft een menu van tijden weer en returned een DinnerRoom object gebaseerd op de keuze</summary>
         public DinnerRoom GetRoom() {
             string[] options = new string[] { "17:00 - 18:45", "18:45 - 20:30", "20:30 - 22:15" };
-            string choice = Resources.makeMenuInput("Alle beschikbare tijden", "Kies uit een van de bovenstaande tijden: ", options, backbutton: true);
+            string choice = Resources.makeMenuInput("Alle beschikbare tijden", "Voer hier een van de bovenstaande opties in: ", options, backbutton: true);
             if (choice == "1")
                 return VoorVijfTotZes;
             else if (choice == "2")

@@ -39,6 +39,10 @@ namespace ReserveringPage
         /// <summary>Deze functie returned een functie waarmee je tijd kan vergelijken met elkaar</summary>
         public Func<DateTime, Func<TimeSpan, bool>> CompareTimeBuilder(DateTime ResTijd) => CurTijd => VergelijkTS => (ResTijd - CurTijd) > VergelijkTS;
 
+        /// <summary>Deze functie kijkt of de gegeven tijd en de huidige tijd meer dan een uur van elkaar zijn verwijderd en returned een boolean</summary>
+        private TimeSpan Hour = new TimeSpan(1, 0, 0);
+        public Func<DateTime, bool> CompareHour(DateTime Restijd) => CurTijd => (Restijd - CurTijd) > Hour;
+
         /// <summary>Returned een bool kijkend of de eerste datum en tijd nog ver weg genoeg zijn om een reservering te doen</summary>
         public bool CompareTime(DateTime restijd) { 
             var firstFun = CompareTimeBuilder(restijd)(DateTime.Now);
@@ -57,9 +61,9 @@ namespace ReserveringPage
             while (true) {
                 Console.Clear();
                 OneLine();
-                string choice = Resources.makeMenuInput("Verander je reservering", "Kies een van de bovenstaande opties: ", options, backbutton: true);
+                string choice = Resources.makeMenuInput("Verander je reservering", "Voer hier een van de bovenstaande opties in: ", options, backbutton: true);
                 if (choice == "1") {
-                    string TimeChoice = Resources.makeMenuInput("Wat wilt u veranderen?", "Kies een van bovenstaande opties: ", new string[] { "Datum", "Tijd" }, backbutton: true);
+                    string TimeChoice = Resources.makeMenuInput("Wat wilt u veranderen?", "Voer hier een van de bovenstaande opties in: ", new string[] { "Datum", "Tijd" }, backbutton: true);
                     if (TimeChoice == "1") {
                         Day chosenDay = ChangeDate(week);
                         if (chosenDay == null) { CancelChange(); continue; }
@@ -123,7 +127,7 @@ namespace ReserveringPage
             while (true) {
                 Console.WriteLine(bestelling1.StringBestelling());
                 string[] options = new string[] { "Gerecht toevoegen", "Gerecht verwijderen" };
-                string choice = Resources.makeMenuInput("Verander je bestelling", "Kies een van de bovenstaande opties: ", options, backbutton: true);
+                string choice = Resources.makeMenuInput("Verander je bestelling", "Voer hier een van de bovenstaande opties in: ", options, backbutton: true);
                 if (choice == "b")
                     break;
                 Gerecht gerecht = menu.ChooseGerechten();
@@ -159,7 +163,6 @@ namespace ReserveringPage
                 Console.WriteLine("Bestelling:");
                 Console.WriteLine(bestelling1.StringBestelling());
             }
-            
         }
 
         /// <summary>Laat in een line alle info van de reservering zien</summary>
@@ -392,7 +395,7 @@ namespace ReserveringPage
                 else if (choice == "3") { // pas een reservering aan
                     Console.Clear();
                     Reservering[] UserReserveringen = GetReserveringen(user);
-                    string changechoice = Resources.makeMenuInput("Reserveringen om aan te passen", "Kies een van de bovenstaande opties: ", ToStrArray(UserReserveringen), backbutton: true);
+                    string changechoice = Resources.makeMenuInput("Reserveringen om aan te passen", "Voer hier een van de bovenstaande opties in: ", ToStrArray(UserReserveringen), backbutton: true);
                     if (changechoice == "b")
                         continue;
                     UserReserveringen[Convert.ToInt32(changechoice) - 1].Change(DezeWeek, user, menu);
@@ -400,7 +403,7 @@ namespace ReserveringPage
                 else if (choice == "4") { // verwijder een reservering
                     Console.Clear();
                     Reservering[] UserReserveringen = GetReserveringen(user);
-                    string changechoice = Resources.makeMenuInput("Reserveringen om te verwijderen", "Kies een van de bovenstaande opties: ", ToStrArray(UserReserveringen), backbutton: true);
+                    string changechoice = Resources.makeMenuInput("Reserveringen om te verwijderen", "Voer hier een van de bovenstaande opties in: ", ToStrArray(UserReserveringen), backbutton: true);
                     if (changechoice == "b")
                         continue;
                     RemoveReservering(UserReserveringen[Convert.ToInt32(changechoice) - 1]);
@@ -416,7 +419,7 @@ namespace ReserveringPage
             while (true) {
                 Console.Clear();
                 string[] reserveOptions = new string[] { "Reserveer als gast", "Reserveer als gebruiker" };
-                string reserveChoice = Resources.makeMenuInput("Hoe wilt u een reservering maken?", "Kies een van de bovenstaande opties: ", reserveOptions, backbutton: true);
+                string reserveChoice = Resources.makeMenuInput("Hoe wilt u een reservering maken?", "Voer hier een van de bovenstaande opties in: ", reserveOptions, backbutton: true);
                 if (reserveChoice == "1") {
                     Person guest = MakeGuest();
                     guest.Present();
@@ -504,7 +507,7 @@ namespace ReserveringPage
                     if (bestelling.Length > 0) {
                         Console.WriteLine(bestelling.StringBestelling());
                     }
-                    string choice = Resources.makeMenuInput("Weet je al wat je wilt? Dan kan je alvast een bestelling doen!", "Kies een van bovenstaande opties: ", new string[] { "Voeg een gerecht toe aan je bestelling", "Verwijder een gerecht van je bestelling", "Ga verder" }, backbutton: true);
+                    string choice = Resources.makeMenuInput("Weet je al wat je wilt? Dan kan je alvast een bestelling doen!", "Voer hier een van de bovenstaande opties in: ", new string[] { "Voeg een gerecht toe aan je bestelling", "Verwijder een gerecht van je bestelling", "Ga verder" }, backbutton: true);
                     if (choice == "1") {
                         Gerecht addgerecht = menu.ChooseGerechten();
                         if (addgerecht != null)
@@ -530,7 +533,7 @@ namespace ReserveringPage
                     string Code = GenerateCode();
                     Reservering nieuwReservering = new Reservering(Code, chosenDay, chosenRoom, chosenTable, bestelling, user);
                     nieuwReservering.ShowReservering();
-                    string choice = Resources.makeMenuInput("", "Kies een van bovenstaande opties: ", new string[] { "Bevestig reservering", "Annuleer reservering" }, backbutton: true);
+                    string choice = Resources.makeMenuInput("", "Voer hier een van de bovenstaande opties in: ", new string[] { "Bevestig reservering", "Annuleer reservering" }, backbutton: true);
                     if (choice == "1") {
                         AddReservering(nieuwReservering);
                         Resources.succesMessage("Reservering succesvol opgeslagen");

@@ -18,7 +18,7 @@ namespace MenuPage
 
         /// <summary>Met deze method kan je de fields/attributes veranderen van je gerecht</summary>
         public void ChangeGerecht() {
-            string choice = Resources.makeMenuInput("Verander je gerecht", "Kies een van de bovenstaande opties: ", new string[] { "Naam", "Prijs" });
+            string choice = Resources.makeMenuInput("Verander je gerecht", "Voer hier een van de bovenstaande opties in: ", new string[] { "Naam", "Prijs" });
             if (choice == "1") {
                 Console.WriteLine($"Oude naam: {Naam}");
                 Naam = Resources.input("Geef de nieuwe naam door van het gerecht: ");
@@ -55,7 +55,7 @@ namespace MenuPage
             while (true) {
                 Console.Clear();
                 Save();
-                string input = Resources.makeMenuInput("", "Kies een van de bovenstaande opties: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan"}, backbutton: true);
+                string input = Resources.makeMenuInput("Menu opties", "Voer hier een van de bovenstaande opties in: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan"}, backbutton: true);
                 if (input == "1") { // zie gerechten
                     ShowGerechten();
                 }
@@ -64,8 +64,10 @@ namespace MenuPage
                 }
                 else if (input == "3") { // pas een gerecht aan
                     string[] alle_namen = GetNames();
+                    if (alle_namen == null)
+                        continue;
                     Console.Clear();
-                    string num = Resources.makeMenuInput("Beschikbare Gerechten", "Kies een van de bovenstaande gerechten: ", alle_namen, backbutton: true);
+                    string num = Resources.makeMenuInput("Beschikbare Gerechten", "Voer hier een van de bovenstaande opties in: ", alle_namen, backbutton: true);
                     if (num == "b")
                         continue;
                     string naam = alle_namen[Convert.ToInt32(num) - 1];
@@ -114,7 +116,7 @@ namespace MenuPage
                 string line = $"{g.Naam}{Resources.drawString(50 - g.Naam.Length, " ")}€{g.Prijs}";
                 options[index++] = line;
             }
-            string choice = Resources.makeMenuInput("Beschikbare gerechten", "Kies een van bovenstaande gerechten: ", options, backbutton: true);
+            string choice = Resources.makeMenuInput("Beschikbare gerechten", "Voer hier een van bovenstaande opties in: ", options, backbutton: true);
             if (choice == "b")
                 return null;
             return gerechtArr[Convert.ToInt32(choice) - 1];
@@ -130,6 +132,8 @@ namespace MenuPage
         /// <summary>Returned een string array met alle namen van de gekozen categorie gerechten</summary>
         public string[] GetNames() {
             Gerecht[] gerechten = GetCategorie();
+            if (gerechten == null)
+                return null;
             string[] namen = new string[gerechten.Length];
             for (int i = 0; i < namen.Length; i++)
                 namen[i] = gerechten[i].Naam;
@@ -156,7 +160,7 @@ namespace MenuPage
         /// <summary>Returned een van de Gerecht[] categorieen gebaseerd op welke keuze er gemaakt word</summary>
         public Gerecht[] GetCategorie() {
             Console.Clear();
-            string choice = Resources.makeMenuInput($"Kies een categorie", "Kies een van de bovenstaande opties: ", new string[] { "Voorgerechten", "Hoofdgerechten", "Desserts" }, backbutton: true);
+            string choice = Resources.makeMenuInput($"Kies een categorie", "Voer hier een van de bovenstaande opties in: ", new string[] { "Voorgerechten", "Hoofdgerechten", "Desserts" }, backbutton: true);
             return choice == "1" ? Voorgerechten : choice == "2" ? Hoofdgerechten : choice == "3" ? Desserts : null;
         }
 

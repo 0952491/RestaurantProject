@@ -15,7 +15,7 @@ namespace Main_Restaurant
         public static Tuple<string, string, string, string, string> Contact = Tuple.Create("Wijnhaven 107", "3011 WN", "Rotterdam", "0612345678", "info@restaurantTeam4.nl");
         // TODO: de Contact tuple moet nog worden opgeslagen en geladen vanuit json, nu slaat de app de veranderingen niet op en start deze elke keer met dezelfde contactgegevens
         
-        /// <summary> START METHOD VAN HET PROGRAMMA!!!! </summary>
+        /// <summary>START METHOD VAN HET PROGRAMMA!!!!</summary>
         public static void Main() => BeginMenu();
 
         /// <summary>Het menu dat je te zien krijgt wanneer je de applicatie opstart</summary>
@@ -27,7 +27,7 @@ namespace Main_Restaurant
                 Logo();
                 // de optie om beschikbare tafels te bekijken moet weg op een gegeven moment
                 string[] userActions = {"Registreren", "Inloggen", "Reserveren", "Menu bekijken", "Contact", "Bekijk plattegrond", "Sluit applicatie"};
-                string optie = Resources.makeMenuInput("Welkom bij ons restaurant!", "Voert u alstublieft een nummer in: ", userActions);
+                string optie = Resources.makeMenuInput("Welkom bij ons restaurant!", "Voer hier een van de bovenstaande opties in: ", userActions);
                 if (optie == "1") 
                     UserAdmin.Registreren(false);
                 else if (optie == "2") {
@@ -60,14 +60,16 @@ namespace Main_Restaurant
         public static void LoggedInMenu(User user) {
             while (true) {
                 Console.Clear();
-                string message;
+                string message = "Ingelogd als ";
+                if (user.IsAdmin())
+                    message += "Admin: ";
                 if (user.Tussenvoegsel == "")
-                    message = $"Ingelogd als {user.Voornaam} {user.Achternaam}";
+                    message += $"{user.Voornaam} {user.Achternaam}";
                 else
-                    message = $"Ingelogd als {user.Voornaam} {user.Tussenvoegsel} {user.Achternaam}";
+                    message += $"{user.Voornaam} {user.Tussenvoegsel} {user.Achternaam}";
                 if (user.IsAdmin()) { // geef het menu weer van een admin
                     string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Verander Contactgegevens", "Uitloggen"};
-                    string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
+                    string choice = Resources.makeMenuInput(message, "Voer hier een van de bovenstaande opties in: ", opties);
                     if (choice == "1")
                         ReserveerAdmin.Menu(user, Menu, UserAdmin);
                     else if (choice == "2")
@@ -81,7 +83,7 @@ namespace Main_Restaurant
                 }
                 else {
                     string[] opties = new string[] {"Reserveringen", "Menu", "Profiel", "Uitloggen"};
-                    string choice = Resources.makeMenuInput(message, "Kies een van de bovenstaande opties: ", opties);
+                    string choice = Resources.makeMenuInput(message, "Voer hier een van de bovenstaande opties in: ", opties);
                     if (choice == "1")
                         ReserveerAdmin.Menu(user, Menu, UserAdmin);
                     else if (choice == "2")
