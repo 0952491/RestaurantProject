@@ -431,8 +431,13 @@ namespace ReserveringPage
                 else  if (reserveChoice == "2") { // reserveer als gebruiker
                     if (!isadmin) {
                         User loggedIn = useradmin.Login();
-                        if (loggedIn == null || loggedIn.IsAdmin()) {
-                            Resources.errorMessage("De ingelogde gebruiker kan geen reservering doen op zijn/haar naam");
+                        if (loggedIn == null) {
+                            continue;
+                        }
+                        else if (loggedIn.IsAdmin()) {
+                            Resources.errorMessage("Admins kunnen geen reservering doen op hun naam");
+                            Resources.EnterMessage();
+                            continue;
                         }
                         MakeReservering(loggedIn, menu, false);
                         return;
@@ -475,6 +480,7 @@ namespace ReserveringPage
 
         /// <summary>Maakt een reservering gebaseerd op de gegeven input, hiervoor moet al een gebruiker zijn geregistreerd</summary>
         public void MakeReservering(User user, MenuKaart menu, bool guest) {
+            // TODO : Vraag hoeveel mensen de gebruiker meeneemt en laat de gebruiker uit tafels kiezen gebaseerd op het aantal personen
             int step = 1;
             Day chosenDay = null;
             DinnerRoom chosenRoom = null;
@@ -497,7 +503,13 @@ namespace ReserveringPage
                         step++;
                 }
                 else if (step == 3) { // selecteer de Tafel
-                    chosenTable = chosenRoom.GetTafel();
+                    string peopleStr = Resources.inputCheck("Met hoeveel mensen was u van plan te komen? (typ 'b' om terug te gaan): ", new string[] {"1", "2", "3", "4", "5", "6", "b"}, "Helaas is die optie niet beschikbaar, als u met meer dan 6 personen wenst te komen kunt u bellen naar het restaurant\nOns nummer kunt u vinden bij de hoofdpagina onder contact");
+                    if (peopleStr == "b") {
+                        step--;
+                        continue;
+                    }
+                    int people = Convert.ToInt32(peopleStr);
+                    chosenTable = chosenRoom.GetTafel(people);
                     if (chosenTable == null)
                         step--;
                     else
