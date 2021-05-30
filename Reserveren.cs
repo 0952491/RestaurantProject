@@ -185,9 +185,18 @@ namespace ReserveringPage
 
     class Bestelling {
         public Gerecht[] bestelling;
+
         public Bestelling() { bestelling = new Gerecht[0]; }
         public Bestelling(Gerecht[] best) => bestelling = best;
         public int Length => bestelling.Length;
+        public string[] Namen {
+            get {
+                string[] namen = new string[Length];
+                int index = 0;
+                foreach (Gerecht g in bestelling)
+                    namen[index++] = g.Naam;
+                return namen;
+                ;} }
 
         /// <summary>Maakt een soort menu met de volledige bestelling die bij de reservering hoort en returned een string daarvan</summary>
         public string StringBestelling() {
@@ -230,6 +239,16 @@ namespace ReserveringPage
             }
         }
 
+        /// <summary>Laat gebruiker een gerecht kiezen uit de bestelling en returned dit gerecht (null als de terugoptie word gekozen)</summary>
+        public Gerecht ChooseGerecht() {
+            string gerechtNaam = Resources.makeMenuInput("Kies een van de gerechten van je bestelling", "Voer hier een van de bovenstaande opties in: ", Namen, backbutton: true);
+            foreach (Gerecht g in bestelling) {
+                if (g.Naam == gerechtNaam)
+                    return g;
+            }
+            return null;
+        }
+        
         /// <summary>Voegt een gerecht toe aan de bestelling</summary>
         public void AddGerecht(Gerecht gerecht) {
             Gerecht[] nieuwBestelling = new Gerecht[Length + 1];
@@ -531,13 +550,9 @@ namespace ReserveringPage
                             bestelling.AddGerecht(addgerecht);
                     }
                     else if (choice == "2") {
-                        Gerecht removegerecht = menu.ChooseGerechten();
-                        if (removegerecht != null && bestelling.bestelling.Contains(removegerecht))
+                        Gerecht removegerecht = bestelling.ChooseGerecht();
+                        if (removegerecht != null)
                             bestelling.RemoveGerecht(removegerecht);
-                        else if (removegerecht != null && !bestelling.bestelling.Contains(removegerecht)) {
-                            Resources.errorMessage($"{removegerecht.Naam} staat niet op je bestelling");
-                            Resources.EnterMessage();
-                        }  
                     }
                     else if (choice == "3") {
                         step++;

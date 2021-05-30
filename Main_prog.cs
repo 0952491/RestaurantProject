@@ -68,7 +68,7 @@ namespace Main_Restaurant
                 else
                     message += $"{user.Voornaam} {user.Tussenvoegsel} {user.Achternaam}";
                 if (user.IsAdmin()) { // geef het menu weer van een admin
-                    string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Verander Contactgegevens", "Uitloggen"};
+                    string[] opties = new string[] {"Reserveringen", "Menu", "Gebruikers", "Verander contactgegevens van het restaurant", "Uitloggen"};
                     string choice = Resources.makeMenuInput(message, "Voer hier een van de bovenstaande opties in: ", opties);
                     if (choice == "1")
                         ReserveerAdmin.Menu(user, Menu, UserAdmin);
