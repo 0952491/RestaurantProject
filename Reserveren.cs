@@ -119,7 +119,12 @@ namespace ReserveringPage
         }
         
         public Table ChangeTable(DinnerRoom room) {
-            Table chosenTable = room.GetTafel();
+            string peopleStr = Resources.inputCheck("Met hoeveel mensen was u van plan te komen? (typ 'b' om terug te gaan): ", new string[] { "1", "2", "3", "4", "5", "6", "b" }, "Helaas is die optie niet beschikbaar, als u met meer dan 6 personen wenst te komen kunt u bellen naar het restaurant\nOns nummer kunt u vinden bij de hoofdpagina onder contact");
+            if (peopleStr == "b") {
+                return null;
+            }
+            int people = Convert.ToInt32(peopleStr);
+            Table chosenTable = room.GetTafel(people);
             return chosenTable;
         }
 
