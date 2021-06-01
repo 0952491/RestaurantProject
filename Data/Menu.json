@@ -2,7 +2,7 @@
   "Voorgerechten": [
     {
       "Naam": "Tomatensoep (V)",
-      "Prijs": 3.0
+      "Prijs": 5.4
     },
     {
       "Naam": "Kruidenbouillon",
@@ -10,7 +10,7 @@
     },
     {
       "Naam": "Vissoep",
-      "Prijs": 3.2
+      "Prijs": 5.0
     },
     {
       "Naam": "Wisselsoep (soep van de dag)",
@@ -77,6 +77,10 @@
     {
       "Naam": "Proeverij vanaf 2",
       "Prijs": 27.9
+    },
+    {
+      "Naam": "Uitsmijter",
+      "Prijs": 5.0
     }
   ],
   "Desserts": [

@@ -24,7 +24,7 @@ namespace MenuPage
                 Naam = Resources.input("Geef de nieuwe naam door van het gerecht: ");
             } else { 
                 Console.WriteLine($"Oude prijs: {Prijs}");
-                Prijs = Convert.ToDouble(Resources.InputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^\d+\.\d+$"));
+                Prijs = Convert.ToDouble(Resources.InputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^(\d+\.\d+|\d)$"));
             }
         }
     }
@@ -55,7 +55,7 @@ namespace MenuPage
             while (true) {
                 Console.Clear();
                 Save();
-                string input = Resources.makeMenuInput("Menu opties", "Voer hier een van de bovenstaande opties in: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan"}, backbutton: true);
+                string input = Resources.makeMenuInput("Menu opties", "Voer hier een van de bovenstaande opties in: ", new string[] { "Zie gerechten", "Voeg een gerecht toe", "Pas een gerecht aan", "Verwijder een gerecht"}, backbutton: true);
                 if (input == "1") { // zie gerechten
                     ShowGerechten();
                 }
@@ -63,6 +63,7 @@ namespace MenuPage
                     AddGerecht(MakeGerecht());
                 }
                 else if (input == "3") { // pas een gerecht aan
+                    Console.Clear();
                     string[] alle_namen = GetNames();
                     if (alle_namen == null)
                         continue;
@@ -71,7 +72,11 @@ namespace MenuPage
                     if (num == "b")
                         continue;
                     string naam = alle_namen[Convert.ToInt32(num) - 1];
+                    Console.Clear();
                     GetGerecht(naam).ChangeGerecht();
+                }
+                else if (input == "4") { 
+                        
                 }
                 else
                     break;

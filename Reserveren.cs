@@ -243,7 +243,9 @@ namespace ReserveringPage
 
         /// <summary>Laat gebruiker een gerecht kiezen uit de bestelling en returned dit gerecht (null als de terugoptie word gekozen)</summary>
         public Gerecht ChooseGerecht() {
-            string gerechtNaam = Resources.makeMenuInput("Kies een van de gerechten van je bestelling", "Voer hier een van de bovenstaande opties in: ", Namen, backbutton: true);
+            string choice = Resources.makeMenuInput("Kies een van de gerechten van je bestelling", "Voer hier een van de bovenstaande opties in: ", Namen, backbutton: true);
+            // TODO: Fix als bestelling leeg is
+            string gerechtNaam = Namen[Convert.ToInt32(choice) - 1];
             foreach (Gerecht g in bestelling) {
                 if (g.Naam == gerechtNaam)
                     return g;
@@ -590,12 +592,14 @@ namespace ReserveringPage
                     }
                     string choice = Resources.makeMenuInput("Weet je al wat je wilt? Dan kan je alvast een bestelling doen!", "Voer hier een van de bovenstaande opties in: ", new string[] { "Voeg een gerecht toe aan je bestelling", "Verwijder een gerecht van je bestelling", "Ga verder" }, backbutton: true);
                     if (choice == "1") {
+                        Console.Clear();
                         Gerecht addgerecht = menu.ChooseGerechten();
                         if (addgerecht != null)
                             bestelling.AddGerecht(addgerecht);
                         bestelling.Sort(menu);
                     }
                     else if (choice == "2") {
+                        Console.Clear();
                         Gerecht removegerecht = bestelling.ChooseGerecht();
                         if (removegerecht != null)
                             bestelling.RemoveGerecht(removegerecht);
