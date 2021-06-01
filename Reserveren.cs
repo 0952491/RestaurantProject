@@ -142,6 +142,7 @@ namespace ReserveringPage
                     bestelling1.AddGerecht(gerecht);
                 else if (choice == "2")
                     bestelling1.RemoveGerecht(gerecht);
+                bestelling1.Sort(menu);
             }
         }
 
@@ -189,14 +190,15 @@ namespace ReserveringPage
         public Bestelling() { bestelling = new Gerecht[0]; }
         public Bestelling(Gerecht[] best) => bestelling = best;
         public int Length => bestelling.Length;
-        public string[] Namen {
+        public string[] Namen { 
             get {
                 string[] namen = new string[Length];
                 int index = 0;
                 foreach (Gerecht g in bestelling)
                     namen[index++] = g.Naam;
                 return namen;
-                ;} }
+            } 
+        }
 
         /// <summary>Maakt een soort menu met de volledige bestelling die bij de reservering hoort en returned een string daarvan</summary>
         public string StringBestelling() {
@@ -271,6 +273,25 @@ namespace ReserveringPage
                 }
             }
             bestelling = nieuwBestelling;
+        }
+
+        /// <summary>Sorteert de gerechten van voorgerecht naar hoofdgerecht</summary>
+        public void Sort(MenuKaart menu) {
+            Gerecht[] GesorteerdeBestelling = new Gerecht[Length];
+            int index = 0;
+            foreach (Gerecht g in bestelling) { // sorteer de voorgerechten
+                if (menu.Voorgerechten.Contains(g))
+                    GesorteerdeBestelling[index++] = g;
+            }
+            foreach (Gerecht g in bestelling) { // sorteer de hoofdgerechten
+                if (menu.Hoofdgerechten.Contains(g))
+                    GesorteerdeBestelling[index++] = g;
+            }
+            foreach (Gerecht g in bestelling) { // sorteer de nagerechten
+                if (menu.Desserts.Contains(g))
+                    GesorteerdeBestelling[index++] = g;
+            }
+            bestelling = GesorteerdeBestelling;
         }
     }
 
@@ -391,6 +412,17 @@ namespace ReserveringPage
             return returnReserveringen;
         }
 
+        public Reservering GetReservering(string code) { 
+            if (Exists(code)) { 
+                foreach (Reservering res in Reserveringen) {
+                    if (res.ToegangsCode == code)
+                        return res;
+                }
+            }
+            Resources.errorMessage("De reservering met code {code} kon niet gevonden worden");
+            return null;
+        }
+
         /// <summary>Zet een array met reserveringen om naar een array met beschrijvingen (strings) van de reserveringen</summary>
         public string[] ToStrArray(Reservering[] reserveringen) {
             string[] strArr = new string[reserveringen.Length];
@@ -442,7 +474,7 @@ namespace ReserveringPage
         public void ReserveringMenu(bool isadmin, MenuKaart menu, UserAdministration useradmin) {
             while (true) {
                 Console.Clear();
-                string[] reserveOptions = new string[] { "Reserveer als gast", "Reserveer als gebruiker" };
+                string[] reserveOptions = new string[] { "Reserveer als gast", "Reserveer als gebruiker" , "Vind uw reservering terug middels de gegeven code"};
                 string reserveChoice = Resources.makeMenuInput("Hoe wilt u een reservering maken?", "Voer hier een van de bovenstaande opties in: ", reserveOptions, backbutton: true);
                 if (reserveChoice == "1") {
                     Person guest = MakeGuest();
@@ -478,6 +510,19 @@ namespace ReserveringPage
                     }
                     else
                         MakeReservering(selected, menu, false);
+                }
+                else if (reserveChoice == "3") { // vind reservering terug via de code
+                    Console.Clear();
+                    string codeChoice = Resources.input("Voer hier uw code in (typ 'b' om terug te gaan): ");
+                    if (codeChoice == "b")
+                        continue;
+                    else {
+                        Reservering displayres = GetReservering(codeChoice);
+                        if (displayres == null)
+                            continue;
+                        displayres.ShowReservering();
+                        Resources.input("Log in of bel naar het restaurant om u reservering aan te passen");
+                    }
                 }
                 else
                     break;
@@ -548,11 +593,13 @@ namespace ReserveringPage
                         Gerecht addgerecht = menu.ChooseGerechten();
                         if (addgerecht != null)
                             bestelling.AddGerecht(addgerecht);
+                        bestelling.Sort(menu);
                     }
                     else if (choice == "2") {
                         Gerecht removegerecht = bestelling.ChooseGerecht();
                         if (removegerecht != null)
                             bestelling.RemoveGerecht(removegerecht);
+                        bestelling.Sort(menu);
                     }
                     else if (choice == "3") {
                         step++;

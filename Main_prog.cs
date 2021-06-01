@@ -110,8 +110,10 @@ namespace Main_Restaurant
                 string[] options = new string[] { "Adres", "Postcode", "Plaats", "Telefoonnummer", "Email" };
                 string choice = Resources.makeMenuInput("Welke contactinformatie wilt u wijzigen?", "Kies een van de bovenstaande opties: ", options, backbutton: true);
                 Console.Clear();
-                if (choice == "b")
+                if (choice == "b") {
+                    Contact = Tuple.Create(tempAddr, tempZipCode, tempPlace, tempPhone, tempEmail);
                     return;
+                }
                 else if (choice == "1") {  // wijzig adres
                     Console.WriteLine($"Vorige adres: {tempAddr}");
                     tempAddr = Resources.InputRegex("Voer hier het nieuwe adres in: ", @"^[A-Za-z0-9'\.\-\s\,]+$");
@@ -133,7 +135,6 @@ namespace Main_Restaurant
                     tempEmail = Resources.InputRegex("Voer hier de nieuwe email in: ", @"^(\w|\.)+@\w+\.\w{2,3}$");
                 }
             }
-            Contact = Tuple.Create(tempAddr, tempZipCode, tempPlace, tempPhone, tempEmail);
         }
 
         /// <summary>Laat het logo zien</summary>
