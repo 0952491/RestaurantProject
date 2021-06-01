@@ -481,7 +481,7 @@ namespace ReserveringPage
                 if (reserveChoice == "1") {
                     Person guest = MakeGuest();
                     guest.Present();
-                    if (Resources.YesOrNo("Is deze informatie correct?: "))
+                    if (Resources.YesOrNo("Is deze informatie correct? (ja/nee): "))
                         MakeReservering(new User(guest.Voornaam, guest.Achternaam, guest.Email, guest.Tel_no, guest.Leeftijd, null, -1, guest.Tussenvoegsel), menu, true);
                     else
                         continue;

@@ -24,7 +24,7 @@ namespace MenuPage
                 Naam = Resources.input("Geef de nieuwe naam door van het gerecht: ");
             } else { 
                 Console.WriteLine($"Oude prijs: {Prijs}");
-                Prijs = Convert.ToDouble(Resources.InputRegex("Geef de nieuwe prijs door van het gerecht: ", @"^(\d+\.\d+|\d)$"));
+                Prijs = Convert.ToDouble(Resources.InputRegex("Geef de nieuwe prijs door van het gerecht: ", @"(^\d+\.\d+$|^\d+$)"));
             }
         }
     }
@@ -64,19 +64,30 @@ namespace MenuPage
                 }
                 else if (input == "3") { // pas een gerecht aan
                     Console.Clear();
-                    string[] alle_namen = GetNames();
-                    if (alle_namen == null)
+                    string[] categorie_namen = GetNames();
+                    if (categorie_namen == null)
                         continue;
                     Console.Clear();
-                    string num = Resources.makeMenuInput("Beschikbare Gerechten", "Voer hier een van de bovenstaande opties in: ", alle_namen, backbutton: true);
+                    string num = Resources.makeMenuInput("Beschikbare Gerechten", "Voer hier een van de bovenstaande opties in: ", categorie_namen, backbutton: true);
                     if (num == "b")
                         continue;
-                    string naam = alle_namen[Convert.ToInt32(num) - 1];
+                    string naam = categorie_namen[Convert.ToInt32(num) - 1];
                     Console.Clear();
                     GetGerecht(naam).ChangeGerecht();
                 }
-                else if (input == "4") { 
-                        
+                else if (input == "4") {
+                    Console.Clear();
+                    Gerecht[] categorie = GetCategorie();
+                    string[] categorie_namen = GetNames(categorie);
+                    if (categorie_namen == null)
+                        continue;
+                    Console.Clear();
+                    string num = Resources.makeMenuInput("Gerechten om te verwijderen", "Voer hier een van de bovenstaande opties in: ", categorie_namen, backbutton: true);
+                    if (num == "b")
+                        continue;
+                    Gerecht removeGer = categorie[Convert.ToInt32(num) - 1];
+                    Console.Clear();
+                    RemoveGerecht(removeGer, categorie);
                 }
                 else
                     break;
@@ -145,6 +156,16 @@ namespace MenuPage
             return namen;
         }
 
+        /// <summary>Returned een array met de namen van de gegeven gerechten</summary>
+        public string[] GetNames(Gerecht[] gerechten) {
+            if (gerechten == null)
+                return null;
+            string[] namen = new string[gerechten.Length];
+            for (int i = 0; i < namen.Length; i++)
+                namen[i] = gerechten[i].Naam;
+            return namen;
+        }
+
         /// <summary>Loopt over alle gerechten van de categorie arrays</summary>
         private Gerecht loopGerechten(string naam, Gerecht[] gerechtArr) {
             foreach (Gerecht g in gerechtArr) {
@@ -189,11 +210,20 @@ namespace MenuPage
         }
 
         /// <summary>Verwijdert een gerecht uit een bepaalde Menu array</summary>
-        public void RemoveGerecht(Gerecht gerecht) {
-            Gerecht[] nieuwArr = new Gerecht[Hoofdgerechten.Length - 1];
-            for (int i = 0, j = 0; i < nieuwArr.Length; i++)
-                nieuwArr[i] = Hoofdgerechten[j] == gerecht ? Hoofdgerechten[j+=2] : Hoofdgerechten[j++];
-            Hoofdgerechten = nieuwArr;
+        public void RemoveGerecht(Gerecht gerecht, Gerecht[] categorie) {
+            Gerecht[] nieuwArr = new Gerecht[categorie.Length - 1];
+            int index = 0;
+            foreach (Gerecht g in categorie) { 
+                if (g != gerecht) {
+                    nieuwArr[index++] = g;
+                }
+            }
+            if (categorie == Voorgerechten)
+                Voorgerechten = nieuwArr;
+            else if (categorie == Hoofdgerechten)
+                Hoofdgerechten = nieuwArr;
+            else
+                Desserts = nieuwArr;
         }
     }
 }

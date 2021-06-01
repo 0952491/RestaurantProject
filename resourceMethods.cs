@@ -34,9 +34,15 @@ namespace resourceMethods{
         }
 
         ///<summary>Checked of de input van de gebruiker voldoet aan een van de meegegeven opties (zo niet wordt de prompt herhaald)</summary>
-        public static string inputCheck(string prompt, string[] options, string errorprompt="Helaas is die optie niet beschikbaar. Kiest u alstublieft opnieuw.", int maxTries=0) {
+        public static string inputCheck(string prompt, string[] options, string errorprompt="Helaas is die optie niet beschikbaar. Kiest u alstublieft opnieuw.", int maxTries=0, bool caseSens=true) {
             string answer = input(prompt);
             int totalTries = 0;
+            if (!caseSens) {
+                answer = answer.ToLower();
+                int index = 0;
+                foreach (string s in options)
+                    options[index++] = s.ToLower();
+            }
             while (!options.Contains(answer)) {
                 errorMessage(errorprompt);
                 totalTries++;
@@ -47,6 +53,8 @@ namespace resourceMethods{
                     break;
                 }
                 answer = input(prompt);
+                if (!caseSens) 
+                   answer = answer.ToLower();
             }
             return answer;
         }
@@ -85,11 +93,29 @@ namespace resourceMethods{
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
+        /// <summary>Helpt om de dagen om te zetten naar nederlands</summary>
+        public static string DayConvert(string day) {
+            if (day == "Monday")
+                return "Maandag";
+            else if (day == "Tuesday")
+                return "Dinsdag";
+            else if (day == "Wednesday")
+                return "Woensdag";
+            else if (day == "Thursday")
+                return "Donderdag";
+            else if (day == "Friday")
+                return "Vrijdag";
+            else if (day == "Saturday")
+                return "Zaterdag";
+            else
+                return "Zondag";
+        }
+
         /// <summary>Laat een menu zien met datums en laat de gebruiker uit een datum kiezen</summary>
         public static DateTime inputDate(string prompt, DateTime[] dates, string errorprompt= "Die datum is helaas niet beschikbaar. Kiest u alstublieft opnieuw.", int maxtries=0) {
             string[] options = new string[dates.Length];  
             for (int i = 0; i < dates.Length; i++)
-                options[i] = dates[i].ToString("dd/MM/yyyy");
+                options[i] = dates[i].ToString("dd/MM/yyyy") + " " + DayConvert(dates[i].DayOfWeek.ToString());
             string returned = makeMenuInput("De volgende dagen zijn beschikbaar", prompt, options, errorprompt, true, maxtries);
             if (returned == "b")
                 return DateTime.MinValue;
@@ -205,13 +231,11 @@ namespace resourceMethods{
 
         /// <summary>Een method die ja of nee krijgt als input en een bool returned (ja = true, nee = false)</summary>
         public static bool YesOrNo(string prompt) {
-            string[] yesoptions = new string[] { "ja", "j", "y", "yes" };
-            string[] options = new string[] { "ja", "j", "y", "yes", "nee", "n", "no" };
-            string choice = inputCheck(prompt, options, "Dat is geen ja of nee, typ alsjeblieft 'ja' of 'nee'");
-            if (yesoptions.Contains(choice))
-                return true;
-            else
-                return false;
+            string[] yesoptions = new string[] { "ja", "j", "y", "yes"};
+            string[] options = new string[] { "ja", "j", "y", "yes", "nee", "n", "no"};
+            string choice = inputCheck(prompt, options, "Dat is geen ja of nee, typ alsjeblieft 'ja' of 'nee'", caseSens: false);
+            
+            return yesoptions.Contains(choice);
         }
 
         /// <summary>Vraagt om een enter input van de user voordat het programma verder gaat</summary>

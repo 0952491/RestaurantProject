@@ -64,6 +64,7 @@ namespace TablePage
             return newDates;
         }
 
+
         /// <summary>Een methode die een bepaalde dag van de week returned</summary>
         public Day GetDay(bool all) {
             Day returnDag = null;
@@ -141,8 +142,7 @@ namespace TablePage
             VoorZes = voorzes;
         }
 
-        public DinnerRoom(string tijd)
-        {
+        public DinnerRoom(string tijd) {
             VoorTwee = new Table[8];
             VoorVier = new Table[5];
             VoorZes = new Table[2];
@@ -163,7 +163,7 @@ namespace TablePage
         /// <summary>Returned een Table Object gebaseerd op het gegeven tafel nummer</summary>
         public Table GetTafel(int persons = 0) {
             DrawMap(persons);
-            string tafel_no = Resources.inputCheck("Kies een van de beschikbare tafels (of typ 'b' om terug te gaan): ", GetAvailableTafels(persons, backbutton: true), "Die tafel is helaas niet beschikbaar, probeer het opnieuw");
+            string tafel_no = Resources.inputCheck("Kies een van de beschikbare tafels (of typ 'b' om terug te gaan): ", GetAvailableTafels(persons, backbutton: true), "Die tafel is helaas niet beschikbaar, probeer het opnieuw", caseSens: false);
             if (tafel_no == "b")
                 return null;
             // vanaf hieronder is de oude method
@@ -267,7 +267,7 @@ namespace TablePage
             // alle tafeltjes voor twee worden hier geprint
             for (int col = 0; col < VoorTwee[0].TableArr().Length; col++) {
                 for (int row = 0; row < VoorTwee.Length; row++) {
-                    Console.ForegroundColor = VoorTwee[row].occupied || persons > 2 ? ConsoleColor.Red : ConsoleColor.Green;
+                    Console.ForegroundColor = (VoorTwee[row].occupied || persons > 2) && persons != 0 ? ConsoleColor.Red : ConsoleColor.Green;
                     Console.Write(VoorTwee[row].TableArr()[col]);
                 }
                 Console.Write("\n");
@@ -278,7 +278,7 @@ namespace TablePage
             for (int row = 0; row < VoorVier[0].TableArr().Length / 2; row++) {
                 for (int col = 0, index = 1; col < VoorVier.Length + 1; col++) {
                     if (col == 2 || col == 5) {
-                        Console.ForegroundColor = VoorVier[index].occupied || persons < 3 || persons > 4 ? ConsoleColor.Red : ConsoleColor.Green;
+                        Console.ForegroundColor = (VoorVier[index].occupied || persons < 3 || persons > 4) && persons != 0 ? ConsoleColor.Red : ConsoleColor.Green;
                         Console.Write(VoorVier[index].TableArr()[row]);
                         index += 2;
                     } else {
@@ -293,7 +293,7 @@ namespace TablePage
             for (int row = 0; row < VoorVier[0].TableArr().Length / 2; row++){
                 for (int col = 1, index = 0; col < 12; col++){
                     if (index < VoorVier.Length)
-                        Console.ForegroundColor = VoorVier[index].occupied || persons < 3 || persons > 4 ? ConsoleColor.Red : ConsoleColor.Green;
+                        Console.ForegroundColor = (VoorVier[index].occupied || persons < 3 || persons > 4) && persons != 0 ? ConsoleColor.Red : ConsoleColor.Green;
                     if (col % 2 != 0)
                         Console.Write(Resources.drawString(7, " "));
                     else if (col % 4 == 0)                   
@@ -310,11 +310,11 @@ namespace TablePage
                     if (col % 2 != 0) {
                         Console.Write(Resources.drawString(7, " "));
                     } else if (col % 4 == 0) {
-                        Console.ForegroundColor = VoorZes[indexT3].occupied || persons < 5 || persons > 6 ? ConsoleColor.Red : ConsoleColor.Green;
+                        Console.ForegroundColor = (VoorZes[indexT3].occupied || persons < 5 || persons > 6) && persons != 0 ? ConsoleColor.Red : ConsoleColor.Green;
                         string line = row != 0 && row != 1 ? VoorZes[indexT3].TableArr()[row - 2] : Resources.drawString(14, " ");
                         Console.Write(line); indexT3++;
                     } else if (col % 2 == 0) {
-                        Console.ForegroundColor = VoorVier[indexT2].occupied || persons < 3 || persons > 4 ? ConsoleColor.Red : ConsoleColor.Green;
+                        Console.ForegroundColor = (VoorVier[indexT2].occupied || persons < 3 || persons > 4) && persons != 0 ? ConsoleColor.Red : ConsoleColor.Green;
                         Console.Write(VoorVier[indexT2].TableArr()[row + VoorVier[indexT2].TableArr().Length / 2]);
                         indexT2 += 2;
                     }
@@ -326,7 +326,7 @@ namespace TablePage
             for (int row = 1; row < VoorZes[0].TableArr().Length; row++) {
                 for (int col = 1, index = 0; col < 6; col++) {
                     if (index < VoorZes.Length)
-                        Console.ForegroundColor = VoorZes[index].occupied || persons < 5 || persons > 6 ? ConsoleColor.Red : ConsoleColor.Green;
+                        Console.ForegroundColor = (VoorZes[index].occupied || persons < 5 || persons > 6) && persons != 0 ? ConsoleColor.Red : ConsoleColor.Green;
                     if (col % 2 != 0)
                         Console.Write(Resources.drawString(28, " "));
                     else
