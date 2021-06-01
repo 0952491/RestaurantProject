@@ -33,7 +33,7 @@ namespace ReserveringPage
         /// <summary>Laat een bericht zien voor een geannuleerde verandering van de reservering</summary>
         public void CancelChange() {
             Console.WriteLine("Verandering van reservering is geannuleerd");
-            Resources.EnterMessage();
+            Resources.TerugMessage();
         }
 
         /// <summary>Deze functie returned een functie waarmee je tijd kan vergelijken met elkaar</summary>
@@ -54,7 +54,7 @@ namespace ReserveringPage
             if (!CompareTime(Dag.GetCorrectTime(Tijdsvak.Tijdvak)) && !changingUser.IsAdmin()) {
                 Resources.errorMessage("Het is niet meer mogelijk deze reservering te veranderen");
                 Resources.errorMessage("Als u toch nog een verandering wilt doorvoeren kunt u bellen naar het nummer van het restaurant onder 'Contact'");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
                 return;
             }
             string[] options = new string[] { "Datum en Tijd", "Tafel", "Bestelling" };
@@ -243,8 +243,12 @@ namespace ReserveringPage
 
         /// <summary>Laat gebruiker een gerecht kiezen uit de bestelling en returned dit gerecht (null als de terugoptie word gekozen)</summary>
         public Gerecht ChooseGerecht() {
+            if (bestelling == null || bestelling.Length == 0) {
+                Resources.errorMessage("Je bestelling is nog leeg");
+                Resources.TerugMessage();
+                return null;
+            }
             string choice = Resources.makeMenuInput("Kies een van de gerechten van je bestelling", "Voer hier een van de bovenstaande opties in: ", Namen, backbutton: true);
-            // TODO: Fix als bestelling leeg is
             string gerechtNaam = Namen[Convert.ToInt32(choice) - 1];
             foreach (Gerecht g in bestelling) {
                 if (g.Naam == gerechtNaam)
@@ -391,7 +395,7 @@ namespace ReserveringPage
                 Resources.errorMessage("Nog geen reserveringen om te laten zien");
                 Console.WriteLine("");
             }
-            Resources.EnterMessage();
+            Resources.TerugMessage();
         }
 
         /// <summary>Returned een array met reserveringen afhankelijk van de gegeven gebruiker</summary>
@@ -494,7 +498,7 @@ namespace ReserveringPage
                         }
                         else if (loggedIn.IsAdmin()) {
                             Resources.errorMessage("Admins kunnen geen reservering doen op hun naam");
-                            Resources.EnterMessage();
+                            Resources.TerugMessage();
                             continue;
                         }
                         MakeReservering(loggedIn, menu, false);
@@ -502,13 +506,13 @@ namespace ReserveringPage
                     }
                     string mail = Resources.inputCheck("Voer de mail van de gebruiker in die een reservering doet: ", useradmin.GetMails(), "Die email is helaas niet beschikbaar", maxTries: 3);
                     if (mail == null) {
-                        Resources.EnterMessage();
+                        Resources.TerugMessage();
                         return;
                     }
                     User selected = useradmin.GetUser(mail);
                     if (selected == null || selected.IsAdmin()) {
                         Resources.errorMessage("De geselecteerde gebruiker kan geen reservering doen op zijn/haar naam");
-                        Resources.EnterMessage();
+                        Resources.TerugMessage();
                     }
                     else
                         MakeReservering(selected, menu, false);
@@ -621,12 +625,12 @@ namespace ReserveringPage
                         AddReservering(nieuwReservering);
                         Resources.succesMessage("Reservering succesvol opgeslagen");
                         Resources.succesMessage($"Uw persoonlijke toegangscode om u reservering te bekijken: {Code}");
-                        Resources.EnterMessage();
+                        Resources.TerugMessage();
                         step++;
                     }
                     else if (choice == "2") {
                         Console.WriteLine("Reservering geannuleerd");
-                        Resources.EnterMessage();
+                        Resources.TerugMessage();
                         step++;
                     }
                     else

@@ -115,7 +115,7 @@ namespace MenuPage
                 }
                 Console.WriteLine(Resources.drawString(60, "~"));
                 if (!ForAdmin)
-                    Resources.EnterMessage();
+                    Resources.TerugMessage();
             }
         }
 

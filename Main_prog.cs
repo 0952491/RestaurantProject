@@ -44,7 +44,7 @@ namespace Main_Restaurant
                     ContactPage();
                 else if (optie == "6") {
                     dinnerroom.DrawMap();
-                    Resources.EnterMessage();
+                    Resources.TerugMessage();
                 }
                 else {  // de gebruiker koos de laatste optie dus sluit de applicatie
                     Resources.succesMessage("Dankjewel voor het gebruiken van onze app, tot volgende keer ; )");

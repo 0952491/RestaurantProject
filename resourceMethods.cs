@@ -239,7 +239,7 @@ namespace resourceMethods{
         }
 
         /// <summary>Vraagt om een enter input van de user voordat het programma verder gaat</summary>
-        public static void EnterMessage() => input("Typ 'b'om terug te gaan: ");
+        public static void TerugMessage() => input("Typ 'b'om terug te gaan: ");
     }
 
     class DataHandler{
