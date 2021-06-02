@@ -167,10 +167,10 @@ namespace TablePage
             if (tafel_no == "b")
                 return null;
             // vanaf hieronder is de oude method
-            Table[] tafelArr = tafel_no.EndsWith("A") ? VoorTwee : tafel_no.EndsWith("B") ? VoorVier : VoorZes;
+            Table[] tafelArr = tafel_no.EndsWith("A") || tafel_no.EndsWith("a") ? VoorTwee : tafel_no.EndsWith("B") || tafel_no.EndsWith("b") ? VoorVier : VoorZes;
             Table newTable = null;
             foreach (Table tafel in tafelArr) {
-                if (tafel.table_num == tafel_no)
+                if (tafel.table_num.ToLower() == tafel_no.ToLower())
                     newTable = tafel;
             }
             return newTable;

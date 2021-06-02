@@ -154,7 +154,7 @@ namespace LoginPage
                 if (choice == "1") {
                     Console.Clear();
                     user.Present();
-                    Resources.EnterMessage();
+                    Resources.TerugMessage();
                 }
                 else if (choice == "2") {
                     User oldPerson = new User(user);
@@ -238,10 +238,10 @@ namespace LoginPage
                 }
                 Subscribers = newSubscribers;
                 Resources.succesMessage($"Account onder email {user.Email} succesvol verwijderd!");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
             } else { 
                 Resources.errorMessage("Die gebruiker bestaat niet");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
             }
         }
 
@@ -257,10 +257,10 @@ namespace LoginPage
                 }
                 Admins = newAdmins;
                 Resources.succesMessage($"Account onder email {user.Email} succesvol verwijderd!");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
             } else {
                 Resources.errorMessage("Die admin bestaat niet");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
             }
         }
 
@@ -329,17 +329,17 @@ namespace LoginPage
                 newUser = new User(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 1, tussenvoegsel);
                 AddAdmin(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
             }
             else if (!admin && inputHerhaal != "") {
                 newUser = new User(voornaam, achternaam, email, telefoonnummer, leeftijd, wachtwoord, 0, tussenvoegsel);
                 AddSub(newUser);
                 Resources.succesMessage("Succesvol Geregistreerd!");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
             }
             else {
                 Resources.errorMessage("3 keer een verkeerd wachtwoord ingevoerd voor herhaling, Registratie mislukt");
-                Resources.EnterMessage();
+                Resources.TerugMessage();
             }
         }
 
