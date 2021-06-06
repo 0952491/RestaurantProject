@@ -69,6 +69,16 @@
       "Email": "Frans@gmail.com",
       "Tel_no": "0644080808",
       "Leeftijd": "18"
+    },
+    {
+      "Wachtwoord": "abcdefgh",
+      "ModLevel": 0,
+      "Voornaam": "Test",
+      "Tussenvoegsel": "",
+      "Achternaam": "Gebruiker",
+      "Email": "Test.Gebruiker@mail.com",
+      "Tel_no": "0000000000",
+      "Leeftijd": "18"
     }
   ],
   "Admins": [

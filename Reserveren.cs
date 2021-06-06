@@ -325,7 +325,7 @@ namespace ReserveringPage
         /// <summary>Vormt een json object tot een Week object</summary>
         public Week LoadWeek(dynamic weekJson) => weekJson.ToObject<Week>();
 
-        /// <summary>slaat de reserveringsadministratie op in "Week.json" file in Data folder</summary>
+        /// <summary>slaat de reserveringsadministratie op in "Reserveringen.json.json" file in Data folder</summary>
         public void Save() => DataHandler.WriteJson(FILENAME, this);
 
         /// <summary>Voegt een nieuwe reservering toe aan alle reserveringen</summary>
