@@ -555,7 +555,6 @@ namespace ReserveringPage
 
         /// <summary>Maakt een reservering gebaseerd op de gegeven input, hiervoor moet al een gebruiker zijn geregistreerd</summary>
         public void MakeReservering(User user, MenuKaart menu, bool guest) {
-            // TODO : Vraag hoeveel mensen de gebruiker meeneemt en laat de gebruiker uit tafels kiezen gebaseerd op het aantal personen
             int step = 1;
             Day chosenDay = null;
             DinnerRoom chosenRoom = null;
