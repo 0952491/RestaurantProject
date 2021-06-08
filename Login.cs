@@ -127,6 +127,7 @@ namespace LoginPage
                 else if (choice == "3") {
                     foreach (string mail in GetMails())
                         Console.WriteLine(mail);
+                    Resources.TerugMessage();
                 }
                 else if (choice == "4")
                     admin.ChangePerson();
@@ -205,7 +206,7 @@ namespace LoginPage
 
         /// <summary>Geeft een prompt en verwijderd gebruiker gebaseerd op email, mag alleen worden gebruikt door admins</summary>
         public void RemoveUser(bool adminRemove, User user, ReserveringsAdministration resAdmin) {
-            string removeMail = Resources.inputCheck("Email van te verwijderen gebruiker: ", GetMails(), "Email incorrect", 3);
+            string removeMail = Resources.inputMail("Email van te verwijderen gebruiker: ", GetMails(), "Email incorrect", 3);
             if (removeMail == "")
                 return;
             if (removeMail.ToLower() == user.Email.ToLower()) {
@@ -230,11 +231,11 @@ namespace LoginPage
         public void RemoveSub(User user) {
             if (Exists(user) && !user.IsAdmin()) {
                 User[] newSubscribers = new User[Subscribers.Length - 1];
-                for (int i = 0; i < Subscribers.Length; i++) { 
+                for (int i = 0, j = 0; i < Subscribers.Length; i++) { 
                     if (Subscribers[i] == user) { 
                         continue;
                     }
-                    newSubscribers[i] = Subscribers[i];
+                    newSubscribers[j++] = Subscribers[i];
                 }
                 Subscribers = newSubscribers;
                 Resources.succesMessage($"Account onder email {user.Email} succesvol verwijderd!");
