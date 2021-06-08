@@ -12,14 +12,21 @@ namespace Main_Restaurant
         public static UserAdministration UserAdmin = new UserAdministration();
         public static DinnerRoom dinnerroom = new DinnerRoom(""); // word gemaakt om een plattegrond van de tafels te laten zien
         public static ReserveringsAdministration ReserveerAdmin = new ReserveringsAdministration();
-        public static Tuple<string, string, string, string, string> Contact = Tuple.Create("Wijnhaven 107", "3011 WN", "Rotterdam", "0612345678", "info@restaurantTeam4.nl");
+        public static Tuple<string, string, string, string, string> Contact = LoadContact(DataHandler.LoadJson("Contact.json"));
         // TODO: de Contact tuple moet nog worden opgeslagen en geladen vanuit json, nu slaat de app de veranderingen niet op en start deze elke keer met dezelfde contactgegevens
         
         /// <summary>START METHOD VAN HET PROGRAMMA!!!!</summary>
         public static void Main() => BeginMenu();
 
+        /// <summary>Zorgt ervoor dat de contactgegevens worden geladen naar de tuple</summary>
+        public static Tuple<string, string, string, string, string> LoadContact(dynamic contact) => contact.ToObject<Tuple<string, string, string, string, string>>();
+
+        /// <summary>Zorgt ervoor dat de contactgegevens worden opgeslagen</summary>
+        public static void SaveContact() => DataHandler.WriteJson("Contact.json", Contact); 
+        
         /// <summary>Het menu dat je te zien krijgt wanneer je de applicatie opstart</summary>
         public static void BeginMenu() {
+            SaveContact();
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
             while (true) {
@@ -111,7 +118,6 @@ namespace Main_Restaurant
                 string choice = Resources.makeMenuInput("Welke contactinformatie wilt u wijzigen?", "Kies een van de bovenstaande opties: ", options, backbutton: true);
                 Console.Clear();
                 if (choice == "b") {
-                    Contact = Tuple.Create(tempAddr, tempZipCode, tempPlace, tempPhone, tempEmail);
                     return;
                 }
                 else if (choice == "1") {  // wijzig adres
@@ -134,6 +140,8 @@ namespace Main_Restaurant
                     Console.WriteLine($"Vorige email: {tempEmail}");
                     tempEmail = Resources.InputRegex("Voer hier de nieuwe email in: ", @"^(\w|\.)+@\w+\.\w{2,3}$");
                 }
+                Contact = Tuple.Create(tempAddr, tempZipCode, tempPlace, tempPhone, tempEmail);
+                SaveContact();
             }
         }
 
