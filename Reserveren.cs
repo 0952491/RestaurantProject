@@ -325,7 +325,7 @@ namespace ReserveringPage
         /// <summary>Vormt een json object tot een Week object</summary>
         public Week LoadWeek(dynamic weekJson) => weekJson.ToObject<Week>();
 
-        /// <summary>slaat de reserveringsadministratie op in "Week.json" file in Data folder</summary>
+        /// <summary>slaat de reserveringsadministratie op in "Reserveringen.json.json" file in Data folder</summary>
         public void Save() => DataHandler.WriteJson(FILENAME, this);
 
         /// <summary>Voegt een nieuwe reservering toe aan alle reserveringen</summary>
@@ -555,7 +555,6 @@ namespace ReserveringPage
 
         /// <summary>Maakt een reservering gebaseerd op de gegeven input, hiervoor moet al een gebruiker zijn geregistreerd</summary>
         public void MakeReservering(User user, MenuKaart menu, bool guest) {
-            // TODO : Vraag hoeveel mensen de gebruiker meeneemt en laat de gebruiker uit tafels kiezen gebaseerd op het aantal personen
             int step = 1;
             Day chosenDay = null;
             DinnerRoom chosenRoom = null;
