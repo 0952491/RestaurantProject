@@ -1,94 +1,14 @@
 {
   "Subscribers": [
-    {
-      "Wachtwoord": "12345678",
-      "ModLevel": 0,
-      "Voornaam": "Jeroen",
-      "Tussenvoegsel": "",
-      "Achternaam": "Visser",
-      "Email": "0952491@hr.nl",
-      "Tel_no": "0612345678",
-      "Leeftijd": "02-07-1999"
-    },
-    {
-      "Wachtwoord": "Nancy123",
-      "ModLevel": 0,
-      "Voornaam": "Nancy",
-      "Tussenvoegsel": "K",
-      "Achternaam": "Rajcomar",
-      "Email": "0978001@hr.nl",
-      "Tel_no": "0623456754",
-      "Leeftijd": "23"
-    },
-    {
-      "Wachtwoord": "TestAccount",
-      "ModLevel": 0,
-      "Voornaam": "Tes",
-      "Tussenvoegsel": "",
-      "Achternaam": "t",
-      "Email": "TestMail@mail.com",
-      "Tel_no": "0612345678",
-      "Leeftijd": "21"
-    },
-    {
-      "Wachtwoord": "12345678",
-      "ModLevel": 0,
-      "Voornaam": "Jarno",
-      "Tussenvoegsel": "",
-      "Achternaam": "de Groot",
-      "Email": "Jarno@mail.com",
-      "Tel_no": "0123456789",
-      "Leeftijd": "18"
-    },
-    {
-      "Wachtwoord": "12345678",
-      "ModLevel": 0,
-      "Voornaam": "gene",
-      "Tussenvoegsel": "",
-      "Achternaam": "en",
-      "Email": "e@e.nl",
-      "Tel_no": "0123456789",
-      "Leeftijd": "18"
-    },
-    {
-      "Wachtwoord": "wachtwoo",
-      "ModLevel": 0,
-      "Voornaam": "e",
-      "Tussenvoegsel": "",
-      "Achternaam": "e",
-      "Email": "e@e.com",
-      "Tel_no": "0123456789",
-      "Leeftijd": "18"
-    },
-    {
-      "Wachtwoord": "12345678",
-      "ModLevel": 0,
-      "Voornaam": "Frans",
-      "Tussenvoegsel": "",
-      "Achternaam": "Fouad",
-      "Email": "Frans@gmail.com",
-      "Tel_no": "0644080808",
-      "Leeftijd": "18"
-    }
   ],
   "Admins": [
     {
       "Wachtwoord": "12345678",
       "ModLevel": 1,
-      "Voornaam": "Ad",
-      "Tussenvoegsel": "",
-      "Achternaam": "min",
-      "Email": "Admin@mail.com",
-      "Tel_no": "0612345678",
-      "Leeftijd": "08-09-1998"
-    },
-    {
-      "Wachtwoord": "Wachtw0ord",
-      "ModLevel": 1,
       "Voornaam": "Admin",
       "Tussenvoegsel": "",
       "Achternaam": "Admin",
-      "Email": "admin@adminmail.com",
+      "Email": "admin@mail.com",
       "Tel_no": "0612345679",
       "Leeftijd": "55"
     }

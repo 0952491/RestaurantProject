@@ -430,7 +430,6 @@ namespace ReserveringPage
                         return res;
                 }
             }
-            Resources.errorMessage("De reservering met code {code} kon niet gevonden worden");
             return null;
         }
 
@@ -529,8 +528,11 @@ namespace ReserveringPage
                         continue;
                     else {
                         Reservering displayres = GetReservering(codeChoice);
-                        if (displayres == null)
+                        if (displayres == null) { 
+                            Resources.errorMessage($"Uw reservering kon niet worden teruggevonden met gegeven code: {codeChoice}");
+                            Resources.input("");
                             continue;
+                        }
                         displayres.ShowReservering();
                         Resources.input("Log in of bel naar het restaurant om u reservering aan te passen");
                     }
