@@ -33,7 +33,7 @@ namespace ReserveringPage
         /// <summary>Laat een bericht zien voor een geannuleerde verandering van de reservering</summary>
         public void CancelChange() {
             Console.WriteLine("Verandering van reservering is geannuleerd");
-            Resources.TerugMessage();
+            Resources.input("");
         }
 
         /// <summary>Deze functie returned een functie waarmee je tijd kan vergelijken met elkaar</summary>
@@ -63,6 +63,7 @@ namespace ReserveringPage
                 OneLine();
                 string choice = Resources.makeMenuInput("Verander je reservering", "Voer hier een van de bovenstaande opties in: ", options, backbutton: true);
                 if (choice == "1") {
+                    Console.Clear();
                     string TimeChoice = Resources.makeMenuInput("Wat wilt u veranderen?", "Voer hier een van de bovenstaande opties in: ", new string[] { "Datum", "Tijd" }, backbutton: true);
                     if (TimeChoice == "1") {
                         Day chosenDay = ChangeDate(week);
@@ -109,16 +110,19 @@ namespace ReserveringPage
         }
 
         public Day ChangeDate(Week week) {
+            Console.Clear();
             Day chosenDay = week.GetDay(false);
             return chosenDay;   
         }
 
         public DinnerRoom ChangeTime(Day dag) {
+            Console.Clear();
             DinnerRoom chosenRoom = dag.GetRoom();
             return chosenRoom;
         }
         
         public Table ChangeTable(DinnerRoom room) {
+            Console.Clear();
             string peopleStr = Resources.inputCheck("Met hoeveel mensen was u van plan te komen? (typ 'b' om terug te gaan): ", new string[] { "1", "2", "3", "4", "5", "6", "b" }, "Helaas is die optie niet beschikbaar, als u met meer dan 6 personen wenst te komen kunt u bellen naar het restaurant\nOns nummer kunt u vinden bij de hoofdpagina onder contact");
             if (peopleStr == "b") {
                 return null;
@@ -130,6 +134,7 @@ namespace ReserveringPage
 
         public void ChangeOrder(MenuKaart menu) {
             while (true) {
+                Console.Clear();
                 Console.WriteLine(bestelling1.StringBestelling());
                 string[] options = new string[] { "Gerecht toevoegen", "Gerecht verwijderen" };
                 string choice = Resources.makeMenuInput("Verander je bestelling", "Voer hier een van de bovenstaande opties in: ", options, backbutton: true);
